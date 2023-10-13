@@ -1,0 +1,15 @@
+<h3>Total Weight: {{.TotalWeight}}g</h3>
+
+<h3>Top Heaviest Items</h3>
+<ul>
+  {{range .TopHeaviestItems}}
+    <li>{{.Name}} - {{.Weight}}</li>
+  {{end}}
+</ul>
+
+<h3>Weight Per Bag</h3>
+<ul>
+  {{range $key, $value := .BagWeights}}
+    <li>Bag Type {{$key}}: {{$value}}g</li>
+  {{end}}
+</ul>
