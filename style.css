@@ -1,24 +1,113 @@
-input, select {
-    padding: 1rem 2rem;
-    font-size: 1.25rem;
-    display: block;
+:root {
+  font-family: "JetBrains Mono", monospace;
+  /* font-size: 1.25em; */
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin-block-start: 2em;
+  margin-inline: 2em;
+  display: grid;
+  gap: 3rem;
+}
+
+input,
+select,
+fieldset {
+  font-size: 1.25rem;
+  padding: 1rem 2rem;
+  border: 2px solid grey;
+}
+input:focus,
+select:focus {
+  outline: 2px solid #0075ff;
+}
+
+fieldset {
+  display: inline-block;
+  position: relative;
+  text-align: center;
+  & label {
+    padding: 0.5em;
+    margin-inline: 0.5em;
   }
-  input:focus, select:focus {
-    outline: 2px solid #0075FF;
+}
+
+fieldset label {
+  cursor: pointer;
+  &:hover {
+    font-weight: 900;
   }
-  option:focus {
-    border: none;
+  &:focus {
+    font-weight: 900;
   }
-  
-  * {
-    font-family: 'JetBrains Mono', monospace;
+}
+
+input[type="radio"] {
+  opacity: 0;
+  width: 0;
+  position: absolute;
+  &:checked + label {
+    color: #0075ff;
+    font-weight: 900;
   }
-  
-  html {
-    filter: invert(1);
-    
-    background: white;
+  &:focus + label {
+    color: red;
   }
-  body {
-    margin-inline: 0.5rem;
+}
+
+input[type="submit"] {
+  padding: 1rem;
+  font-size: 1.5rem;
+  border: 2px solid grey;
+  background-color: #0075ff;
+}
+
+.itemList {
+  display: grid;
+}
+
+.itemListItem {
+  display: inline-grid;
+  grid-template-columns: 5ch 1fr 4ch 5ch 15ch 20ch 6ch 15ch;
+  grid-template-areas: "itemAmount itemName itemWeight itemTotalWeight itemCategory itemSubcategory itemPriority itemBagType";
+  gap: 2rem;
+}
+
+.itemAmount {
+  text-align: end;
+}
+
+.itemWeight,
+.itemTotalWeight,
+.totalWeight {
+  position: relative;
+  text-align: end;
+}
+.itemWeight::after,
+.itemTotalWeight::after,
+.totalWeight::after {
+  content: " g";
+  position: absolute;
+  right: -2ch;
+}
+
+.itemList article:nth-of-type(2n + 1) {
+  background: lightgray;
+}
+
+.itemListSummary {
+  & h4 {
+    grid-area: itemName;
   }
+  & .totalWeight {
+    grid-column: itemTotalWeight;
+  }
+}
