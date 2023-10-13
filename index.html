@@ -10,15 +10,15 @@
 </head>
 
 <body>
-  <h1>OneBag Optimizer</h1>
+  <h2>OneBag Optimizer</h1>
   <section class="inputform">
     <form>
       <input id="itemName" type="text" placeholder="Name" required="required" autofocus="autofocus" />
       <input id="itemAmount" type="number" placeholder="Amount" required="required" min="0" max="99" />
-      <input id="itemWeight" type="number" placeholder="Weight (g)" required="required" min="0" max="9999" />
+      <input id="itemWeight" type="number" placeholder="Weight" required="required" min="0" max="9999" />
       <select id="itemCategory" required="required">
         <option value="" disabled="disabled" selected="selected">
-          -- Select Category --
+          Category
         </option>
         <option value="Bags">Bags</option>
         <option value="Clothing">Clothing</option>
@@ -33,114 +33,107 @@
 
       <input id="itemSubcategory" placeholder="Subcategory" autocomplete="on" />
 
-      <fieldset id="itemPriority">
-        <legend>Priority</legend>
-        <input type="radio" value="1" id="priority1" name="priority" checked />
-        <label for="priority1">1 </label>
-        <input type="radio" value="2" id="priority2" name="priority" />
-        <label for="priority2">2 </label>
-        <input type="radio" value="3" id="priority3" name="priority" />
-        <label for="priority3">3 </label>
-      </fieldset>
-      <fieldset id="itemBagType">
-        <legend>Bag Type</legend>
-        <input type="radio" value="1" id="bagType1" name="bagtype" checked />
-        <label for="bagType1">carry-on </label>
+      <select id="itemPriority" required="required">
+        <option value="priority1">Priority 1</option>
+        <option value="priority2">Priority 2</option>
+        <option value="priority3">Priority 3</option>
 
-        <input type="radio" value="2" id="bagType2" name="bagtype" />
-        <label for="bagType2">personal item </label>
-      </fieldset>
+      </select>
+      <select id="itemBagType" required="required">
+        <option value="carryOn">Carry-On</option>
+        <option value="personalItem">Personal Item</option>
+      </select>
       <input type="submit" value="+">
     </form>
   </section>
   <section class="itemList">
     <h3>Item List</h3>
     <article class="itemListItem">
-      <div class="itemAmount">1</div>
       <div class="itemName">Peak Design Travel Backpack 30L</div>
+      <div class="itemAmount">1x</div>
       <div class="itemWeight">1385</div>
-      <div class="itemTotalWeight">1385</div>
+      <div class="itemTotalWeight"><span class="mobileOnlyInfo">Total Weight: </span>1385</div>
       <div class="itemCategory">Bags</div>
       <div class="itemSubcategory">Backpack</div>
       <div class="itemPriority">Prio 1</div>
       <div class="itemBagType">Carry-On</div>
     </article>
     <article class="itemListItem">
-      <div class="itemAmount">1</div>
       <div class="itemName">Peak Design Packing Cube Medium</div>
+      <div class="itemAmount">1x</div>
       <div class="itemWeight">142</div>
-      <div class="itemTotalWeight">142</div>
+      <div class="itemTotalWeight"><span class="mobileOnlyInfo">Total Weight: </span>142</div>
       <div class="itemCategory">Bags</div>
       <div class="itemSubcategory">Packing Cube</div>
       <div class="itemPriority">Prio 1</div>
       <div class="itemBagType">Carry-On</div>
     </article>
     <article class="itemListItem">
-      <div class="itemAmount">1</div>
       <div class="itemName">Matador Freerain22</div>
+      <div class="itemAmount">1x</div>
       <div class="itemWeight">278</div>
-      <div class="itemTotalWeight">278</div>
+      <div class="itemTotalWeight"><span class="mobileOnlyInfo">Total Weight: </span>278</div>
       <div class="itemCategory">Bags</div>
       <div class="itemSubcategory">Backpack</div>
       <div class="itemPriority">Prio 1</div>
       <div class="itemBagType">Carry-On</div>
     </article>
     <article class="itemListItem">
-      <div class="itemAmount">1</div>
       <div class="itemName">Heimplanet Transit Line Sling Pocket XL</div>
+      <div class="itemAmount">1x</div>
       <div class="itemWeight">300</div>
-      <div class="itemTotalWeight">300</div>
+      <div class="itemTotalWeight"><span class="mobileOnlyInfo">Total Weight: </span>300</div>
       <div class="itemCategory">Bags</div>
       <div class="itemSubcategory">Sling Bag</div>
       <div class="itemPriority">Prio 1</div>
       <div class="itemBagType">Personal Item</div>
     </article>
     <article class="itemListItem">
-      <div class="itemAmount">1</div>
       <div class="itemName">Fujifilm X-T5</div>
+      <div class="itemAmount">1x</div>
       <div class="itemWeight">570</div>
-      <div class="itemTotalWeight">570</div>
+      <div class="itemTotalWeight"><span class="mobileOnlyInfo">Total Weight: </span>570</div>
       <div class="itemCategory">Electronics</div>
       <div class="itemSubcategory">Camera Gear</div>
       <div class="itemPriority">Prio 1</div>
       <div class="itemBagType">Carry-On</div>
     </article>
     <article class="itemListItem">
-      <div class="itemAmount">1</div>
       <div class="itemName">Fujifilm XF16-80mm f4</div>
+      <div class="itemAmount">1x</div>
       <div class="itemWeight">501</div>
-      <div class="itemTotalWeight">501</div>
+      <div class="itemTotalWeight"><span class="mobileOnlyInfo">Total Weight: </span>501</div>
       <div class="itemCategory">Electronics</div>
       <div class="itemSubcategory">Camera Gear</div>
       <div class="itemPriority">Prio 1</div>
       <div class="itemBagType">Carry-On</div>
     </article>
     <article class="itemListItem">
-      <div class="itemAmount">1</div>
       <div class="itemName">Devold Running Merino Cover Zip Neck</div>
+      <div class="itemAmount">1x</div>
       <div class="itemWeight">210</div>
-      <div class="itemTotalWeight">210</div>
+      <div class="itemTotalWeight"><span class="mobileOnlyInfo">Total Weight: </span>210</div>
       <div class="itemCategory">Clothing</div>
       <div class="itemSubcategory">Shirt</div>
       <div class="itemPriority">Prio 1</div>
       <div class="itemBagType">Carry-On</div>
     </article>
     <article class="itemListItem">
-      <div class="itemAmount">4</div>
       <div class="itemName">Calvin Klein Underwear</div>
+      <div class="itemAmount">4x</div>
       <div class="itemWeight">53</div>
-      <div class="itemTotalWeight">212</div>
+      <div class="itemTotalWeight"><span class="mobileOnlyInfo">Total Weight: </span>212</div>
       <div class="itemCategory">Clothing</div>
       <div class="itemSubcategory">Underwear</div>
       <div class="itemPriority">Prio 1</div>
       <div class="itemBagType">Carry-On</div>
     </article>
     <article class="itemListItem itemListSummary">
-      <h4>Total Weight</h4>
+      <div class="itemName">Total Weight:</div>
       <div class="totalWeight">1493</div>
     </article>
   </section>
-  <section>
+  <section class="itemCharts">
     <h3>Charts</h3>
     <img src="https://place-hold.it/600x400" alt="">
     <img src="https://place-hold.it/600x400" alt="">
