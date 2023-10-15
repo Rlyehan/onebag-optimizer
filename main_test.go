@@ -6,6 +6,8 @@ import (
 	"os"
 	"io/ioutil"
 	"strings"
+	"bytes"
+	"net/http"
 	"net/http/httptest"
 )
 
@@ -69,34 +71,38 @@ func TestCategoryWeightPieChart(t *testing.T) {
 	}
 }
 
-func TestAddItemHandler(t *testing.T) {
-	itemsList = []TravelItem{}
+func TestProcessHandler(t *testing.T) {
 
-	r1 := httptest.NewRequest("POST", "/add", strings.NewReader("itemName=TestItem1&itemAmount=1&itemWeight=100&itemCategory=Bags&itemSubcategory=Backpack&itemPriority=1&itemBagType=1"))
-	r1.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-
-	w1 := httptest.NewRecorder()
-
-	addItemHandler(w1, r1)
-
-	r2 := httptest.NewRequest("POST", "/add", strings.NewReader("itemName=TestItem2&itemAmount=2&itemWeight=200&itemCategory=Electronics&itemSubcategory=Camera&itemPriority=2&itemBagType=2"))
-	r2.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-
-	w2 := httptest.NewRecorder()
-
-	addItemHandler(w2, r2)
-
-	if len(itemsList) != 2 {
-		t.Fatalf("Expected 2 items in itemsList, but got %d", len(itemsList))
+	reqBody := `[
+		{
+			"name": "TestItem1",
+			"amount": 2,
+			"weight": 500,
+			"category": "clothing",
+			"subcategory": "shirts",
+			"priority": 1,
+			"bagtype": 1
+		},
+		{
+			"name": "TestItem2",
+			"amount": 1,
+			"weight": 1000,
+			"category": "electronics",
+			"subcategory": "laptop",
+			"priority": 2,
+			"bagtype": 2
+		}
+	]`
+	req, err := http.NewRequest("POST", "/process", bytes.NewBufferString(reqBody))
+	if err != nil {
+		t.Fatal(err)
 	}
 
-	item1 := itemsList[0]
-	if item1.Name != "TestItem1" {
-		t.Errorf("Expected first item name to be TestItem1, but got %s", item1.Name)
-	}
+	recorder := httptest.NewRecorder()
 
-	item2 := itemsList[1]
-	if item2.Name != "TestItem2" {
-		t.Errorf("Expected second item name to be TestItem2, but got %s", item2.Name)
+	processHandler(recorder, req)
+
+	if status := recorder.Code; status != http.StatusOK {
+		t.Errorf("Handler returned wrong status code: got %v want %v", status, http.StatusOK)
 	}
 }
