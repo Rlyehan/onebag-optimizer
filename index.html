@@ -10,135 +10,443 @@
 </head>
 
 <body>
-  <h2>OneBag Optimizer</h1>
+  <h2>OneBag Optimizer</h2>
   <section class="inputform">
-    <form>
-      <input id="itemName" type="text" placeholder="Name" required="required" autofocus="autofocus" />
-      <input id="itemAmount" type="number" placeholder="Amount" required="required" min="0" max="99" />
-      <input id="itemWeight" type="number" placeholder="Weight" required="required" min="0" max="9999" />
+    <form onsubmit="addListItem()">
+      <input id="itemName" value="Test" type="text" placeholder="Name" required="required" autofocus="autofocus" />
+      <input id="itemAmount" value="1" type="number" placeholder="Amount" required="required" min="0" max="99" />
+      <input id="itemWeight" value="1000" type="number" placeholder="Weight" required="required" min="0" max="9999" />
       <select id="itemCategory" required="required">
         <option value="" disabled="disabled" selected="selected">
           Category
         </option>
-        <option value="Bags">Bags</option>
-        <option value="Clothing">Clothing</option>
-        <option value="Footwear">Footwear</option>
-        <option value="Grooming">Grooming</option>
-        <option value="Electronics">Electronics</option>
-        <option value="Medical">Medical</option>
-        <option value="Food Items">Food Items</option>
-        <option value="Necessities">Necessities</option>
-        <option value="Others">Others</option>
+        <option value="bags" selected="selected">Bags</option>
+        <option value="clothing">Clothing</option>
+        <option value="footwear">Footwear</option>
+        <option value="grooming">Grooming</option>
+        <option value="electronics">Electronics</option>
+        <option value="hygiene">Hygiene</option>
+        <option value="meds">Meds</option>
+        <option value="consumables">Consumables</option>
+        <option value="necessities">Necessities</option>
+        <option value="other">Other</option>
       </select>
 
-      <input id="itemSubcategory" placeholder="Subcategory" autocomplete="on" />
+      <input id="itemSubcategory" value="Item Subcategory" placeholder="Subcategory" autocomplete="on" />
 
       <select id="itemPriority" required="required">
-        <option value="priority1">Priority 1</option>
-        <option value="priority2">Priority 2</option>
-        <option value="priority3">Priority 3</option>
-
+        <option value="1">Priority 1</option>
+        <option value="2">Priority 2</option>
+        <option value="3">Priority 3</option>
       </select>
       <select id="itemBagType" required="required">
         <option value="carryOn">Carry-On</option>
         <option value="personalItem">Personal Item</option>
       </select>
-      <input type="submit" value="+">
+      <input type="submit" value="+" />
     </form>
   </section>
-  <section class="itemList">
-    <h3>Item List</h3>
-    <article class="itemListItem">
-      <div class="itemName">Peak Design Travel Backpack 30L</div>
-      <div class="itemAmount">1x</div>
-      <div class="itemWeight">1385</div>
-      <div class="itemTotalWeight"><span class="mobileOnlyInfo">Total Weight: </span>1385</div>
-      <div class="itemCategory">Bags</div>
-      <div class="itemSubcategory">Backpack</div>
-      <div class="itemPriority">Prio 1</div>
-      <div class="itemBagType">Carry-On</div>
+  <button onclick="localStorage.clear()">Clear Local Storage</button>
+  <section class="itemList bagCarryOn">
+    <h3>Carry-On</h3>
+    <fieldset class="filters">
+      <legend>Filter by category:</legend>
+
+      <label for="bags">Bags<input type="checkbox" name="Bags" id="bags" /></label>
+      <label for="clothing">Clothing<input type="checkbox" name="clothing" id="clothing" />
+      </label>
+      <label for="footwear">Footwear<input type="checkbox" name="footwear" id="footwear" />
+      </label>
+      <label for="grooming">Grooming<input type="checkbox" name="grooming" id="grooming" />
+      </label>
+      <label for="electronics">Electronics<input type="checkbox" name="electronics" id="electronics" />
+      </label>
+      <label for="hygiene">Hygiene<input type="checkbox" name="hygiene" id="hygiene" />
+      </label>
+      <label for="medical">Medical<input type="checkbox" name="medical" id="medical" />
+      </label>
+      <label for="consumables">Consumables<input type="checkbox" name="consumables" id="consumables" />
+      </label>
+      <label for="necessities">Necessities<input type="checkbox" name="necessities" id="necessities" />
+      </label>
+      <label for="other">Other<input type="checkbox" name="other" id="other" />
+      </label>
+    </fieldset>
+    <article class="itemListHeader">
+      <div class="itemName">Item Name</div>
+      <div class="itemAmount">Amount</div>
+      <div class="itemWeight">Item Weight</div>
+      <div class="itemTotalWeight">Total Weight</div>
+      <div class="itemPriority">Priority</div>
+      <div class="itemCategory">Category</div>
+      <div class="itemSubcategory">Subcategory</div>
     </article>
-    <article class="itemListItem">
+    <!-- <article class="itemListItem bags carryOn">
       <div class="itemName">Peak Design Packing Cube Medium</div>
       <div class="itemAmount">1x</div>
       <div class="itemWeight">142</div>
-      <div class="itemTotalWeight"><span class="mobileOnlyInfo">Total Weight: </span>142</div>
+      <div class="itemTotalWeight">
+        <span class="mobileOnlyInfo">Total: </span>142
+      </div>
+      <div class="itemPriority"><span class="mobileOnlyInfo">Prio </span>1</div>
       <div class="itemCategory">Bags</div>
       <div class="itemSubcategory">Packing Cube</div>
-      <div class="itemPriority">Prio 1</div>
-      <div class="itemBagType">Carry-On</div>
     </article>
-    <article class="itemListItem">
+    <article class="itemListItem bags carryOn">
       <div class="itemName">Matador Freerain22</div>
       <div class="itemAmount">1x</div>
       <div class="itemWeight">278</div>
-      <div class="itemTotalWeight"><span class="mobileOnlyInfo">Total Weight: </span>278</div>
+      <div class="itemTotalWeight">
+        <span class="mobileOnlyInfo">Total: </span>278
+      </div>
+      <div class="itemPriority"><span class="mobileOnlyInfo">Prio </span>1</div>
       <div class="itemCategory">Bags</div>
       <div class="itemSubcategory">Backpack</div>
-      <div class="itemPriority">Prio 1</div>
-      <div class="itemBagType">Carry-On</div>
     </article>
-    <article class="itemListItem">
+    <article class="itemListItem bags personalItem">
       <div class="itemName">Heimplanet Transit Line Sling Pocket XL</div>
       <div class="itemAmount">1x</div>
       <div class="itemWeight">300</div>
-      <div class="itemTotalWeight"><span class="mobileOnlyInfo">Total Weight: </span>300</div>
+      <div class="itemTotalWeight">
+        <span class="mobileOnlyInfo">Total: </span>300
+      </div>
+      <div class="itemPriority"><span class="mobileOnlyInfo">Prio </span>1</div>
       <div class="itemCategory">Bags</div>
       <div class="itemSubcategory">Sling Bag</div>
-      <div class="itemPriority">Prio 1</div>
-      <div class="itemBagType">Personal Item</div>
     </article>
-    <article class="itemListItem">
+    <article class="itemListItem electronics carryOn">
       <div class="itemName">Fujifilm X-T5</div>
       <div class="itemAmount">1x</div>
       <div class="itemWeight">570</div>
-      <div class="itemTotalWeight"><span class="mobileOnlyInfo">Total Weight: </span>570</div>
+      <div class="itemTotalWeight">
+        <span class="mobileOnlyInfo">Total: </span>570
+      </div>
+      <div class="itemPriority"><span class="mobileOnlyInfo">Prio </span>1</div>
       <div class="itemCategory">Electronics</div>
       <div class="itemSubcategory">Camera Gear</div>
-      <div class="itemPriority">Prio 1</div>
-      <div class="itemBagType">Carry-On</div>
     </article>
-    <article class="itemListItem">
+    <article class="itemListItem electronics carryOn">
       <div class="itemName">Fujifilm XF16-80mm f4</div>
       <div class="itemAmount">1x</div>
       <div class="itemWeight">501</div>
-      <div class="itemTotalWeight"><span class="mobileOnlyInfo">Total Weight: </span>501</div>
+      <div class="itemTotalWeight">
+        <span class="mobileOnlyInfo">Total: </span>501
+      </div>
+      <div class="itemPriority"><span class="mobileOnlyInfo">Prio </span>1</div>
       <div class="itemCategory">Electronics</div>
       <div class="itemSubcategory">Camera Gear</div>
-      <div class="itemPriority">Prio 1</div>
-      <div class="itemBagType">Carry-On</div>
     </article>
-    <article class="itemListItem">
+    <article class="itemListItem clothing carryOn">
       <div class="itemName">Devold Running Merino Cover Zip Neck</div>
       <div class="itemAmount">1x</div>
       <div class="itemWeight">210</div>
-      <div class="itemTotalWeight"><span class="mobileOnlyInfo">Total Weight: </span>210</div>
+      <div class="itemTotalWeight">
+        <span class="mobileOnlyInfo">Total: </span>210
+      </div>
+      <div class="itemPriority"><span class="mobileOnlyInfo">Prio </span>1</div>
       <div class="itemCategory">Clothing</div>
       <div class="itemSubcategory">Shirt</div>
-      <div class="itemPriority">Prio 1</div>
-      <div class="itemBagType">Carry-On</div>
     </article>
-    <article class="itemListItem">
+    <article class="itemListItem clothing carryOn">
       <div class="itemName">Calvin Klein Underwear</div>
       <div class="itemAmount">4x</div>
       <div class="itemWeight">53</div>
-      <div class="itemTotalWeight"><span class="mobileOnlyInfo">Total Weight: </span>212</div>
+      <div class="itemTotalWeight">
+        <span class="mobileOnlyInfo">Total: </span>212
+      </div>
+      <div class="itemPriority"><span class="mobileOnlyInfo">Prio </span>1</div>
       <div class="itemCategory">Clothing</div>
       <div class="itemSubcategory">Underwear</div>
-      <div class="itemPriority">Prio 1</div>
-      <div class="itemBagType">Carry-On</div>
     </article>
-    <article class="itemListItem itemListSummary">
-      <div class="itemName">Total Weight:</div>
-      <div class="totalWeight">1493</div>
+    <article class="itemListItem footwear carryOn">
+      <div class="itemName">ON Running Cloudtech</div>
+      <div class="itemAmount">1x</div>
+      <div class="itemWeight">528</div>
+      <div class="itemTotalWeight">
+        <span class="mobileOnlyInfo">Total: </span>528
+      </div>
+      <div class="itemPriority"><span class="mobileOnlyInfo">Prio </span>1</div>
+      <div class="itemCategory">Footwear</div>
+      <div class="itemSubcategory">Shoes</div>
+    </article>
+    <article class="itemListItem necessities personalItem">
+      <div class="itemName">Passport</div>
+      <div class="itemAmount">1x</div>
+      <div class="itemWeight">35</div>
+      <div class="itemTotalWeight">
+        <span class="mobileOnlyInfo">Total: </span>35
+      </div>
+      <div class="itemPriority"><span class="mobileOnlyInfo">Prio </span>1</div>
+      <div class="itemCategory">Necessities</div>
+      <div class="itemSubcategory">Documents</div>
+    </article> -->
+    <article class="itemListItem itemListSummary carryOn">
+      <div class="itemName">Total Weight</div>
+      <div class="totalWeight" id="carryOnTotalWeight"></div>
+    </article>
+  </section>
+  <section class="itemList bagPersonalItem">
+    <h3>Personal Item</h3>
+    <fieldset class="filters">
+      <legend>Filter by category:</legend>
+
+      <label for="bags2">Bags<input type="checkbox" name="bags2" id="bags2" /></label>
+      <label for="clothing2">Clothing<input type="checkbox" name="clothing2" id="clothing2" />
+      </label>
+      <label for="footwear2">Footwear<input type="checkbox" name="footwear2" id="footwear2" />
+      </label>
+      <label for="grooming2">Grooming<input type="checkbox" name="grooming2" id="grooming2" />
+      </label>
+      <label for="electronics2">Electronics<input type="checkbox" name="electronics2" id="electronics2" />
+      </label>
+      <label for="medical2">Medical<input type="checkbox" name="medical2" id="medical2" />
+      </label>
+      <label for="consumables2">Consumables<input type="checkbox" name="consumables2" id="consumables2" />
+      </label>
+      <label for="necessities2">Necessities<input type="checkbox" name="necessities2" id="necessities2" />
+      </label>
+      <label for="other2">Other<input type="checkbox" name="other2" id="other2" />
+      </label>
+    </fieldset>
+    <article class="itemListHeader">
+      <div class="itemName">Item Name</div>
+      <div class="itemAmount">Amount</div>
+      <div class="itemWeight">Item Weight</div>
+      <div class="itemTotalWeight">Total Weight</div>
+      <div class="itemPriority">Priority</div>
+      <div class="itemCategory">Category</div>
+      <div class="itemSubcategory">Subcategory</div>
+    </article>
+    <!-- <article class="itemListItem bags carryOn">
+      <div class="itemName">Peak Design Travel Backpack 30L</div>
+      <div class="itemAmount">1x</div>
+      <div class="itemWeight">1385</div>
+      <div class="itemTotalWeight">
+        <span class="mobileOnlyInfo">Total: </span>1385
+      </div>
+      <div class="itemPriority"><span class="mobileOnlyInfo">Prio </span>1</div>
+      <div class="itemCategory">Bags</div>
+      <div class="itemSubcategory">Backpack</div>
+    </article>
+    <article class="itemListItem bags carryOn">
+      <div class="itemName">Peak Design Packing Cube Medium</div>
+      <div class="itemAmount">1x</div>
+      <div class="itemWeight">142</div>
+      <div class="itemTotalWeight">
+        <span class="mobileOnlyInfo">Total: </span>142
+      </div>
+      <div class="itemPriority"><span class="mobileOnlyInfo">Prio </span>1</div>
+      <div class="itemCategory">Bags</div>
+      <div class="itemSubcategory">Packing Cube</div>
+    </article>
+    <article class="itemListItem bags carryOn">
+      <div class="itemName">Matador Freerain22</div>
+      <div class="itemAmount">1x</div>
+      <div class="itemWeight">278</div>
+      <div class="itemTotalWeight">
+        <span class="mobileOnlyInfo">Total: </span>278
+      </div>
+      <div class="itemPriority"><span class="mobileOnlyInfo">Prio </span>1</div>
+      <div class="itemCategory">Bags</div>
+      <div class="itemSubcategory">Backpack</div>
+    </article>
+    <article class="itemListItem bags personalItem">
+      <div class="itemName">Heimplanet Transit Line Sling Pocket XL</div>
+      <div class="itemAmount">1x</div>
+      <div class="itemWeight">300</div>
+      <div class="itemTotalWeight">
+        <span class="mobileOnlyInfo">Total: </span>300
+      </div>
+      <div class="itemPriority"><span class="mobileOnlyInfo">Prio </span>1</div>
+      <div class="itemCategory">Bags</div>
+      <div class="itemSubcategory">Sling Bag</div>
+    </article>
+    <article class="itemListItem electronics carryOn">
+      <div class="itemName">Fujifilm X-T5</div>
+      <div class="itemAmount">1x</div>
+      <div class="itemWeight">570</div>
+      <div class="itemTotalWeight">
+        <span class="mobileOnlyInfo">Total: </span>570
+      </div>
+      <div class="itemPriority"><span class="mobileOnlyInfo">Prio </span>1</div>
+      <div class="itemCategory">Electronics</div>
+      <div class="itemSubcategory">Camera Gear</div>
+    </article>
+    <article class="itemListItem electronics carryOn">
+      <div class="itemName">Fujifilm XF16-80mm f4</div>
+      <div class="itemAmount">1x</div>
+      <div class="itemWeight">501</div>
+      <div class="itemTotalWeight">
+        <span class="mobileOnlyInfo">Total: </span>501
+      </div>
+      <div class="itemPriority"><span class="mobileOnlyInfo">Prio </span>1</div>
+      <div class="itemCategory">Electronics</div>
+      <div class="itemSubcategory">Camera Gear</div>
+    </article>
+    <article class="itemListItem electronics personalItem">
+      <div class="itemName">Airpods Pro 2</div>
+      <div class="itemAmount">1x</div>
+      <div class="itemWeight">61</div>
+      <div class="itemTotalWeight">
+        <span class="mobileOnlyInfo">Total: </span>61
+      </div>
+      <div class="itemPriority"><span class="mobileOnlyInfo">Prio </span>1</div>
+      <div class="itemCategory">Electronics</div>
+      <div class="itemSubcategory">Headphones</div>
+    </article>
+    <article class="itemListItem clothing carryOn">
+      <div class="itemName">Devold Running Merino Cover Zip Neck</div>
+      <div class="itemAmount">1x</div>
+      <div class="itemWeight">210</div>
+      <div class="itemTotalWeight">
+        <span class="mobileOnlyInfo">Total: </span>210
+      </div>
+      <div class="itemPriority"><span class="mobileOnlyInfo">Prio </span>1</div>
+      <div class="itemCategory">Clothing</div>
+      <div class="itemSubcategory">Shirt</div>
+    </article>
+    <article class="itemListItem clothing carryOn">
+      <div class="itemName">Calvin Klein Underwear</div>
+      <div class="itemAmount">4x</div>
+      <div class="itemWeight">53</div>
+      <div class="itemTotalWeight">
+        <span class="mobileOnlyInfo">Total: </span>212
+      </div>
+      <div class="itemPriority"><span class="mobileOnlyInfo">Prio </span>1</div>
+      <div class="itemCategory">Clothing</div>
+      <div class="itemSubcategory">Underwear</div>
+    </article>
+    <article class="itemListItem footwear carryOn">
+      <div class="itemName">ON Running Cloudtech</div>
+      <div class="itemAmount">1x</div>
+      <div class="itemWeight">528</div>
+      <div class="itemTotalWeight">
+        <span class="mobileOnlyInfo">Total: </span>528
+      </div>
+      <div class="itemPriority"><span class="mobileOnlyInfo">Prio </span>1</div>
+      <div class="itemCategory">Footwear</div>
+      <div class="itemSubcategory">Shoes</div>
+    </article>
+    <article class="itemListItem necessities personalItem">
+      <div class="itemName">Passport</div>
+      <div class="itemAmount">1x</div>
+      <div class="itemWeight">35</div>
+      <div class="itemTotalWeight">
+        <span class="mobileOnlyInfo">Total: </span>35
+      </div>
+      <div class="itemPriority"><span class="mobileOnlyInfo">Prio </span>1</div>
+      <div class="itemCategory">Necessities</div>
+      <div class="itemSubcategory">Documents</div>
+    </article> -->
+    <article class="itemListItem itemListSummary personalItem">
+      <div class="itemName">Total Weight</div>
+      <div class="totalWeight" id="personalItemTotalWeight"></div>
     </article>
   </section>
   <section class="itemCharts">
     <h3>Charts</h3>
-    <img src="https://place-hold.it/600x400" alt="">
-    <img src="https://place-hold.it/600x400" alt="">
-
+    <img src="https://place-hold.it/600x400" alt="" />
+    <img src="https://place-hold.it/600x400" alt="" />
   </section>
+  <script>
+    window.onload = loadOBItems;
+    var totalWeight = 0;
+    var targetCarryOn = document.querySelector(".bagCarryOn");
+    var itemListSummaryCarryOn = document.querySelector(".itemListSummary.carryOn");
+    function loadOBItems() {
+      const itemsArray = localStorage.getItem("items")
+        ? JSON.parse(localStorage.getItem("items"))
+        : [];
+
+      var targetCarryOn = document.querySelector(".bagCarryOn");
+      var carryOnTotalWeight = document.getElementById("carryOnTotalWeight");
+
+      itemsArray.forEach((item) => {
+        const itemListItem = document.createElement("article");
+        itemListItem.classList.add("itemListItem");
+        itemListItem.classList.add(item.itemCategory);
+        itemListItem.classList.add(item.itemBagType);
+        itemTotalWeight = item.itemAmount * item.itemWeight;
+        totalWeight += itemTotalWeight;
+        itemListItem.innerHTML =
+          '<div class="itemName">' +
+          item.itemName +
+          '</div><div class="itemAmount">' +
+          item.itemAmount +
+          '</div><div class="itemWeight">' +
+          item.itemWeight +
+          '</div><div class="itemTotalWeight"><span class="mobileOnlyInfo">Total: </span>' +
+          itemTotalWeight +
+          '</div><div class="itemPriority"><span class="mobileOnlyInfo">Prio: </span>' +
+          item.itemPriority +
+          '</div><div class="itemCategory">' +
+          item.itemCategory.charAt(0).toUpperCase() +
+          item.itemCategory.slice(1) +
+          '</div><div class="itemSubcategory">' +
+          item.itemSubcategory +
+          "</div>";
+        targetCarryOn.insertBefore(itemListItem, itemListSummaryCarryOn);
+      });
+      carryOnTotalWeight.innerHTML = totalWeight;
+
+    }
+
+    function addListItem() {
+      event.preventDefault();
+      const itemsArray = localStorage.getItem("items")
+        ? JSON.parse(localStorage.getItem("items"))
+        : [];
+
+
+      var itemName = document.getElementById("itemName").value;
+      var itemAmount = document.getElementById("itemAmount").value;
+      var itemWeight = document.getElementById("itemWeight").value;
+      var itemCategory = document.getElementById("itemCategory").value;
+      var itemSubcategory = document.getElementById("itemSubcategory").value;
+      var itemPriority = document.getElementById("itemPriority").value;
+      var itemBagType = document.getElementById("itemBagType").value;
+      var totalWeightDiv = document.get;
+
+      var itemTotalWeight = itemAmount * itemWeight;
+      totalWeight += itemTotalWeight;
+      carryOnTotalWeight.innerHTML = totalWeight;
+
+      var article = document.createElement("article");
+      article.classList.add("itemListItem");
+      article.classList.add(itemCategory);
+      article.classList.add(itemBagType);
+
+      article.innerHTML =
+        '<div class="itemName">' +
+        itemName +
+        '</div><div class="itemAmount">' +
+        itemAmount +
+        '</div><div class="itemWeight">' +
+        itemWeight +
+        '</div><div class="itemTotalWeight"><span class="mobileOnlyInfo">Total: </span>' +
+        itemTotalWeight +
+        '</div><div class="itemPriority">' +
+        itemPriority +
+        '</div><div class="itemCategory">' +
+        itemCategory.charAt(0).toUpperCase() +
+        itemCategory.slice(1) +
+        '</div><div class="itemSubcategory">' +
+        itemSubcategory +
+        "</div>";
+
+      targetCarryOn.insertBefore(article, itemListSummaryCarryOn);
+      itemsArray.push({
+        itemName: itemName,
+        itemAmount: itemAmount,
+        itemWeight: itemWeight,
+        itemCategory: itemCategory,
+        itemSubcategory: itemSubcategory,
+        itemPriority: itemPriority,
+        itemBagType: itemBagType,
+      });
+      localStorage.setItem("items", JSON.stringify(itemsArray));
+    }
+  </script>
 </body>
 
 </html>

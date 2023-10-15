@@ -1,6 +1,7 @@
 :root {
   font-family: "JetBrains Mono", monospace;
-  color-scheme: dark;
+  color-scheme: dark light;
+  --clr-accent: #0075ff;
 }
 
 *,
@@ -42,47 +43,87 @@ select {
   padding: 0.75rem 2rem;
   border: 2px solid grey;
 }
+
 input:focus,
 select:focus {
-  outline: 2px solid #0075ff;
-}
-
-fieldset label {
-  cursor: pointer;
-  margin: 0;
-}
-fieldset label:hover {
-  font-weight: 900;
-}
-
-fieldset label:focus {
-  font-weight: 900;
-}
-input[type="radio"] {
-  opacity: 0;
-  width: 0;
-  height: 0;
-  position: absolute;
-}
-input[type="radio"]:checked + label {
-  color: #0075ff;
-  font-weight: 900;
-}
-
-input[type="radio"]:focus + label {
-  color: red;
+  outline: 2px solid var(--clr-accent);
 }
 
 input[type="submit"] {
   padding: 1rem;
   font-size: 1.5rem;
   border: 2px solid grey;
-  background-color: #0075ff;
+  background-color: var(--clr-accent);
 }
+
+/* FILTERS */
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0.5rem;
+  gap: 1rem;
+  margin-block: 1rem;
+}
+
+.filters input {
+  visibility: hidden;
+  margin: 0;
+  padding: 0;
+  height: 0;
+  width: 0;
+}
+
+.filters label:hover {
+  cursor: pointer;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.filters label:has(input:checked) {
+  color: var(--clr-accent);
+}
+
+/* Display all articles when no filter is :checked */
+.filters:has(:not(:checked))~.itemListItem {
+  display: grid;
+}
+
+/* Hide all articles when at least one filter is :checked */
+.filters:has(:checked)~.itemListItem {
+  display: none;
+}
+
+/* Display any article that has its corresponding filter :checked */
+.filters:has(#bags:checked)~article.carryOn.bags,
+.filters:has(#clothing:checked)~article.carryOn.clothing,
+.filters:has(#footwear:checked)~article.carryOn.footwear,
+.filters:has(#grooming:checked)~article.carryOn.grooming,
+.filters:has(#electronics:checked)~article.carryOn.electronics,
+.filters:has(#hygiene:checked)~article.carryOn.hygiene,
+.filters:has(#medical:checked)~article.carryOn.medical,
+.filters:has(#consumables:checked)~article.carryOn.consumables,
+.filters:has(#necessities:checked)~article.carryOn.necessities,
+.filters:has(#other:checked)~article.carryOn.other,
+.filters:has(#bags2:checked)~article.personalItem.bags,
+.filters:has(#clothing2:checked)~article.personalItem.clothing,
+.filters:has(#footwear2:checked)~article.personalItem.footwear,
+.filters:has(#grooming2:checked)~article.personalItem.grooming,
+.filters:has(#electronics2:checked)~article.personalItem.electronics,
+.filters:has(#hygiene2:checked)~article.personalItem.hygiene,
+.filters:has(#medical2:checked)~article.personalItem.medical,
+.filters:has(#consumables2:checked)~article.personalItem.consumables,
+.filters:has(#necessities2:checked)~article.personalItem.necessities,
+.filters:has(#other2:checked)~article.personalItem.other {
+  display: grid;
+}
+
+/* ITEM LIST */
 
 .itemList {
   display: grid;
 }
+
 
 .itemListItem {
   display: grid;
@@ -90,9 +131,14 @@ input[type="submit"] {
   grid-template-columns: repeat(6, 1fr);
   max-width: 95dvw;
   text-align: center;
-  line-break: strict;
+  /* line-break: strict; */
   padding-block: 0.5rem;
-  column-gap: 0.5rem;
+  column-gap: 1rem;
+  border-bottom: 1px solid grey;
+}
+
+.itemListHeader {
+  display: none;
 }
 
 .itemListItem :not(.itemName, .itemTotalWeight .mobileOnlyInfo) {
@@ -109,13 +155,13 @@ input[type="submit"] {
 }
 
 .itemName,
+.itemPriority,
 .itemTotalWeight {
   grid-column: span 6;
 }
 
 .itemAmount,
-.itemCategory,
-.itemPriority {
+.itemCategory {
   text-align: end;
 }
 
@@ -125,28 +171,16 @@ input[type="submit"] {
   text-align: start;
 }
 
-.itemList article:nth-of-type(2n + 1) {
-  background: rgba(50, 50, 50);
-}
-
-.itemList article:last-of-type {
-  background: transparent;
-}
-
 .itemListItem.itemListSummary .totalWeight,
 .itemListItem.itemListSummary .itemName {
   grid-column: span 6;
   font-size: larger;
-  color: #0075ff;
+  color: var(--clr-accent);
 }
 
 .itemCharts img {
   width: 100%;
   height: auto;
-}
-
-.itemWeight .mobileOnlyInfo {
-  display: none;
 }
 
 @media (min-width: 64rem) {
@@ -159,42 +193,50 @@ input[type="submit"] {
   select {
     padding-inline: 1rem 0;
   }
+
   #itemName {
     grid-column: span 6;
   }
+
   #itemCategory,
   #itemSubcategory {
     grid-column: span 1;
   }
+
   input[type="submit"] {
     grid-column: span 6;
   }
 
-  .mobileOnlyInfo {
-    display: none;
+  .itemListHeader {
+    display: grid;
+    border-bottom: 2px solid grey;
+    font-size: 0.75rem;
   }
 
-  .itemListItem {
-    display: grid;
-    grid-template-columns: 2fr 5ch 5ch 5ch 11ch 1fr 6ch 15ch;
+  .itemListItem,
+  .itemListHeader {
+    grid-template-columns: 1fr 3rem 3rem 3rem 2rem 7rem 1fr;
     grid-template-rows: 1fr;
-    grid-template-areas: "itemName itemAmount itemWeight itemTotalWeight itemCategory itemSubcategory itemPriority itemBagType";
+    grid-template-areas: "itemName itemAmount itemWeight itemTotalWeight itemCategory itemSubcategory itemPriority";
     gap: 1rem;
     text-align: start;
 
-    & > * {
+    &>* {
       grid-column: span 1;
       padding: 0 0.25rem;
     }
   }
+
   .itemAmount {
     text-align: end;
   }
+
   .itemWeight,
   .itemTotalWeight,
   .totalWeight {
     text-align: end;
   }
+
   .itemAmount,
   .itemName {
     grid-column: span 1;
@@ -209,8 +251,12 @@ input[type="submit"] {
     grid-column: itemTotalWeight;
   }
 
+  .mobileOnlyInfo {
+    display: none;
+  }
+
   .itemCharts img {
-    max-width: calc(47.5dvw - 5px);
+    max-width: calc(50% - 5px);
     height: auto;
   }
 }
