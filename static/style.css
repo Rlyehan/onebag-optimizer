@@ -235,7 +235,7 @@ input[type="submit"] {
   }
   .itemListItem .deleteItem {
     top: 50%;
-    right: 0;
+    right: .5rem;
     translate: 0 -50%;
     opacity: 0;
     border: none;
