@@ -11,13 +11,13 @@ import (
 )
 
 type TravelItem struct {
-	Name        string  `json:"name"`
-	Amount      int     `json:"amount"`
-	Weight      int		`json:"weight"`
-	Category    string  `json:"category"`
-	Subcategory string  `json:"subcategory"`
-	Priority    int	    `json:"priority"`
-	BagType     int     `json:"bagtype"`
+	Name        string  `json:"itemName"`
+	Amount      int     `json:"itemAmount"`
+	Weight      int     `json:"itemWeight"`
+	Category    string  `json:"itemCategory"`
+	Subcategory string  `json:"itemSubcategory"`
+	Priority    int     `json:"itemPriority"`
+	BagType     int     `json:"itemBagType"`
 }
 
 type AnalysisResult struct {

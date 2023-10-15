@@ -75,22 +75,22 @@ func TestProcessHandler(t *testing.T) {
 
 	reqBody := `[
 		{
-			"name": "TestItem1",
-			"amount": 2,
-			"weight": 500,
-			"category": "clothing",
-			"subcategory": "shirts",
-			"priority": 1,
-			"bagtype": 1
+			"itemName": "TestItem1",
+			"itemAmount": 2,
+			"itemWeight": 500,
+			"itemCategory": "clothing",
+			"itemSubcategory": "shirts",
+			"itemPriority": 1,
+			"itemBagType": 1
 		},
 		{
-			"name": "TestItem2",
-			"amount": 1,
-			"weight": 1000,
-			"category": "electronics",
-			"subcategory": "laptop",
-			"priority": 2,
-			"bagtype": 2
+			"itemName": "TestItem2",
+			"itemAmount": 1,
+			"itemWeight": 1000,
+			"itemCategory": "electronics",
+			"itemSubcategory": "laptop",
+			"itemPriority": 2,
+			"itemBagType": 2
 		}
 	]`
 	req, err := http.NewRequest("POST", "/process", bytes.NewBufferString(reqBody))
