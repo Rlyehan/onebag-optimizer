@@ -351,15 +351,20 @@
   <script>
     window.onload = loadOBItems;
     var totalWeight = 0;
+    var totalWeightCarryOn = 0;
+    var totalWeightPersonalItem = 0;
     var targetCarryOn = document.querySelector(".bagCarryOn");
     var itemListSummaryCarryOn = document.querySelector(".itemListSummary.carryOn");
+    var targetPersonalItem = document.querySelector(".bagPersonalItem");
+    var itemListSummaryPersonalItem = document.querySelector(".itemListSummary.personalItem");
+
     function loadOBItems() {
       const itemsArray = localStorage.getItem("items")
         ? JSON.parse(localStorage.getItem("items"))
         : [];
 
-      var targetCarryOn = document.querySelector(".bagCarryOn");
       var carryOnTotalWeight = document.getElementById("carryOnTotalWeight");
+      var personalItemTotalWeight = document.getElementById("personalItemTotalWeight");
 
       itemsArray.forEach((item) => {
         const itemListItem = document.createElement("article");
@@ -367,7 +372,6 @@
         itemListItem.classList.add(item.itemCategory);
         itemListItem.classList.add(item.itemBagType);
         itemTotalWeight = item.itemAmount * item.itemWeight;
-        totalWeight += itemTotalWeight;
         itemListItem.innerHTML =
           '<div class="itemName">' +
           item.itemName +
@@ -385,10 +389,17 @@
           '</div><div class="itemSubcategory">' +
           item.itemSubcategory +
           "</div>";
-        targetCarryOn.insertBefore(itemListItem, itemListSummaryCarryOn);
-      });
-      carryOnTotalWeight.innerHTML = totalWeight;
+        if (item.itemBagType == "carryOn") {
+          targetCarryOn.insertBefore(itemListItem, itemListSummaryCarryOn);
+          totalWeightCarryOn += itemTotalWeight;
+          carryOnTotalWeight.innerHTML = totalWeightCarryOn;
+        } else if (item.itemBagType == "personalItem") {
+          targetPersonalItem.insertBefore(itemListItem, itemListSummaryPersonalItem);
+          totalWeightPersonalItem += itemTotalWeight;
+          personalItemTotalWeight.innerHTML = totalWeightPersonalItem;
+        };
 
+      })
     }
 
     function addListItem() {
@@ -396,7 +407,6 @@
       const itemsArray = localStorage.getItem("items")
         ? JSON.parse(localStorage.getItem("items"))
         : [];
-
 
       var itemName = document.getElementById("itemName").value;
       var itemAmount = document.getElementById("itemAmount").value;
@@ -408,8 +418,7 @@
       var totalWeightDiv = document.get;
 
       var itemTotalWeight = itemAmount * itemWeight;
-      totalWeight += itemTotalWeight;
-      carryOnTotalWeight.innerHTML = totalWeight;
+
 
       var article = document.createElement("article");
       article.classList.add("itemListItem");
@@ -433,8 +442,16 @@
         '</div><div class="itemSubcategory">' +
         itemSubcategory +
         "</div>";
+      if (itemBagType == "carryOn") {
+        targetCarryOn.insertBefore(article, itemListSummaryCarryOn);
+        totalWeightCarryOn += itemTotalWeight;
+        carryOnTotalWeight.innerHTML = totalWeightCarryOn;
+      } else if (itemBagType == "personalItem") {
+        targetPersonalItem.insertBefore(article, itemListSummaryPersonalItem);
+        totalWeightPersonalItem += itemTotalWeight;
+        personalItemTotalWeight.innerHTML = totalWeightPersonalItem;
+      }
 
-      targetCarryOn.insertBefore(article, itemListSummaryCarryOn);
       itemsArray.push({
         itemName: itemName,
         itemAmount: itemAmount,
