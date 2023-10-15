@@ -26,6 +26,10 @@ type AnalysisResult struct {
 	TotalWeight      int
 	TopHeaviestItems []TravelItem
 	BagWeights       map[string]int
+	CategoryWeights  map[string]int
+	PriorityWeights  map[string]int
+	AverageWeight    int
+	CategoryWeightPercentage map[string]float64
 }
 
 type CategoryWeight struct {
@@ -89,6 +93,8 @@ func processHandler(w http.ResponseWriter, r *http.Request) {
 func dataProcessing(items []TravelItem) AnalysisResult {
 	totalWeight := 0
 	bagWeights := make(map[string]int)
+	categoryWeights := make(map[string]int)
+	priorityWeights := make(map[string]int)
 
 	for _, item := range items {
 		itemWeightInt := item.Weight
@@ -96,7 +102,11 @@ func dataProcessing(items []TravelItem) AnalysisResult {
 		itemTotalWeight := itemWeightInt * itemAmountInt
 		totalWeight += itemTotalWeight
 		bagWeights[item.BagType] += itemTotalWeight
+		priorityWeights[item.Priority] += itemTotalWeight
+		categoryWeights[item.Category] += itemTotalWeight
 	}
+
+	averageWeight := totalWeight / len(items)
 
 	sort.Slice(items, func(i, j int) bool {
 		weightI := items[i].Weight
@@ -111,10 +121,19 @@ func dataProcessing(items []TravelItem) AnalysisResult {
 
 	topHeaviestItems := items[:topItemsCount]
 
+	categoryWeightPercentage := make(map[string]float64)
+	for category, weight := range categoryWeights {
+		categoryWeightPercentage[category] = float64(weight) / float64(totalWeight) * 100
+	}
+
 	return AnalysisResult{
 		TotalWeight:      totalWeight,
 		TopHeaviestItems: topHeaviestItems,
 		BagWeights:       bagWeights,
+		AverageWeight:	  averageWeight,
+		PriorityWeights:  priorityWeights,
+		CategoryWeights:   categoryWeights,
+		CategoryWeightPercentage: categoryWeightPercentage,
 	}
 }
 
