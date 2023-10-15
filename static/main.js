@@ -67,8 +67,8 @@ function addListItem() {
     : [];
 
   var itemName = document.getElementById("itemName").value;
-  var itemAmount = document.getElementById("itemAmount").value;
-  var itemWeight = document.getElementById("itemWeight").value;
+  var itemAmount = parseInt(document.getElementById("itemAmount").value);
+  var itemWeight = parseInt(document.getElementById("itemWeight").value);
   var itemCategory = document.getElementById("itemCategory").value;
   var itemSubcategory = document.getElementById("itemSubcategory").value;
   var itemPriority = document.getElementById("itemPriority").value;
@@ -135,7 +135,7 @@ function deleteItem(i) {
   itemsArray.splice(i, 1);
   console.log(itemsArray);
   localStorage.setItem("items", JSON.stringify(itemsArray));
-  location.reload();
+  // location.reload();
 }
 
 function sendData() {
