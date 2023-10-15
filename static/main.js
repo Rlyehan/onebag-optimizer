@@ -131,9 +131,11 @@ function activateDeleteListeners() {
 }
 
 function deleteItem(i) {
-  console.log(itemsArray);
+  // console.log(itemsArray);
   itemsArray.splice(i, 1);
-  console.log(itemsArray);
+  // console.log(itemsArray);
+  console.log(JSON.stringify(itemsArray));
+  
   localStorage.setItem("items", JSON.stringify(itemsArray));
   // location.reload();
 }
