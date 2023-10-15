@@ -58,10 +58,7 @@ function loadOBItems() {
     }
   });
   activateDeleteListeners();
-
 }
-
-
 
 function addListItem() {
   event.preventDefault();
@@ -130,8 +127,6 @@ function activateDeleteListeners() {
     dB.addEventListener("click", () => {
       deleteItem(i);
     });
-    console.log("added listener", i);
-
   });
 }
 
@@ -141,4 +136,14 @@ function deleteItem(i) {
   console.log(itemsArray);
   localStorage.setItem("items", JSON.stringify(itemsArray));
   location.reload();
+}
+
+function sendData() {
+  fetch("/process", {
+    method: "POST",
+    body: JSON.stringify(itemsArray),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8"
+    }
+  })
 }
