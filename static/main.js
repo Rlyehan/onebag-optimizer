@@ -1,5 +1,202 @@
 window.addEventListener("load", loadOBItems);
 
+
+// Sample data for testing
+const sampleData = [
+  {
+    itemName: "Sample Item 1",
+    itemAmount: 2,
+    itemWeight: 500,
+    itemCategory: "bags",
+    itemSubcategory: "Backpack",
+    itemPriority: "1",
+    itemBagType: "carryOn",
+  },
+  {
+    itemName: "Sample Item 2",
+    itemAmount: 3,
+    itemWeight: 300,
+    itemCategory: "clothing",
+    itemSubcategory: "T-Shirts",
+    itemPriority: "2",
+    itemBagType: "carryOn",
+  },
+  {
+    itemName: "Sample Item 3",
+    itemAmount: 1,
+    itemWeight: 750,
+    itemCategory: "footwear",
+    itemSubcategory: "Sneakers",
+    itemPriority: "1",
+    itemBagType: "carryOn",
+  },
+  {
+    itemName: "Sample Item 4",
+    itemAmount: 2,
+    itemWeight: 250,
+    itemCategory: "grooming",
+    itemSubcategory: "Toiletries",
+    itemPriority: "3",
+    itemBagType: "personalItem",
+  },
+  {
+    itemName: "Sample Item 5",
+    itemAmount: 1,
+    itemWeight: 1500,
+    itemCategory: "electronics",
+    itemSubcategory: "Laptop",
+    itemPriority: "1",
+    itemBagType: "carryOn",
+  },
+  {
+    itemName: "Sample Item 6",
+    itemAmount: 4,
+    itemWeight: 200,
+    itemCategory: "hygiene",
+    itemSubcategory: "Soap",
+    itemPriority: "2",
+    itemBagType: "personalItem",
+  },
+  {
+    itemName: "Sample Item 7",
+    itemAmount: 2,
+    itemWeight: 500,
+    itemCategory: "meds",
+    itemSubcategory: "Painkillers",
+    itemPriority: "2",
+    itemBagType: "carryOn",
+  },
+  {
+    itemName: "Sample Item 8",
+    itemAmount: 1,
+    itemWeight: 1000,
+    itemCategory: "consumables",
+    itemSubcategory: "Snacks",
+    itemPriority: "3",
+    itemBagType: "carryOn",
+  },
+  {
+    itemName: "Sample Item 9",
+    itemAmount: 1,
+    itemWeight: 500,
+    itemCategory: "necessities",
+    itemSubcategory: "Passport",
+    itemPriority: "1",
+    itemBagType: "personalItem",
+  },
+  {
+    itemName: "Sample Item 10",
+    itemAmount: 2,
+    itemWeight: 300,
+    itemCategory: "clothing",
+    itemSubcategory: "Shorts",
+    itemPriority: "2",
+    itemBagType: "carryOn",
+  },
+  {
+    itemName: "Sample Item 11",
+    itemAmount: 1,
+    itemWeight: 750,
+    itemCategory: "footwear",
+    itemSubcategory: "Sandals",
+    itemPriority: "1",
+    itemBagType: "carryOn",
+  },
+  {
+    itemName: "Sample Item 12",
+    itemAmount: 2,
+    itemWeight: 250,
+    itemCategory: "grooming",
+    itemSubcategory: "Toothbrush",
+    itemPriority: "3",
+    itemBagType: "personalItem",
+  },
+  {
+   itemName: "Sample Item 13",
+    itemAmount: 1,
+    itemWeight: 1500,
+    itemCategory: "electronics",
+    itemSubcategory: "Tablet",
+    itemPriority: "1",
+    itemBagType: "carryOn",
+  },
+  {
+   itemName: "Sample Item 14",
+    itemAmount: 4,
+    itemWeight: 200,
+    itemCategory: "hygiene",
+    itemSubcategory: "Shampoo",
+    itemPriority: "2",
+    itemBagType: "personalItem",
+  },
+  {
+   itemName: "Sample Item 15",
+    itemAmount: 2,
+    itemWeight: 500,
+    itemCategory: "meds",
+    itemSubcategory: "Antihistamines",
+    itemPriority: "2",
+    itemBagType: "carryOn",
+  },
+  {
+    itemName: "Sample Item 16",
+    itemAmount: 1,
+    itemWeight: 1000,
+    itemCategory: "consumables",
+    itemSubcategory: "Water Bottle",
+    itemPriority: "3",
+    itemBagType: "carryOn",
+  },
+  {
+    itemName: "Sample Item 17",
+    itemAmount: 1,
+    itemWeight: 500,
+    itemCategory: "necessities",
+    itemSubcategory: "Travel Adapter",
+    itemPriority: "1",
+    itemBagType: "personalItem",
+  },
+  {
+    itemName: "Sample Item 18",
+    itemAmount: 2,
+    itemWeight: 300,
+    itemCategory: "clothing",
+    itemSubcategory: "Shirts",
+    itemPriority: "2",
+    itemBagType: "carryOn",
+  },
+  {
+    itemName: "Sample Item 19",
+    itemAmount: 1,
+    itemWeight: 750,
+    itemCategory: "footwear",
+    itemSubcategory: "Slippers",
+    itemPriority: "1",
+    itemBagType: "carryOn",
+  },
+  {
+    itemName: "Sample Item 20",
+    itemAmount: 2,
+    itemWeight: 250,
+    itemCategory: "grooming",
+    itemSubcategory: "Razor",
+    itemPriority: "3",
+    itemBagType: "personalItem",
+  },
+  // Add more sample items here
+];
+
+
+// Function to set the sample data in localStorage
+function setSampleData() {
+  localStorage.setItem("items", JSON.stringify(sampleData));
+}
+
+// Call this function to set the sample data
+setSampleData();
+
+
+
 var targetCarryOn = document.querySelector(".bagCarryOn");
 var itemListSummaryCarryOn = document.querySelector(".itemListSummary.carryOn");
 var targetPersonalItem = document.querySelector(".bagPersonalItem");
@@ -7,12 +204,12 @@ var itemListSummaryPersonalItem = document.querySelector(".itemListSummary.perso
 
 function loadOBItems() {
   clearItemList();
-  var itemsArray = getItemsArray();
+  var itemArray = getitemArray();
 
-  if (itemsArray.length === 0) {
+  if (itemArray.length === 0) {
     displayNoItemsMessage();
   } else {
-    renderItems(itemsArray);
+    renderItems(itemArray);
   }
 
   activateDeleteListeners();
@@ -35,15 +232,15 @@ function displayNoItemsMessageInBag(target) {
   target.insertBefore(itemListItem, target.querySelector(".itemListSummary"));
 }
 
-function renderItems(itemsArray) {
+function renderItems(itemArray) {
   var totalWeightCarryOn = 0;
   var totalWeightPersonalItem = 0;
   var carryOnTotalWeight = document.getElementById("carryOnTotalWeight");
   var personalItemTotalWeight = document.getElementById("personalItemTotalWeight");
 
-  itemsArray.forEach((item) => {
+  itemArray.forEach((item, index) => {
     var itemTotalWeight = item.itemAmount * item.itemWeight;
-    const itemListItem = createItemListItem(item, itemTotalWeight);
+    const itemListItem = createItemListItem(item, itemTotalWeight, index);
   
     if (item.itemBagType == "carryOn") {
       targetCarryOn.insertBefore(itemListItem, itemListSummaryCarryOn);
@@ -57,7 +254,7 @@ function renderItems(itemsArray) {
   });
 }
 
-function createItemListItem(item, itemTotalWeight) {
+function createItemListItem(item, itemTotalWeight, index) {
   const itemListItem = document.createElement("article");
   itemListItem.classList.add("itemListItem");
   itemListItem.classList.add(item.itemCategory);
@@ -72,11 +269,14 @@ function createItemListItem(item, itemTotalWeight) {
     <div class="itemSubcategory">${item.itemSubcategory}
     <span class="deleteItem">❌</button>`;
 
+    itemListItem.innerHTML += `
+    <span class="deleteItem" data-index="${index}">❌</span>
+  `;
   return itemListItem;
 }
 
 function addListItem() {
-  var itemsArray = getItemsArray();
+  var itemArray = getitemArray();
 
   var itemName = document.getElementById("itemName").value;
   var itemAmount = parseInt(document.getElementById("itemAmount").value);
@@ -87,7 +287,7 @@ function addListItem() {
   var itemBagType = document.getElementById("itemBagType").value;
   event.preventDefault();
 
-  itemsArray.push({
+  itemArray.push({
     itemName: itemName,
     itemAmount: itemAmount,
     itemWeight: itemWeight,
@@ -96,39 +296,42 @@ function addListItem() {
     itemPriority: itemPriority,
     itemBagType: itemBagType,
   });
-  setItemsArray(itemsArray);
+  setitemArray(itemArray);
   loadOBItems();
 }
 
-function getItemsArray() {
+function getitemArray() {
   return JSON.parse(localStorage.getItem("items")) || [];
 }
 
-function setItemsArray(itemsArray) {
-  localStorage.setItem("items", JSON.stringify(itemsArray));
+function setitemArray(itemArray) {
+  localStorage.setItem("items", JSON.stringify(itemArray));
 }
 
 function activateDeleteListeners() {
   let deleteBtn = document.querySelectorAll(".deleteItem");
-  deleteBtn.forEach((dB, i) => {
+  deleteBtn.forEach((dB) => {
     dB.addEventListener("click", () => {
-      deleteItem(i);
+      // Get the index from the data-index attribute
+      const index = dB.getAttribute("data-index");
+      deleteItem(index);
     });
   });
 }
 
 function deleteItem(i) {
-  var itemsArray = getItemsArray();
-  itemsArray.splice(i, 1);
-  setItemsArray(itemsArray);
+  var itemArray = getitemArray();
+  itemArray.splice(i, 1);
+  setitemArray(itemArray);
   loadOBItems();
 }
 
 function sendData() {
-  var itemsArray = localStorage.getItem("items");
+  var itemArray = localStorage.getItem("items");
+  console.log(itemArray)
   fetch("/process", {
     method: "POST",
-    body: JSON.stringify(itemsArray),
+    body: JSON.stringify(itemArray),
     headers: {
       "Content-type": "application/json; charset=UTF-8",
     },
