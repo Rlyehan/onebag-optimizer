@@ -184,6 +184,7 @@ const sampleData = [
   },
   // Add more sample items here
 ];
+const loadSampleItemsButton = document.getElementById("loadSampleItems");
 
 // Function to set the sample data in localStorage
 const setSampleData = () => {
@@ -191,7 +192,11 @@ const setSampleData = () => {
 };
 
 // Call this function to set the sample data
-setSampleData();
+loadSampleItemsButton.addEventListener("click", function () {
+  setSampleData();
+  loadOBItems();
+});
+
 
 const itemForm = document.getElementById("itemForm");
 const clearLocalStorageButton = document.getElementById("clearLocalStorage");
