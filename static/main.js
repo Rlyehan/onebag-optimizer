@@ -224,13 +224,7 @@ var itemListSummaryPersonalItem = document.querySelector(".itemListSummary.perso
 function loadOBItems() {
   clearItemList();
   var itemArray = getitemArray();
-
-  if (itemArray.length === 0) {
-    displayNoItemsMessage();
-  } else {
-    renderItems(itemArray);
-  }
-
+  renderItems(itemArray);
   activateDeleteListeners();
 }
 
@@ -239,23 +233,13 @@ function clearItemList() {
   articles.forEach(entry => entry.remove());
 }
 
-function displayNoItemsMessage() {
-  displayNoItemsMessageInBag(targetCarryOn);
-  displayNoItemsMessageInBag(targetPersonalItem);
-}
-
-function displayNoItemsMessageInBag(target) {
-  var itemListItem = document.createElement("article");
-  itemListItem.classList.add("itemListItem");
-  itemListItem.innerHTML = "<em>There are no items to display.</em>"
-  target.insertBefore(itemListItem, target.querySelector(".itemListSummary"));
-}
-
 function renderItems(itemArray) {
   var totalWeightCarryOn = 0;
   var totalWeightPersonalItem = 0;
   var carryOnTotalWeight = document.getElementById("carryOnTotalWeight");
   var personalItemTotalWeight = document.getElementById("personalItemTotalWeight");
+  carryOnTotalWeight.innerHTML = 0;
+  personalItemTotalWeight.innerHTML = 0;
 
   itemArray.forEach((item, index) => {
     var itemTotalWeight = item.itemAmount * item.itemWeight;
@@ -275,9 +259,8 @@ function renderItems(itemArray) {
 
 function createItemListItem(item, itemTotalWeight, index) {
   const itemListItem = document.createElement("article");
-  itemListItem.classList.add("itemListItem");
-  itemListItem.classList.add(item.itemCategory);
-  itemListItem.classList.add(item.itemBagType);
+  itemListItem.classList.add("itemListItem", item.itemCategory, item.itemBagType);
+
   itemListItem.innerHTML = `
     <div class="itemName">${item.itemName}</div>
     <div class="itemAmount">${item.itemAmount}</div>
@@ -286,11 +269,8 @@ function createItemListItem(item, itemTotalWeight, index) {
     <div class="itemPriority"><span class="mobileOnlyInfo">Prio: </span>${item.itemPriority}</div>
     <div class="itemCategory">${item.itemCategory.charAt(0).toUpperCase() + item.itemCategory.slice(1)}</div>
     <div class="itemSubcategory">${item.itemSubcategory}
-    <span class="deleteItem">❌</button>`;
-
-    itemListItem.innerHTML += `
-    <span class="deleteItem" data-index="${index}">❌</span>
-  `;
+    <span class="deleteItem" data-index="${index}">❌</span>`;
+  
   return itemListItem;
 }
 

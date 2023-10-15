@@ -85,36 +85,36 @@ input[type="submit"] {
 }
 
 /* Display all articles when no filter is :checked */
-.filters:has(:not(:checked))~.itemListItem {
+.filters:has(:not(:checked)) ~ .itemListItem {
   display: grid;
 }
 
 /* Hide all articles when at least one filter is :checked */
-.filters:has(:checked)~.itemListItem:not(.itemListSummary) {
+.filters:has(:checked) ~ .itemListItem:not(.itemListSummary) {
   display: none;
 }
 
 /* Display any article that has its corresponding filter :checked */
-.filters:has(#bags:checked)~article.carryOn.bags,
-.filters:has(#clothing:checked)~article.carryOn.clothing,
-.filters:has(#footwear:checked)~article.carryOn.footwear,
-.filters:has(#grooming:checked)~article.carryOn.grooming,
-.filters:has(#electronics:checked)~article.carryOn.electronics,
-.filters:has(#hygiene:checked)~article.carryOn.hygiene,
-.filters:has(#medical:checked)~article.carryOn.medical,
-.filters:has(#consumables:checked)~article.carryOn.consumables,
-.filters:has(#necessities:checked)~article.carryOn.necessities,
-.filters:has(#other:checked)~article.carryOn.other,
-.filters:has(#bags2:checked)~article.personalItem.bags,
-.filters:has(#clothing2:checked)~article.personalItem.clothing,
-.filters:has(#footwear2:checked)~article.personalItem.footwear,
-.filters:has(#grooming2:checked)~article.personalItem.grooming,
-.filters:has(#electronics2:checked)~article.personalItem.electronics,
-.filters:has(#hygiene2:checked)~article.personalItem.hygiene,
-.filters:has(#medical2:checked)~article.personalItem.medical,
-.filters:has(#consumables2:checked)~article.personalItem.consumables,
-.filters:has(#necessities2:checked)~article.personalItem.necessities,
-.filters:has(#other2:checked)~article.personalItem.other {
+.filters:has(#bags:checked) ~ article.carryOn.bags,
+.filters:has(#clothing:checked) ~ article.carryOn.clothing,
+.filters:has(#footwear:checked) ~ article.carryOn.footwear,
+.filters:has(#grooming:checked) ~ article.carryOn.grooming,
+.filters:has(#electronics:checked) ~ article.carryOn.electronics,
+.filters:has(#hygiene:checked) ~ article.carryOn.hygiene,
+.filters:has(#medical:checked) ~ article.carryOn.medical,
+.filters:has(#consumables:checked) ~ article.carryOn.consumables,
+.filters:has(#necessities:checked) ~ article.carryOn.necessities,
+.filters:has(#other:checked) ~ article.carryOn.other,
+.filters:has(#bags2:checked) ~ article.personalItem.bags,
+.filters:has(#clothing2:checked) ~ article.personalItem.clothing,
+.filters:has(#footwear2:checked) ~ article.personalItem.footwear,
+.filters:has(#grooming2:checked) ~ article.personalItem.grooming,
+.filters:has(#electronics2:checked) ~ article.personalItem.electronics,
+.filters:has(#hygiene2:checked) ~ article.personalItem.hygiene,
+.filters:has(#medical2:checked) ~ article.personalItem.medical,
+.filters:has(#consumables2:checked) ~ article.personalItem.consumables,
+.filters:has(#necessities2:checked) ~ article.personalItem.necessities,
+.filters:has(#other2:checked) ~ article.personalItem.other {
   display: grid;
 }
 
@@ -124,6 +124,16 @@ input[type="submit"] {
   display: grid;
 }
 
+.itemListEmpty {
+  display: grid;
+  padding-block: 0.5rem;
+  border-bottom: 1px solid grey;
+  font-style: italic;
+}
+
+.itemList:has(.itemListItem:not(.itemListHeader):not(.itemListSummary)) .itemListEmpty {
+display: none;
+}
 
 .itemListItem {
   display: grid;
@@ -132,7 +142,6 @@ input[type="submit"] {
   position: relative;
   max-width: 95dvw;
   text-align: center;
-  /* line-break: strict; */
   padding-block: 0.5rem;
   column-gap: 1rem;
   border-bottom: 1px solid grey;
@@ -142,9 +151,8 @@ input[type="submit"] {
   position: absolute;
   right: 1rem;
   top: 2.5rem;
-  padding: .25rem;
+  padding: 0.25rem;
   color: red;
-  /* border: 1px solid grey; */
   cursor: pointer;
 }
 
@@ -221,21 +229,22 @@ input[type="submit"] {
   }
 
   .itemListItem,
-  .itemListHeader {
+  .itemListHeader,
+  .itemListEmpty {
     grid-template-columns: 1fr 3rem 3rem 3rem 2rem 7rem 1fr;
     grid-template-rows: 1fr;
     grid-template-areas: "itemName itemAmount itemWeight itemTotalWeight itemCategory itemSubcategory itemPriority";
     gap: 1rem;
     text-align: start;
 
-    &>* {
+    & > * {
       grid-column: span 1;
       padding: 0 0.25rem;
     }
   }
   .itemListItem .deleteItem {
     top: 50%;
-    right: .5rem;
+    right: 0.5rem;
     translate: 0 -50%;
     opacity: 0;
     border: none;
