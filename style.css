@@ -90,7 +90,7 @@ input[type="submit"] {
 }
 
 /* Hide all articles when at least one filter is :checked */
-.filters:has(:checked)~.itemListItem {
+.filters:has(:checked)~.itemListItem:not(.itemListSummary) {
   display: none;
 }
 
