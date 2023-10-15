@@ -1,4 +1,4 @@
-window.onload = loadOBItems;
+window.onload = loadOBItems
 
 var targetCarryOn = document.querySelector(".bagCarryOn")
 var itemListSummaryCarryOn = document.querySelector(".itemListSummary.carryOn")
@@ -116,7 +116,6 @@ function deleteItem(i) {
 
 function sendData() {
   var itemsArray = localStorage.getItem("items")
-  console.log(itemsArray)
   fetch("/process", {
     method: "POST",
     body: JSON.stringify(itemsArray),
