@@ -9,11 +9,12 @@ var targetPersonalItem = document.querySelector(".bagPersonalItem");
 var itemListSummaryPersonalItem = document.querySelector(
   ".itemListSummary.personalItem"
 );
+const itemsArray = localStorage.getItem("items")
+? JSON.parse(localStorage.getItem("items"))
+: [];
 
 function loadOBItems() {
-  const itemsArray = localStorage.getItem("items")
-    ? JSON.parse(localStorage.getItem("items"))
-    : [];
+
 
   var carryOnTotalWeight = document.getElementById("carryOnTotalWeight");
   var personalItemTotalWeight = document.getElementById(
@@ -42,7 +43,7 @@ function loadOBItems() {
       item.itemCategory.slice(1) +
       '</div><div class="itemSubcategory">' +
       item.itemSubcategory +
-      "</div>";
+      '</div><span class="deleteItem">❌</button>';
     if (item.itemBagType == "carryOn") {
       targetCarryOn.insertBefore(itemListItem, itemListSummaryCarryOn);
       totalWeightCarryOn += itemTotalWeight;
@@ -56,7 +57,11 @@ function loadOBItems() {
       personalItemTotalWeight.innerHTML = totalWeightPersonalItem;
     }
   });
+  activateDeleteListeners();
+
 }
+
+
 
 function addListItem() {
   event.preventDefault();
@@ -96,7 +101,7 @@ function addListItem() {
     itemCategory.slice(1) +
     '</div><div class="itemSubcategory">' +
     itemSubcategory +
-    "</div>";
+    '</div><span class="deleteItem">❌</button>';
   if (itemBagType == "carryOn") {
     targetCarryOn.insertBefore(article, itemListSummaryCarryOn);
     totalWeightCarryOn += itemTotalWeight;
@@ -117,4 +122,23 @@ function addListItem() {
     itemBagType: itemBagType,
   });
   localStorage.setItem("items", JSON.stringify(itemsArray));
+}
+
+function activateDeleteListeners() {
+  let deleteBtn = document.querySelectorAll(".deleteItem");
+  deleteBtn.forEach((dB, i) => {
+    dB.addEventListener("click", () => {
+      deleteItem(i);
+    });
+    console.log("added listener", i);
+
+  });
+}
+
+function deleteItem(i) {
+  console.log(itemsArray);
+  itemsArray.splice(i, 1);
+  console.log(itemsArray);
+  localStorage.setItem("items", JSON.stringify(itemsArray));
+  location.reload();
 }
