@@ -144,7 +144,7 @@ input[type="submit"] {
   top: 2.5rem;
   padding: .25rem;
   color: red;
-  border: 1px solid grey;
+  /* border: 1px solid grey; */
   cursor: pointer;
 }
 
