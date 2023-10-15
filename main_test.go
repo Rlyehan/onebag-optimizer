@@ -3,6 +3,12 @@ package main
 import (
 	"reflect"
 	"testing"
+	"os"
+	"io/ioutil"
+	"strings"
+	"bytes"
+	"net/http"
+	"net/http/httptest"
 )
 
 func TestDataProcessing(t *testing.T) {
@@ -34,5 +40,69 @@ func TestDataProcessing(t *testing.T) {
 
 	if !reflect.DeepEqual(result.BagWeights, expectedBagWeights) {
 		t.Errorf("Expected bag weights to be %+v but got %+v", expectedBagWeights, result.BagWeights)
+	}
+}
+
+func TestCategoryWeightPieChart(t *testing.T) {
+	data := []CategoryWeight{
+		{Category: "Clothing", Weight: 2000},
+		{Category: "Electronics", Weight: 1500},
+		{Category: "Grooming", Weight: 1200},
+	}
+
+	htmlContent := categoryWeightPieChart(data)
+
+	err := ioutil.WriteFile("pie.html", []byte(htmlContent), 0644)
+	if err != nil {
+		t.Fatalf("Error writing to pie.html: %v", err)
+	}
+
+	if _, err := os.Stat("pie.html"); os.IsNotExist(err) {
+		t.Fatalf("Expected pie.html to be generated, but it wasn't.")
+	}
+
+	content, err := ioutil.ReadFile("pie.html")
+	if err != nil {
+		t.Fatalf("Could not read pie.html: %v", err)
+	}
+
+	if !strings.Contains(string(content), "Weight distribution per Category") {
+		t.Fatalf("Expected title not found in pie.html")
+	}
+}
+
+func TestProcessHandler(t *testing.T) {
+
+	reqBody := `[
+		{
+			"itemName": "TestItem1",
+			"itemAmount": 2,
+			"itemWeight": 500,
+			"itemCategory": "clothing",
+			"itemSubcategory": "shirts",
+			"itemPriority": 1,
+			"itemBagType": 1
+		},
+		{
+			"itemName": "TestItem2",
+			"itemAmount": 1,
+			"itemWeight": 1000,
+			"itemCategory": "electronics",
+			"itemSubcategory": "laptop",
+			"itemPriority": 2,
+			"itemBagType": 2
+		}
+	]`
+	req, err := http.NewRequest("POST", "/process", bytes.NewBufferString(reqBody))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	recorder := httptest.NewRecorder()
+
+	processHandler(recorder, req)
+
+	if status := recorder.Code; status != http.StatusOK {
+		t.Errorf("Handler returned wrong status code: got %v want %v", status, http.StatusOK)
 	}
 }
