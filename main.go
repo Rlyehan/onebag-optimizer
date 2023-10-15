@@ -16,14 +16,14 @@ type TravelItem struct {
 	Weight      int     `json:"itemWeight"`
 	Category    string  `json:"itemCategory"`
 	Subcategory string  `json:"itemSubcategory"`
-	Priority    int     `json:"itemPriority"`
-	BagType     int     `json:"itemBagType"`
+	Priority    string     `json:"itemPriority"`
+	BagType     string  `json:"itemBagType"`
 }
 
 type AnalysisResult struct {
 	TotalWeight          int
 	TopHeaviestItems     []TravelItem
-	BagWeights           map[int]int
+	BagWeights           map[string]int
 }
 
 type CategoryWeight struct {
@@ -34,6 +34,7 @@ type CategoryWeight struct {
 func main() {
 	http.HandleFunc("/", rootHandler)
 	http.HandleFunc("/process", processHandler)
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 	http.ListenAndServe(":8080", nil)
 }
 
@@ -61,7 +62,7 @@ func processHandler(w http.ResponseWriter, r *http.Request) {
 
 	results := dataProcessing(items)
 
-	tmpl, err := template.ParseFiles("./templates//analysis.html")
+	tmpl, err := template.ParseFiles("./templates/analysis.html")
 	if err != nil {
 		http.Error(w, "could not load template", http.StatusInternalServerError)
 		return
@@ -75,7 +76,7 @@ func processHandler(w http.ResponseWriter, r *http.Request) {
 
 func dataProcessing(items []TravelItem) AnalysisResult {
 	totalWeight := 0
-	bagWeights := make(map[int]int)
+	bagWeights := make(map[string]int)
 
 	for _, item := range items {
 		itemTotalWeight := item.Weight * item.Amount
