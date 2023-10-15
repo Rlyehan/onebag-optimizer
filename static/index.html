@@ -13,7 +13,7 @@
 <body>
   <h2>OneBag Optimizer</h2>
   <section class="inputform">
-    <form onsubmit="addListItem()">
+    <form id="itemForm">
       <input id="itemName" value="Test" type="text" placeholder="Name" required="required" autofocus="autofocus" />
       <input id="itemAmount" value="1" type="number" placeholder="Amount" required="required" min="0" max="99" />
       <input id="itemWeight" value="1000" type="number" placeholder="Weight" required="required" min="0" max="9999" />
@@ -47,7 +47,7 @@
       <input type="submit" value="+" />
     </form>
   </section>
-  <button onclick="localStorage.clear()" style="padding: 1rem 2rem">Clear Local Storage</button>
+  <button id="clearLocalStorage" style="padding: 1rem 2rem">Clear Local Storage</button>
   <section class="itemList bagCarryOn">
     <h3>Carry-On</h3>
     <fieldset class="filters">
@@ -124,7 +124,7 @@
       <div class="totalWeight" id="personalItemTotalWeight"></div>
     </article>
   </section>
-  <button onclick="sendData()">Start Analysis</button>
+  <button id="startAnalysis">Start Analysis</button>
   <section class="itemCharts">
     <h3>Charts</h3>
     <img src="https://place-hold.it/600x400" alt="" />

@@ -1,5 +1,4 @@
-window.addEventListener("load", loadOBItems);
-
+document.addEventListener("DOMContentLoaded", loadOBItems);
 
 // Sample data for testing
 const sampleData = [
@@ -186,16 +185,31 @@ const sampleData = [
   // Add more sample items here
 ];
 
-
 // Function to set the sample data in localStorage
-function setSampleData() {
+const setSampleData = () => {
   localStorage.setItem("items", JSON.stringify(sampleData));
-}
+};
 
 // Call this function to set the sample data
 setSampleData();
 
+const itemForm = document.getElementById("itemForm");
+const clearLocalStorageButton = document.getElementById("clearLocalStorage");
+const startAnalysisButton = document.getElementById("startAnalysis");
 
+itemForm.addEventListener("submit", function (event) {
+  event.preventDefault();
+  addListItem();
+});
+
+clearLocalStorageButton.addEventListener("click", function () {
+  localStorage.clear();
+  loadOBItems();
+});
+
+startAnalysisButton.addEventListener("click", function () {
+  sendData();
+});
 
 var targetCarryOn = document.querySelector(".bagCarryOn");
 var itemListSummaryCarryOn = document.querySelector(".itemListSummary.carryOn");
