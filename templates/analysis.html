@@ -1,15 +1,37 @@
-<h3>Total Weight: {{.TotalWeight}}g</h3>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis Results</title>
+    <link rel="stylesheet" href="/static/style.css"> <!-- Assuming you have some CSS in static folder -->
+</head>
+<body>
 
-<h3>Top Heaviest Items</h3>
+<h1>Analysis Results</h1>
+
+<h2>Total Weight</h2>
+<p>{{.Analysis.TotalWeight}}</p>
+
+<h2>Top Heaviest Items</h2>
 <ul>
-  {{range .TopHeaviestItems}}
-    <li>{{.Name}} - {{.Weight}}</li>
-  {{end}}
+    {{range .Analysis.TopHeaviestItems}}
+    <li>{{.Name}} - {{.Weight}}g (Amount: {{.Amount}})</li>
+    {{end}}
 </ul>
 
-<h3>Weight Per Bag</h3>
+<h2>Weight by Bag Type</h2>
 <ul>
-  {{range $key, $value := .BagWeights}}
-    <li>Bag Type {{$key}}: {{$value}}g</li>
-  {{end}}
+    {{range $key, $value := .Analysis.BagWeights}}
+    <li>{{$key}}: {{$value}}g</li>
+    {{end}}
 </ul>
+
+<h2>Category Weight Distribution</h2>
+<div>
+    {{.Chart}}
+</div>
+
+</body>
+</html>

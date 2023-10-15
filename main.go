@@ -1,34 +1,36 @@
 package main
 
 import (
-	"net/http"
-	"html/template"
+	"bytes"
 	"encoding/json"
-	"sort"
 	"github.com/go-echarts/go-echarts/v2/charts"
 	"github.com/go-echarts/go-echarts/v2/opts"
-	"bytes"
+	chartrender "github.com/go-echarts/go-echarts/v2/render"
+	"html/template"
+	"log"
+	"net/http"
+	"sort"
 )
 
 type TravelItem struct {
-	Name        string  `json:"itemName"`
-	Amount      int     `json:"itemAmount"`
-	Weight      int     `json:"itemWeight"`
-	Category    string  `json:"itemCategory"`
-	Subcategory string  `json:"itemSubcategory"`
-	Priority    string     `json:"itemPriority"`
-	BagType     string  `json:"itemBagType"`
+	Name        string `json:"itemName"`
+	Amount      int    `json:"itemAmount"`
+	Weight      int    `json:"itemWeight"`
+	Category    string `json:"itemCategory"`
+	Subcategory string `json:"itemSubcategory"`
+	Priority    string `json:"itemPriority"`
+	BagType     string `json:"itemBagType"`
 }
 
 type AnalysisResult struct {
-	TotalWeight          int
-	TopHeaviestItems     []TravelItem
-	BagWeights           map[string]int
+	TotalWeight      int
+	TopHeaviestItems []TravelItem
+	BagWeights       map[string]int
 }
 
 type CategoryWeight struct {
-	Category	string
-	Weight		int
+	Category string
+	Weight   int
 }
 
 func main() {
@@ -61,6 +63,16 @@ func processHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	results := dataProcessing(items)
+	categoryWeights := extractCategoryWeights(items)
+	chart := categoryWeightPieChart(categoryWeights)
+
+	data := struct {
+		Analysis AnalysisResult
+		Chart    template.HTML
+	}{
+		Analysis: results,
+		Chart:    chart,
+	}
 
 	tmpl, err := template.ParseFiles("./templates/analysis.html")
 	if err != nil {
@@ -68,7 +80,7 @@ func processHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = tmpl.Execute(w, results)
+	err = tmpl.Execute(w, data)
 	if err != nil {
 		http.Error(w, "Error executing template: "+err.Error(), http.StatusInternalServerError)
 	}
@@ -79,13 +91,17 @@ func dataProcessing(items []TravelItem) AnalysisResult {
 	bagWeights := make(map[string]int)
 
 	for _, item := range items {
-		itemTotalWeight := item.Weight * item.Amount
+		itemWeightInt := item.Weight
+		itemAmountInt := item.Amount
+		itemTotalWeight := itemWeightInt * itemAmountInt
 		totalWeight += itemTotalWeight
 		bagWeights[item.BagType] += itemTotalWeight
 	}
 
 	sort.Slice(items, func(i, j int) bool {
-		return items[i].Weight > items[j].Weight
+		weightI := items[i].Weight
+		weightJ := items[j].Weight
+		return weightI > weightJ
 	})
 
 	topItemsCount := 5
@@ -96,12 +112,31 @@ func dataProcessing(items []TravelItem) AnalysisResult {
 	topHeaviestItems := items[:topItemsCount]
 
 	return AnalysisResult{
-		TotalWeight:          totalWeight,
-		TopHeaviestItems:     topHeaviestItems,
-		BagWeights:           bagWeights,
+		TotalWeight:      totalWeight,
+		TopHeaviestItems: topHeaviestItems,
+		BagWeights:       bagWeights,
 	}
 }
 
+func extractCategoryWeights(items []TravelItem) []CategoryWeight {
+	categoryWeightMap := make(map[string]int)
+
+	for _, item := range items {
+		itemWeightInt := item.Weight
+		itemAmountInt := item.Amount
+		weight := itemWeightInt * itemAmountInt
+		categoryWeightMap[item.Category] += weight
+	}
+
+	var categoryWeights []CategoryWeight
+	for category, weight := range categoryWeightMap {
+		categoryWeights = append(categoryWeights, CategoryWeight{
+			Category: category,
+			Weight:   weight,
+		})
+	}
+	return categoryWeights
+}
 
 func generatePieItems(data []CategoryWeight) []opts.PieData {
 	var items []opts.PieData
@@ -111,7 +146,19 @@ func generatePieItems(data []CategoryWeight) []opts.PieData {
 	return items
 }
 
-func categoryWeightPieChart(data []CategoryWeight) string {
+func renderToHtml(c interface{}) template.HTML {
+	var buf bytes.Buffer
+	r := c.(chartrender.Renderer)
+	err := r.Render(&buf)
+	if err != nil {
+		log.Printf("Failed to render chart: %s", err)
+		return ""
+	}
+
+	return template.HTML(buf.String())
+}
+
+func categoryWeightPieChart(data []CategoryWeight) template.HTML {
 	pie := charts.NewPie()
 	pie.SetGlobalOptions(
 		charts.WithTitleOpts(
@@ -137,10 +184,10 @@ func categoryWeightPieChart(data []CategoryWeight) string {
 				},
 			),
 		)
-		buffer := new(bytes.Buffer)
-		err := pie.Render(buffer)
-		if err != nil {
-			return "Could not generate the Pie Chart."
-		}
-		return buffer.String()
+	buffer := new(bytes.Buffer)
+	err := pie.Render(buffer)
+	if err != nil {
+		return "Could not generate the Pie Chart."
+	}
+	return renderToHtml(pie)
 }
