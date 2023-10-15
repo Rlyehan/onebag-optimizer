@@ -1,15 +1,61 @@
-<h3>Total Weight: {{.TotalWeight}}g</h3>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis Results</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
 
-<h3>Top Heaviest Items</h3>
+<h1>Analysis Results</h1>
+
+<h2>Total Weight</h2>
+<p>{{.TotalWeight}}g</p>
+
+<h2>Top Heaviest Items</h2>
 <ul>
-  {{range .TopHeaviestItems}}
-    <li>{{.Name}} - {{.Weight}}</li>
-  {{end}}
+    {{range .TopHeaviestItems}}
+    <li>{{.Name}} - {{.Weight}}g (Amount: {{.Amount}})</li>
+    {{end}}
 </ul>
 
-<h3>Weight Per Bag</h3>
+<h2>Weight by Bag Type</h2>
 <ul>
-  {{range $key, $value := .BagWeights}}
-    <li>Bag Type {{$key}}: {{$value}}g</li>
-  {{end}}
+    {{range $key, $value := .BagWeights}}
+    <li>{{$key}}: {{$value}}g</li>
+    {{end}}
 </ul>
+
+<h2>Weight by Category</h2>
+<ul>
+    {{range $key, $value := .CategoryWeights}}
+    <li>{{$key}}: {{$value}}g</li>
+    {{end}}
+</ul>
+
+<h2>Weight Distribution by Priority</h2>
+<ul>
+    {{range $key, $value := .PriorityWeights}}
+    <li>Priority {{$key}}: {{$value}}g</li>
+    {{end}}
+</ul>
+
+<h2>Average Weight</h2>
+<p>{{.AverageWeight}}g</p>
+
+<h2>Weight Percentage by Category</h2>
+<ul>
+    {{range $key, $value := .CategoryWeightPercentage}}
+    <li>{{$key}}: {{printf "%.2f" $value}}%</li>
+    {{end}}
+</ul>
+
+<h2>Category Weight Distribution</h2>
+<div>
+    {{.Chart}}
+</div>
+
+</body>
+</html>

@@ -1,14 +1,14 @@
 package main
 
 import (
-	"reflect"
-	"testing"
-	"os"
-	"io/ioutil"
-	"strings"
 	"bytes"
+	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"os"
+	"reflect"
+	"strings"
+	"testing"
 )
 
 func TestDataProcessing(t *testing.T) {
@@ -25,7 +25,7 @@ func TestDataProcessing(t *testing.T) {
 		t.Errorf("Expected total weight to be 2000 but got %d", result.TotalWeight)
 	}
 
-	if len(result.TopHeaviestItems) != 4 { 
+	if len(result.TopHeaviestItems) != 4 {
 		t.Errorf("Expected top items count to be 4 but got %d", len(result.TopHeaviestItems))
 	}
 
