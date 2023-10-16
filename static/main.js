@@ -1,6 +1,5 @@
-document.addEventListener("DOMContentLoaded", loadOBItems);
+document.addEventListener("DOMContentLoaded", loadOBItems)
 
-// Sample data for testing
 const sampleData = [
   {
     itemName: "Sample Item 1",
@@ -111,7 +110,7 @@ const sampleData = [
     itemBagType: "personalItem",
   },
   {
-   itemName: "Sample Item 13",
+    itemName: "Sample Item 13",
     itemAmount: 1,
     itemWeight: 1500,
     itemCategory: "electronics",
@@ -120,7 +119,7 @@ const sampleData = [
     itemBagType: "carryOn",
   },
   {
-   itemName: "Sample Item 14",
+    itemName: "Sample Item 14",
     itemAmount: 4,
     itemWeight: 200,
     itemCategory: "hygiene",
@@ -129,7 +128,7 @@ const sampleData = [
     itemBagType: "personalItem",
   },
   {
-   itemName: "Sample Item 15",
+    itemName: "Sample Item 15",
     itemAmount: 2,
     itemWeight: 500,
     itemCategory: "meds",
@@ -181,110 +180,124 @@ const sampleData = [
     itemSubcategory: "Razor",
     itemPriority: "3",
     itemBagType: "personalItem",
-  },
-  // Add more sample items here
-];
-const loadSampleItemsButton = document.getElementById("loadSampleItems");
+  }
+]
 
-// Function to set the sample data in localStorage
+const loadSampleItemsButton = document.getElementById("loadSampleItems")
+
 const setSampleData = () => {
-  localStorage.setItem("items", JSON.stringify(sampleData));
-};
+  localStorage.setItem("items", JSON.stringify(sampleData))
+}
 
-// Call this function to set the sample data
 loadSampleItemsButton.addEventListener("click", function () {
-  setSampleData();
-  loadOBItems();
-});
+  setSampleData()
+  loadOBItems()
+})
 
-
-const itemForm = document.getElementById("itemForm");
-const clearLocalStorageButton = document.getElementById("clearLocalStorage");
-const startAnalysisButton = document.getElementById("startAnalysis");
+const itemForm = document.getElementById("itemForm")
+const clearLocalStorageButton = document.getElementById("clearLocalStorage")
+const startAnalysisButton = document.getElementById("startAnalysis")
 
 itemForm.addEventListener("submit", function (event) {
-  event.preventDefault();
-  addListItem();
-});
+  event.preventDefault()
+  addListItem()
+})
 
 clearLocalStorageButton.addEventListener("click", function () {
-  localStorage.clear();
-  loadOBItems();
-});
+  localStorage.clear()
+  loadOBItems()
+})
 
 startAnalysisButton.addEventListener("click", function () {
-  sendData();
-});
+  sendData()
+})
 
-var targetCarryOn = document.querySelector(".bagCarryOn");
-var itemListSummaryCarryOn = document.querySelector(".itemListSummary.carryOn");
-var targetPersonalItem = document.querySelector(".bagPersonalItem");
-var itemListSummaryPersonalItem = document.querySelector(".itemListSummary.personalItem");
+var targetCarryOn = document.querySelector(".bagCarryOn")
+var itemListSummaryCarryOn = document.querySelector(
+  ".bagCarryOn .itemListSummary"
+)
+var targetPersonalItem = document.querySelector(".bagPersonalItem")
+var itemListSummaryPersonalItem = document.querySelector(
+  ".bagPersonalItem .itemListSummary"
+)
 
 function loadOBItems() {
-  clearItemList();
-  var itemArray = getitemArray();
-  renderItems(itemArray);
-  activateDeleteListeners();
+  clearItemList()
+  var itemArray = getItemArray()
+  renderItems(itemArray)
+  activateDeleteListeners()
 }
 
 function clearItemList() {
-  var articles = document.querySelectorAll(".itemListItem:not(.itemListHeader):not(.itemListSummary)");
-  articles.forEach(entry => entry.remove());
+  var articles = document.querySelectorAll(
+    ".itemListItem"
+  )
+  articles.forEach((entry) => entry.remove())
 }
 
 function renderItems(itemArray) {
-  var totalWeightCarryOn = 0;
-  var totalWeightPersonalItem = 0;
-  var carryOnTotalWeight = document.getElementById("carryOnTotalWeight");
-  var personalItemTotalWeight = document.getElementById("personalItemTotalWeight");
-  carryOnTotalWeight.innerHTML = 0;
-  personalItemTotalWeight.innerHTML = 0;
+  var totalWeightCarryOn = 0
+  var totalWeightPersonalItem = 0
+  var carryOnTotalWeight = document.getElementById("carryOnTotalWeight")
+  var personalItemTotalWeight = document.getElementById(
+    "personalItemTotalWeight"
+  )
+  carryOnTotalWeight.innerHTML = 0
+  personalItemTotalWeight.innerHTML = 0
 
   itemArray.forEach((item, index) => {
-    var itemTotalWeight = item.itemAmount * item.itemWeight;
-    const itemListItem = createItemListItem(item, itemTotalWeight, index);
-  
+    var itemTotalWeight = item.itemAmount * item.itemWeight
+    const itemListItem = createItemListItem(item, itemTotalWeight, index)
+
     if (item.itemBagType == "carryOn") {
-      targetCarryOn.insertBefore(itemListItem, itemListSummaryCarryOn);
-      totalWeightCarryOn += itemTotalWeight;
-      carryOnTotalWeight.innerHTML = totalWeightCarryOn;
+      targetCarryOn.insertBefore(itemListItem, itemListSummaryCarryOn)
+      totalWeightCarryOn += itemTotalWeight
+      carryOnTotalWeight.innerHTML = totalWeightCarryOn
     } else if (item.itemBagType == "personalItem") {
-      targetPersonalItem.insertBefore(itemListItem, itemListSummaryPersonalItem);
-      totalWeightPersonalItem += itemTotalWeight;
-      personalItemTotalWeight.innerHTML = totalWeightPersonalItem;
+      targetPersonalItem.insertBefore(
+        itemListItem,
+        itemListSummaryPersonalItem
+      )
+      totalWeightPersonalItem += itemTotalWeight
+      personalItemTotalWeight.innerHTML = totalWeightPersonalItem
     }
-  });
+  })
 }
 
 function createItemListItem(item, itemTotalWeight, index) {
-  const itemListItem = document.createElement("article");
-  itemListItem.classList.add("itemListItem", item.itemCategory, item.itemBagType);
-
+  const itemListItem = document.createElement("article")
+  itemListItem.classList.add(
+    "itemListItem",
+    item.itemCategory,
+    item.itemBagType
+  )
+  itemListItem.setAttribute("data-index", `${index}`)
   itemListItem.innerHTML = `
     <div class="itemName">${item.itemName}</div>
     <div class="itemAmount">${item.itemAmount}</div>
     <div class="itemWeight">${item.itemWeight}</div>
     <div class="itemTotalWeight"><span class="mobileOnlyInfo">Total: </span>${itemTotalWeight}</div>
-    <div class="itemPriority"><span class="mobileOnlyInfo">Prio: </span>${item.itemPriority}</div>
-    <div class="itemCategory">${item.itemCategory.charAt(0).toUpperCase() + item.itemCategory.slice(1)}</div>
+    <div class="itemPriority"><span class="mobileOnlyInfo">Prio: </span>${item.itemPriority
+    }</div>
+    <div class="itemCategory">${item.itemCategory.charAt(0).toUpperCase() + item.itemCategory.slice(1)
+    }</div>
     <div class="itemSubcategory">${item.itemSubcategory}
-    <span class="deleteItem" data-index="${index}">❌</span>`;
-  
-  return itemListItem;
+    <span class="deleteItem" data-index="${index}">❌</span>`
+
+  return itemListItem
 }
 
 function addListItem() {
-  var itemArray = getitemArray();
+  var itemArray = getItemArray()
 
-  var itemName = document.getElementById("itemName").value;
-  var itemAmount = parseInt(document.getElementById("itemAmount").value);
-  var itemWeight = parseInt(document.getElementById("itemWeight").value);
-  var itemCategory = document.getElementById("itemCategory").value;
-  var itemSubcategory = document.getElementById("itemSubcategory").value;
-  var itemPriority = document.getElementById("itemPriority").value;
-  var itemBagType = document.getElementById("itemBagType").value;
-  event.preventDefault();
+  var itemName = document.getElementById("itemName").value
+  var itemAmount = parseInt(document.getElementById("itemAmount").value)
+  var itemWeight = parseInt(document.getElementById("itemWeight").value)
+  var itemCategory = document.getElementById("itemCategory").value
+  var itemSubcategory = document.getElementById("itemSubcategory").value
+  var itemPriority = document.getElementById("itemPriority").value
+  var itemBagType = document.getElementById("itemBagType").value
+  event.preventDefault()
 
   itemArray.push({
     itemName: itemName,
@@ -294,45 +307,43 @@ function addListItem() {
     itemSubcategory: itemSubcategory,
     itemPriority: itemPriority,
     itemBagType: itemBagType,
-  });
-  setitemArray(itemArray);
-  loadOBItems();
+  })
+  setItemArray(itemArray)
+  loadOBItems()
 }
 
-function getitemArray() {
-  return JSON.parse(localStorage.getItem("items")) || [];
+function getItemArray() {
+  return JSON.parse(localStorage.getItem("items")) || []
 }
 
-function setitemArray(itemArray) {
-  localStorage.setItem("items", JSON.stringify(itemArray));
+function setItemArray(itemArray) {
+  localStorage.setItem("items", JSON.stringify(itemArray))
 }
 
 function activateDeleteListeners() {
-  let deleteBtn = document.querySelectorAll(".deleteItem");
+  let deleteBtn = document.querySelectorAll(".deleteItem")
   deleteBtn.forEach((dB) => {
     dB.addEventListener("click", () => {
-      // Get the index from the data-index attribute
-      const index = dB.getAttribute("data-index");
-      deleteItem(index);
-    });
-  });
+      const index = dB.parentElement.parentElement.getAttribute("data-index")
+      deleteItem(index)
+    })
+  })
 }
 
 function deleteItem(i) {
-  var itemArray = getitemArray();
-  itemArray.splice(i, 1);
-  setitemArray(itemArray);
-  loadOBItems();
+  var itemArray = getItemArray()
+  itemArray.splice(i, 1)
+  setItemArray(itemArray)
+  loadOBItems()
 }
 
 function sendData() {
-  var itemArray = localStorage.getItem("items");
-  console.log(itemArray)
+  var itemArray = localStorage.getItem("items")
   fetch("/process", {
     method: "POST",
     body: JSON.stringify(itemArray),
     headers: {
       "Content-type": "application/json; charset=UTF-8",
-    },
-  });
+    }
+  })
 }
