@@ -56,8 +56,6 @@ input[type="submit"] {
   background-color: var(--clr-accent);
 }
 
-/* FILTERS */
-
 .filters {
   display: flex;
   flex-wrap: wrap;
@@ -84,17 +82,14 @@ input[type="submit"] {
   color: var(--clr-accent);
 }
 
-/* Display all articles when no filter is :checked */
 .filters:has(:not(:checked)) ~ .itemListItem {
   display: grid;
 }
 
-/* Hide all articles when at least one filter is :checked */
-.filters:has(:checked) ~ .itemListItem:not(.itemListSummary) {
+.filters:has(:checked) ~ .itemListItem {
   display: none;
 }
 
-/* Display any article that has its corresponding filter :checked */
 .filters:has(#bags:checked) ~ article.carryOn.bags,
 .filters:has(#clothing:checked) ~ article.carryOn.clothing,
 .filters:has(#footwear:checked) ~ article.carryOn.footwear,
@@ -118,10 +113,12 @@ input[type="submit"] {
   display: grid;
 }
 
-/* ITEM LIST */
-
 .itemList {
   display: grid;
+}
+
+.itemListHeader {
+  display: none;
 }
 
 .itemListEmpty {
@@ -131,11 +128,12 @@ input[type="submit"] {
   font-style: italic;
 }
 
-.itemList:has(.itemListItem:not(.itemListHeader):not(.itemListSummary)) .itemListEmpty {
-display: none;
+.itemList:has(.itemListItem) .itemListEmpty {
+  display: none;
 }
 
-.itemListItem {
+.itemListItem,
+.itemListSummary {
   display: grid;
   grid-template-rows: repeat(5, auto);
   grid-template-columns: repeat(6, 1fr);
@@ -154,10 +152,6 @@ display: none;
   padding: 0.25rem;
   color: red;
   cursor: pointer;
-}
-
-.itemListHeader {
-  display: none;
 }
 
 .itemCategory,
@@ -186,8 +180,8 @@ display: none;
   text-align: start;
 }
 
-.itemListItem.itemListSummary .totalWeight,
-.itemListItem.itemListSummary .itemName {
+.itemListSummary .totalWeight,
+.itemListSummary .itemName {
   grid-column: span 6;
   font-size: larger;
   color: var(--clr-accent);
@@ -230,7 +224,8 @@ display: none;
 
   .itemListItem,
   .itemListHeader,
-  .itemListEmpty {
+  .itemListEmpty,
+  .itemListSummary {
     grid-template-columns: 1fr 3rem 3rem 3rem 2rem 7rem 1fr;
     grid-template-rows: 1fr;
     grid-template-areas: "itemName itemAmount itemWeight itemTotalWeight itemCategory itemSubcategory itemPriority";
@@ -269,12 +264,12 @@ display: none;
     grid-column: span 1;
   }
 
-  .itemListItem.itemListSummary .totalWeight,
-  .itemListItem.itemListSummary .itemName {
+  .itemListSummary .totalWeight,
+  .itemListSummary .itemName {
     grid-column: span 1;
   }
 
-  .itemListItem.itemListSummary .totalWeight {
+  .itemListSummary .totalWeight {
     grid-column: itemTotalWeight;
   }
 
