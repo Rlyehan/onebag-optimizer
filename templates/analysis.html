@@ -12,42 +12,42 @@
 <h1>Analysis Results</h1>
 
 <h2>Total Weight</h2>
-<p>{{.TotalWeight}}g</p>
+<p>{{.Analysis.TotalWeight}}g</p>
 
 <h2>Top Heaviest Items</h2>
 <ul>
-    {{range .TopHeaviestItems}}
+    {{range .Analysis.TopHeaviestItems}}
     <li>{{.Name}} - {{.Weight}}g (Amount: {{.Amount}})</li>
     {{end}}
 </ul>
 
 <h2>Weight by Bag Type</h2>
 <ul>
-    {{range $key, $value := .BagWeights}}
+    {{range $key, $value := .Analysis.BagWeights}}
     <li>{{$key}}: {{$value}}g</li>
     {{end}}
 </ul>
 
 <h2>Weight by Category</h2>
 <ul>
-    {{range $key, $value := .CategoryWeights}}
+    {{range $key, $value := .Analysis.CategoryWeights}}
     <li>{{$key}}: {{$value}}g</li>
     {{end}}
 </ul>
 
 <h2>Weight Distribution by Priority</h2>
 <ul>
-    {{range $key, $value := .PriorityWeights}}
+    {{range $key, $value := .Analysis.PriorityWeights}}
     <li>Priority {{$key}}: {{$value}}g</li>
     {{end}}
 </ul>
 
 <h2>Average Weight</h2>
-<p>{{.AverageWeight}}g</p>
+<p>{{.Analysis.AverageWeight}}g</p>
 
 <h2>Weight Percentage by Category</h2>
 <ul>
-    {{range $key, $value := .CategoryWeightPercentage}}
+    {{range $key, $value := .Analysis.CategoryWeightPercentage}}
     <li>{{$key}}: {{printf "%.2f" $value}}%</li>
     {{end}}
 </ul>
