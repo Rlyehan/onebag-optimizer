@@ -12,6 +12,10 @@ import (
 	"sort"
 	"os"
 	"fmt"
+	"sync"
+	"time"
+	"crypto/rand"
+	"encoding/base64"
 )
 
 type TravelItem struct {
@@ -39,7 +43,115 @@ type CategoryWeight struct {
 	Weight   int
 }
 
+type Session struct {
+	ID string
+	LastAccess time.Time
+	Values map[string]interface{}
+}
+
+type SessionManager struct {
+	sessions map[string]*Session
+	mutex sync.Mutex
+	expiry time.Duration
+}
+
+func NewSessionManager(expiry time.Duration) *SessionManager {
+	return &SessionManager{
+		sessions: make(map[string]*Session),
+		expiry: expiry,
+	}
+}
+
+func generateSessionID() (string, error) {
+    b := make([]byte, 32)
+    _, err := rand.Read(b)
+    if err != nil {
+        return "", err
+    }
+    return base64.URLEncoding.EncodeToString(b), nil
+}
+
+func (sm *SessionManager) CreateSession() (*Session, error) {
+	sm.mutex.Lock()
+	defer sm.mutex.Unlock()
+
+	sessionID, err := generateSessionID()
+    if err != nil {
+        return nil, err
+    }
+
+	session := &Session{
+		ID: sessionID,
+		LastAccess: time.Now(),
+		Values: make(map[string]interface{}),
+	}
+	sm.sessions[session.ID] = session
+	return session, nil
+} 
+
+func (sm *SessionManager) GetSession(sessionID string) (*Session, bool) {
+	sm.mutex.Lock()
+	defer sm.mutex.Unlock()
+
+	session, found := sm.sessions[sessionID]
+	if !found {
+		return nil, false
+	}
+
+	session.LastAccess = time.Now()
+	return session, true
+}
+
+func (sm *SessionManager) Cleanup() {
+    sm.mutex.Lock()
+    defer sm.mutex.Unlock()
+
+    for id, session := range sm.sessions {
+        if time.Since(session.LastAccess) > sm.expiry {
+            delete(sm.sessions, id)
+        }
+    }
+}
+
+func sessionMiddleware(next http.HandlerFunc, sm *SessionManager) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		sessionCookie, err := r.Cookie("session_id")
+		if err != nil || sessionCookie.Value == "" {
+			session, err := sm.CreateSession()
+			if err != nil {
+				// Handle the error here. For example, you might log the error and return a 500 status.
+				log.Printf("Failed to create session: %v", err)
+				http.Error(w, "Internal server error", http.StatusInternalServerError)
+				return
+			}
+			http.SetCookie(w, &http.Cookie{
+				Name:    "session_id",
+				Value:   session.ID,
+				Expires: time.Now().Add(sm.expiry),
+			})
+		} else {
+			_, exists := sm.GetSession(sessionCookie.Value)
+			if !exists {
+				session, err := sm.CreateSession()
+				if err != nil {
+					// Handle the error here. For example, you might log the error and return a 500 status.
+					log.Printf("Failed to create session: %v", err)
+					http.Error(w, "Internal server error", http.StatusInternalServerError)
+					return
+				}
+				http.SetCookie(w, &http.Cookie{
+					Name:    "session_id",
+					Value:   session.ID,
+					Expires: time.Now().Add(sm.expiry),
+				})
+			}
+		}
+		next.ServeHTTP(w, r)
+	}
+}
+
 func main() {
+	sessionManager := NewSessionManager(12 * time.Hour)
     logFile, err := os.OpenFile("app.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
     if err != nil {
         log.Fatalf("Failed to open log file: %v", err)
@@ -53,8 +165,15 @@ func main() {
 		port = "8080"
 	}
 
-	http.HandleFunc("/", rootHandler)
-	http.HandleFunc("/process", processHandler)
+	go func() {
+        for {
+            time.Sleep(1 * time.Hour)
+            sessionManager.Cleanup()
+        }
+    }()
+
+	http.HandleFunc("/", sessionMiddleware(rootHandler, sessionManager))
+	http.HandleFunc("/process", sessionMiddleware(processHandler, sessionManager))
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 	err = http.ListenAndServe(":"+port, nil)
 	if err != nil {
