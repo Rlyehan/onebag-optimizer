@@ -338,11 +338,10 @@ function deleteItem(i) {
 }
 
 function sendData() {
-  var itemString = localStorage.getItem("items")
-  var itemArray = JSON.parse(itemString)
+  var itemArray = localStorage.getItem("items")
   fetch("/process", {
     method: "POST",
-    body: JSON.stringify(itemArray),
+    body: itemArray,
     headers: {
       "Content-type": "application/json; charset=UTF-8",
     }
