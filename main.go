@@ -10,6 +10,8 @@ import (
 	"log"
 	"net/http"
 	"sort"
+	"os"
+	"fmt"
 )
 
 type TravelItem struct {
@@ -38,37 +40,79 @@ type CategoryWeight struct {
 }
 
 func main() {
+    logFile, err := os.OpenFile("app.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+    if err != nil {
+        log.Fatalf("Failed to open log file: %v", err)
+    }
+    defer logFile.Close()
+
+    log.SetOutput(logFile)
+
+	port := os.Getenv("SERVER_PORT")
+	if port == "" {
+		port = "8080"
+	}
+
 	http.HandleFunc("/", rootHandler)
 	http.HandleFunc("/process", processHandler)
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
-	http.ListenAndServe(":8080", nil)
+	err = http.ListenAndServe(":"+port, nil)
+	if err != nil {
+    	log.Fatalf("Failed to start server: %v", err)
+	}
+}
+
+func handleError(w http.ResponseWriter, statusCode int, err error, logMessage string) {
+    log.Printf("%s: %s", logMessage, err)
+    http.Error(w, http.StatusText(statusCode), statusCode)
 }
 
 func rootHandler(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFiles("./static/index.html")
 	if err != nil {
-		http.Error(w, "Could not load template", http.StatusInternalServerError)
-		return
+        handleError(w, http.StatusInternalServerError, err, "Failed to load template")
+        return
 	}
-	tmpl.Execute(w, nil)
+	if err = tmpl.Execute(w, nil); err != nil {
+        handleError(w, http.StatusInternalServerError, err, "Error executing template")
+		return
+    }
 }
 
 func processHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
-		http.Error(w, "Only POST method is allowed", http.StatusMethodNotAllowed)
+		handleError(w, http.StatusMethodNotAllowed, fmt.Errorf("Method not allowed"), "Only POST method is allowed")
 		return
 	}
 
 	var items []TravelItem
 	err := json.NewDecoder(r.Body).Decode(&items)
 	if err != nil {
-		http.Error(w, "Error decoding JSON", http.StatusBadRequest)
+		handleError(w, http.StatusBadRequest, err, "Error decoding JSON")
 		return
 	}
 
+	for _, item := range items {
+		if !isValidTravelItem(item) {
+			handleError(w, http.StatusUnprocessableEntity, fmt.Errorf("Invalid travel item data"), "Invalid travel item data")
+			return
+		}
+	}
+
 	results := dataProcessing(items)
-	categoryWeights := extractCategoryWeights(items)
-	chart := categoryWeightPieChart(categoryWeights)
+
+	var categoryWeights []CategoryWeight
+	for category, weight := range results.CategoryWeights {
+		categoryWeights = append(categoryWeights, CategoryWeight{
+			Category: category,
+			Weight:   weight,
+		})
+	}
+	chart, err := categoryWeightPieChart(categoryWeights)
+	if err != nil {
+		handleError(w, http.StatusInternalServerError, err, "Failed to generate the pie chart")
+		return
+	}
 
 	data := struct {
 		Analysis AnalysisResult
@@ -80,13 +124,13 @@ func processHandler(w http.ResponseWriter, r *http.Request) {
 
 	tmpl, err := template.ParseFiles("./templates/analysis.html")
 	if err != nil {
-		http.Error(w, "could not load template", http.StatusInternalServerError)
+		handleError(w, http.StatusInternalServerError, err, "Could not load template")
 		return
 	}
 
 	err = tmpl.Execute(w, data)
 	if err != nil {
-		http.Error(w, "Error executing template: "+err.Error(), http.StatusInternalServerError)
+		handleError(w, http.StatusInternalServerError, err, "Error executing template")
 	}
 }
 
@@ -106,7 +150,10 @@ func dataProcessing(items []TravelItem) AnalysisResult {
 		categoryWeights[item.Category] += itemTotalWeight
 	}
 
-	averageWeight := totalWeight / len(items)
+	averageWeight := 0
+	if len(items) > 0 {
+		averageWeight = totalWeight / len(items)
+	}
 
 	sort.Slice(items, func(i, j int) bool {
 		weightI := items[i].Weight
@@ -137,32 +184,25 @@ func dataProcessing(items []TravelItem) AnalysisResult {
 	}
 }
 
-func extractCategoryWeights(items []TravelItem) []CategoryWeight {
-	categoryWeightMap := make(map[string]int)
-
-	for _, item := range items {
-		itemWeightInt := item.Weight
-		itemAmountInt := item.Amount
-		weight := itemWeightInt * itemAmountInt
-		categoryWeightMap[item.Category] += weight
-	}
-
-	var categoryWeights []CategoryWeight
-	for category, weight := range categoryWeightMap {
-		categoryWeights = append(categoryWeights, CategoryWeight{
-			Category: category,
-			Weight:   weight,
-		})
-	}
-	return categoryWeights
-}
-
 func generatePieItems(data []CategoryWeight) []opts.PieData {
 	var items []opts.PieData
 	for _, item := range data {
 		items = append(items, opts.PieData{Name: item.Category, Value: item.Weight})
 	}
 	return items
+}
+
+func isValidTravelItem(item TravelItem) bool {
+    if item.Name == "" {
+        return false
+    }
+    if item.Amount < 0 {
+        return false
+    }
+    if item.Weight < 0 {
+        return false
+    }
+    return true
 }
 
 func renderToHtml(c interface{}) template.HTML {
@@ -177,7 +217,7 @@ func renderToHtml(c interface{}) template.HTML {
 	return template.HTML(buf.String())
 }
 
-func categoryWeightPieChart(data []CategoryWeight) template.HTML {
+func categoryWeightPieChart(data []CategoryWeight) (template.HTML, error) {
 	pie := charts.NewPie()
 	pie.SetGlobalOptions(
 		charts.WithTitleOpts(
@@ -206,7 +246,7 @@ func categoryWeightPieChart(data []CategoryWeight) template.HTML {
 	buffer := new(bytes.Buffer)
 	err := pie.Render(buffer)
 	if err != nil {
-		return "Could not generate the Pie Chart."
+		return "", err
 	}
-	return renderToHtml(pie)
+	return renderToHtml(pie), nil
 }
