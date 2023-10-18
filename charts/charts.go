@@ -3,11 +3,16 @@ package charts
 import (
 	"github.com/go-echarts/go-echarts/v2/charts"
 	"github.com/go-echarts/go-echarts/v2/opts"
+	"github.com/PuerkitoBio/goquery"
 	chartrender "github.com/go-echarts/go-echarts/v2/render"
 	"github.com/Rlyehan/onebag-optimizer/models"
 	"html/template"
 	"bytes"
 	"log"
+	"strings"
+	"html"
+	"regexp"
+	"fmt"
 )
 
 
@@ -19,17 +24,45 @@ func generatePieItems(data []models.CategoryWeight) []opts.PieData {
 	return items
 }
 
-func renderToHtml(c interface{}) template.HTML {
-	var buf bytes.Buffer
-	r := c.(chartrender.Renderer)
-	err := r.Render(&buf)
-	if err != nil {
-		log.Printf("Failed to render chart: %s", err)
-		return ""
-	}
-
-	return template.HTML(buf.String())
+func decodeHtmlEntities(input string) string {
+	return html.UnescapeString(input)
 }
+
+func renderToHtml(c interface{}) template.HTML {
+    var buf bytes.Buffer
+    r := c.(chartrender.Renderer)
+    err := r.Render(&buf)
+    if err != nil {
+        log.Printf("Failed to render chart: %s", err)
+        return ""
+    }
+
+    htmlString := buf.String()
+    doc, err := goquery.NewDocumentFromReader(strings.NewReader(htmlString))
+    if err != nil {
+        log.Printf("Failed to parse HTML: %s", err)
+        return ""
+    }
+
+    // Extract the chart ID from the rendered script
+    chartId := doc.Find("script").Text()
+    re := regexp.MustCompile(`document.getElementById\('(.+?)'\)`)
+    matches := re.FindStringSubmatch(chartId)
+    if len(matches) < 2 {
+        log.Printf("Failed to extract chart ID")
+        return ""
+    }
+    extractedChartId := matches[1]
+
+    script, _ := doc.Find("body script").Html()
+	script = decodeHtmlEntities(script)
+
+    cleanedHtml := fmt.Sprintf(`<div class="item" id="%s" style="width:900px;height:500px;"></div>
+<script type="text/javascript">%s</script>`, extractedChartId, script)
+
+    return template.HTML(cleanedHtml)
+}
+
 
 func CategoryWeightPieChart(data []models.CategoryWeight) (template.HTML, error) {
 	pie := charts.NewPie()
