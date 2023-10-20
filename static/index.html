@@ -48,7 +48,7 @@
   </section>
   <button id="loadSampleItems">Load Sample Items</button>
   <button id="clearLocalStorage">Clear Local Storage</button>
-  <section class="itemList bagCarryOn">
+  <section class="itemList bagCarryOn" style="display:none;">
     <h3>Carry-On</h3>
     <fieldset class="filters">
       <legend>Filter by category:</legend>
@@ -63,7 +63,7 @@
       </label>
       <label for="hygiene">Hygiene<input type="checkbox" name="hygiene" id="hygiene" />
       </label>
-      <label for="medical">Medical<input type="checkbox" name="medical" id="medical" />
+      <label for="meds">Meds<input type="checkbox" name="meds" id="meds" />
       </label>
       <label for="consumables">Consumables<input type="checkbox" name="consumables" id="consumables" />
       </label>
@@ -89,7 +89,7 @@
       <div class="totalWeight" id="carryOnTotalWeight"></div>
     </article>
   </section>
-  <section class="itemList bagPersonalItem">
+  <section class="itemList bagPersonalItem"  style="display:none;">
     <h3>Personal Item</h3>
     <fieldset class="filters">
       <legend>Filter by category:</legend>
@@ -102,7 +102,7 @@
       </label>
       <label for="electronics2">Electronics<input type="checkbox" name="electronics2" id="electronics2" />
       </label>
-      <label for="medical2">Medical<input type="checkbox" name="medical2" id="medical2" />
+      <label for="meds2">Meds<input type="checkbox" name="meds2" id="meds2" />
       </label>
       <label for="consumables2">Consumables<input type="checkbox" name="consumables2" id="consumables2" />
       </label>
@@ -129,13 +129,6 @@
     </article>
   </section>
   <button id="startAnalysis">Start Analysis</button>
-  <section id="analysisResult"></section>
-  <section class="itemCharts">
-    <h3>Charts</h3>
-    <img src="https://place-hold.it/600x400" alt="" />
-    <img src="https://place-hold.it/600x400" alt="" />
-  </section>
-  <!-- <script src="main.js"></script> -->
   <script src="./static/main.js"></script>
 </body>
 

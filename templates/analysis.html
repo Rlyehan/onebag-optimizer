@@ -1,62 +1,48 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analysis Results</title>
-    <link rel="stylesheet" href="/static/style.css">
-    <script src="https://go-echarts.github.io/go-echarts-assets/assets/echarts.min.js"></script>
-</head>
-<body>
+<section class="itemList analysisResult">
+    <h3>Analysis Results</h3>
 
-<h1>Analysis Results</h1>
+    <h4>Total Weight: {{.Analysis.TotalWeight}} g</h4>
 
-<h2>Total Weight</h2>
-<p>{{.Analysis.TotalWeight}}g</p>
-
-<h2>Top Heaviest Items</h2>
-<ul>
+    <h4>Top Heaviest Items</h4>
     {{range .Analysis.TopHeaviestItems}}
-    <li>{{.Name}} - {{.Weight}}g (Amount: {{.Amount}})</li>
+    <article class="itemListItem">
+        <div class="itemAmount">{{.Amount}}x</div>
+        <div class="itemWeight">{{.Weight}} g</div>
+        <div class="itemName">{{.Name}}</div>
+    </article>
     {{end}}
-</ul>
 
-<h2>Weight by Bag Type</h2>
-<ul>
+    <h4>Weight by Bag Type</h4>
     {{range $key, $value := .Analysis.BagWeights}}
-    <li>{{$key}}: {{$value}}g</li>
+    <article class="itemListItem">
+        <div class="itemAmount"></div>
+        <div class="itemWeight">{{$value}} g</div>
+        <div class="itemName">{{$key}}</div>
+    </article>
     {{end}}
-</ul>
 
-<h2>Weight by Category</h2>
-<ul>
-    {{range $key, $value := .Analysis.CategoryWeights}}
-    <li>{{$key}}: {{$value}}g</li>
-    {{end}}
-</ul>
+    <h3>Weight by Category</h3>
+    <ul>
+        {{range $key, $value := .Analysis.CategoryWeights}}
+        <li>{{$key}}: {{$value}}g</li>
+        {{end}}
+    </ul>
 
-<h2>Weight Distribution by Priority</h2>
-<ul>
-    {{range $key, $value := .Analysis.PriorityWeights}}
-    <li>Priority {{$key}}: {{$value}}g</li>
-    {{end}}
-</ul>
+    <h3>Weight Distribution by Priority</h3>
+    <ul>
+        {{range $key, $value := .Analysis.PriorityWeights}}
+        <li>Priority {{$key}}: {{$value}}g</li>
+        {{end}}
+    </ul>
 
-<h2>Average Weight</h2>
-<p>{{.Analysis.AverageWeight}}g</p>
+    <h3>Average Weight</h3>
+    <p>{{.Analysis.AverageWeight}}g</p>
 
-<h2>Weight Percentage by Category</h2>
-<ul>
-    {{range $key, $value := .Analysis.CategoryWeightPercentage}}
-    <li>{{$key}}: {{printf "%.2f" $value}}%</li>
-    {{end}}
-</ul>
+    <h3>Weight Percentage by Category</h3>
+    <ul>
+        {{range $key, $value := .Analysis.CategoryWeightPercentage}}
+        <li>{{$key}}: {{printf "%.2f" $value}}%</li>
+        {{end}}
+    </ul>
 
-<h2>Category Weight Distribution</h2>
-<div>
-    {{.Chart}}
-</div>
-
-</body>
-</html>
+</section>

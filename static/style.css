@@ -28,6 +28,8 @@ form {
   gap: 0.25rem;
   grid-template-columns: 1fr 1fr;
   max-width: 95dvw;
+  font-family: "JetBrains Mono", monospace;
+
 }
 
 #itemName,
@@ -42,6 +44,8 @@ select {
   font-size: 1.25rem;
   padding: 0.75rem 2rem;
   border: 2px solid grey;
+  font-family: "JetBrains Mono", monospace;
+
 }
 
 input:focus,
@@ -96,7 +100,7 @@ input[type="submit"] {
 .filters:has(#grooming:checked) ~ article.carryOn.grooming,
 .filters:has(#electronics:checked) ~ article.carryOn.electronics,
 .filters:has(#hygiene:checked) ~ article.carryOn.hygiene,
-.filters:has(#medical:checked) ~ article.carryOn.medical,
+.filters:has(#meds:checked) ~ article.carryOn.meds,
 .filters:has(#consumables:checked) ~ article.carryOn.consumables,
 .filters:has(#necessities:checked) ~ article.carryOn.necessities,
 .filters:has(#other:checked) ~ article.carryOn.other,
@@ -106,7 +110,7 @@ input[type="submit"] {
 .filters:has(#grooming2:checked) ~ article.personalItem.grooming,
 .filters:has(#electronics2:checked) ~ article.personalItem.electronics,
 .filters:has(#hygiene2:checked) ~ article.personalItem.hygiene,
-.filters:has(#medical2:checked) ~ article.personalItem.medical,
+.filters:has(#meds2:checked) ~ article.personalItem.meds,
 .filters:has(#consumables2:checked) ~ article.personalItem.consumables,
 .filters:has(#necessities2:checked) ~ article.personalItem.necessities,
 .filters:has(#other2:checked) ~ article.personalItem.other {
@@ -130,6 +134,17 @@ input[type="submit"] {
 
 .itemList:has(.itemListItem) .itemListEmpty {
   display: none;
+}
+
+.analysisResult .itemListItem {
+  grid-template-columns: 3ch 8ch 1fr;
+}
+
+.analysisResult .itemAmount,
+.analysisResult .itemWeight,
+.analysisResult .itemName {
+  grid-column: span 1;
+  text-align: start;
 }
 
 .itemListItem,
@@ -185,11 +200,6 @@ input[type="submit"] {
   grid-column: span 6;
   font-size: larger;
   color: var(--clr-accent);
-}
-
-.itemCharts img {
-  width: 100%;
-  height: auto;
 }
 
 @media (min-width: 64rem) {
@@ -249,6 +259,16 @@ input[type="submit"] {
     opacity: 1;
   }
 
+  /* .analysisResult .itemListItem {
+    grid-template-columns: 3ch 8ch 1fr;
+  } */
+  
+  .analysisResult .itemAmount,
+  .analysisResult .itemWeight {
+    grid-column: span 1;
+    text-align: end;
+  }
+
   .itemAmount {
     text-align: end;
   }
@@ -275,10 +295,5 @@ input[type="submit"] {
 
   .mobileOnlyInfo {
     display: none;
-  }
-
-  .itemCharts img {
-    max-width: calc(50% - 5px);
-    height: auto;
   }
 }
