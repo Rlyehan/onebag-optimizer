@@ -154,6 +154,10 @@ input[type="submit"] {
   text-align: start;
 }
 
+.analysisResult .categoryData {
+  grid-template-columns: 8ch 8ch 1fr;
+}
+
 .itemListItem,
 .itemListSummary {
   display: grid;
@@ -207,6 +211,11 @@ input[type="submit"] {
   grid-column: span 6;
   font-size: larger;
   color: var(--clr-accent);
+}
+
+footer {
+  padding-block: 5rem;
+  text-align: center;
 }
 
 @media (min-width: 64rem) {
@@ -272,6 +281,10 @@ input[type="submit"] {
 
   .analysisResult .itemListItem {
     grid-template-columns: 8ch 3ch 1fr;
+  }
+
+  .analysisResult .categoryData {
+    grid-template-columns: 8ch 8ch 1fr;
   }
 
   .analysisResult .itemAmount,

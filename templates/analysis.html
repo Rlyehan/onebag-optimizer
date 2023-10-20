@@ -14,10 +14,10 @@
 
     <div>
         <h3>Weight by Category</h3>
-        {{range $key, $value := .Analysis.CategoryWeights}}
-        <article class="itemListItem">
-            <div class="itemWeight">{{$value.weight}} g</div>
-            <div class="itemWeight">({{$value.percentage}} %)</div>
+        {{range $key, $value := .Analysis.CategoryData}}
+        <article class="itemListItem categoryData">
+            <div class="itemWeight">{{$value.Weight}} g</div>
+            <div class="itemWeight">{{printf "%.2f" $value.Percentage}} %</div>
             <div class="itemName" style="text-transform: capitalize;">{{$key}}</div>
         </article>
         {{end}}
