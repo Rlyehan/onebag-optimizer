@@ -46,9 +46,20 @@
       <input type="submit" value="+" />
     </form>
   </section>
+  <section class="listSelector">
+    <form id="listSelector">
+      <select id="itemCategory" required="required">
+        <option value="" disabled="disabled" selected="selected">
+          Sample List
+        </option>
+      </select>
+      <input type="submit" value="Load List" />
+      <input type="submit" value="Delete List" />
+    </form>
+  </section>
   <button id="loadSampleItems">Load Sample Items</button>
   <button id="clearLocalStorage">Clear Local Storage</button>
-  <section class="itemList bagCarryOn" style="display:none;">
+  <section class="itemList bagCarryOn">
     <h3>Carry-On</h3>
     <fieldset class="filters">
       <legend>Filter by category:</legend>
@@ -89,7 +100,7 @@
       <div class="totalWeight" id="carryOnTotalWeight"></div>
     </article>
   </section>
-  <section class="itemList bagPersonalItem"  style="display:none;">
+  <section class="itemList bagPersonalItem">
     <h3>Personal Item</h3>
     <fieldset class="filters">
       <legend>Filter by category:</legend>

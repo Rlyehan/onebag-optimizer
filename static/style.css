@@ -29,7 +29,6 @@ form {
   grid-template-columns: 1fr 1fr;
   max-width: 95dvw;
   font-family: "JetBrains Mono", monospace;
-
 }
 
 #itemName,
@@ -45,7 +44,6 @@ select {
   padding: 0.75rem 2rem;
   border: 2px solid grey;
   font-family: "JetBrains Mono", monospace;
-
 }
 
 input:focus,
@@ -58,6 +56,11 @@ input[type="submit"] {
   font-size: 1.5rem;
   border: 2px solid grey;
   background-color: var(--clr-accent);
+}
+
+.listSelector input[value="Load List"],
+.listSelector input[value="Load List"] {
+  display: block;
 }
 
 .filters {
@@ -136,8 +139,12 @@ input[type="submit"] {
   display: none;
 }
 
+.analysisResult {
+  gap: 2rem;
+}
+
 .analysisResult .itemListItem {
-  grid-template-columns: 3ch 8ch 1fr;
+  grid-template-columns: 8ch 3ch 1fr;
 }
 
 .analysisResult .itemAmount,
@@ -259,10 +266,14 @@ input[type="submit"] {
     opacity: 1;
   }
 
-  /* .analysisResult .itemListItem {
-    grid-template-columns: 3ch 8ch 1fr;
-  } */
-  
+  .analysisResult {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .analysisResult .itemListItem {
+    grid-template-columns: 8ch 3ch 1fr;
+  }
+
   .analysisResult .itemAmount,
   .analysisResult .itemWeight {
     grid-column: span 1;

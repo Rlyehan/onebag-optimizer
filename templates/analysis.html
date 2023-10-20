@@ -1,48 +1,26 @@
+<h2>Analysis Results</h2>
 <section class="itemList analysisResult">
-    <h3>Analysis Results</h3>
 
-    <h4>Total Weight: {{.Analysis.TotalWeight}} g</h4>
+    <div>
+        <h3>Top Heaviest Items</h3>
+        {{range .Analysis.TopHeaviestItems}}
+        <article class="itemListItem">
+            <div class="itemWeight">{{.Weight}} g</div>
+            <div class="itemAmount">{{.Amount}}x</div>
+            <div class="itemName">{{.Name}}</div>
+        </article>
+        {{end}}
+    </div>
 
-    <h4>Top Heaviest Items</h4>
-    {{range .Analysis.TopHeaviestItems}}
-    <article class="itemListItem">
-        <div class="itemAmount">{{.Amount}}x</div>
-        <div class="itemWeight">{{.Weight}} g</div>
-        <div class="itemName">{{.Name}}</div>
-    </article>
-    {{end}}
-
-    <h4>Weight by Bag Type</h4>
-    {{range $key, $value := .Analysis.BagWeights}}
-    <article class="itemListItem">
-        <div class="itemAmount"></div>
-        <div class="itemWeight">{{$value}} g</div>
-        <div class="itemName">{{$key}}</div>
-    </article>
-    {{end}}
-
-    <h3>Weight by Category</h3>
-    <ul>
+    <div>
+        <h3>Weight by Category</h3>
         {{range $key, $value := .Analysis.CategoryWeights}}
-        <li>{{$key}}: {{$value}}g</li>
+        <article class="itemListItem">
+            <div class="itemWeight">{{$value.weight}} g</div>
+            <div class="itemWeight">({{$value.percentage}} %)</div>
+            <div class="itemName" style="text-transform: capitalize;">{{$key}}</div>
+        </article>
         {{end}}
-    </ul>
-
-    <h3>Weight Distribution by Priority</h3>
-    <ul>
-        {{range $key, $value := .Analysis.PriorityWeights}}
-        <li>Priority {{$key}}: {{$value}}g</li>
-        {{end}}
-    </ul>
-
-    <h3>Average Weight</h3>
-    <p>{{.Analysis.AverageWeight}}g</p>
-
-    <h3>Weight Percentage by Category</h3>
-    <ul>
-        {{range $key, $value := .Analysis.CategoryWeightPercentage}}
-        <li>{{$key}}: {{printf "%.2f" $value}}%</li>
-        {{end}}
-    </ul>
+    </div>
 
 </section>
