@@ -5,6 +5,18 @@ import (
 	"sort"
 )
 
+func formatBagType(bagType string) string {
+	switch bagType {
+	case "carryOn":
+		return "Carry On"
+	case "personalItem":
+		return "Personal Item"
+	default:
+		return bagType
+	}
+}
+
+
 func DataProcessing(items []models.TravelItem) models.AnalysisResult {
 	totalWeight := 0
 	bagWeights := make(map[string]int)
@@ -19,6 +31,8 @@ func DataProcessing(items []models.TravelItem) models.AnalysisResult {
 		bagWeights[item.BagType] += itemTotalWeight
 		priorityWeights[item.Priority] += itemTotalWeight
 		categoryWeights[item.Category] += itemTotalWeight
+		formattedBagType := formatBagType(item.BagType)
+		bagWeights[formattedBagType] += itemTotalWeight
 	}
 
 	averageWeight := 0
@@ -54,7 +68,6 @@ func DataProcessing(items []models.TravelItem) models.AnalysisResult {
 		CategoryWeightPercentage: categoryWeightPercentage,
 	}
 }
-
 
 func IsValidTravelItem(item models.TravelItem) bool {
     if item.Name == "" {
