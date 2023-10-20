@@ -1,5 +1,8 @@
 document.addEventListener("DOMContentLoaded", loadOBItems)
 
+// let uuid = self.crypto.randomUUID();
+// console.log(uuid);
+
 const sampleData = [
   {
     itemName: "Sample Item 1",
@@ -337,6 +340,7 @@ function deleteItem(i) {
 
 function sendData() {
   var itemArray = localStorage.getItem("items")
+
   fetch("/process", {
     method: "POST",
     body: itemArray,
