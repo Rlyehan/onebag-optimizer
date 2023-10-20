@@ -18,9 +18,15 @@ type AnalysisResult struct {
 	PriorityWeights  map[string]int
 	AverageWeight    int
 	CategoryWeightPercentage map[string]float64
+	CategoryData map[string]CategoryInfo
 }
 
 type CategoryWeight struct {
 	Category string
 	Weight   int
+}
+
+type CategoryInfo struct {
+	Weight     int
+	Percentage float64
 }

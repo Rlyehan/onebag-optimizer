@@ -22,6 +22,7 @@ func DataProcessing(items []models.TravelItem) models.AnalysisResult {
 	bagWeights := make(map[string]int)
 	categoryWeights := make(map[string]int)
 	priorityWeights := make(map[string]int)
+	categoryData := make(map[string]models.CategoryInfo)
 
 	for _, item := range items {
 		itemWeightInt := item.Weight
@@ -57,6 +58,14 @@ func DataProcessing(items []models.TravelItem) models.AnalysisResult {
 		categoryWeightPercentage[category] = float64(weight) / float64(totalWeight) * 100
 	}
 
+	for category, weight := range categoryWeights {
+		percentage := float64(weight) / float64(totalWeight) * 100
+		categoryData[category] = models.CategoryInfo{
+			Weight:     weight,
+			Percentage: percentage,
+		}
+	}
+
 	return models.AnalysisResult{
 		TotalWeight:      totalWeight,
 		TopHeaviestItems: topHeaviestItems,
@@ -65,6 +74,7 @@ func DataProcessing(items []models.TravelItem) models.AnalysisResult {
 		PriorityWeights:  priorityWeights,
 		CategoryWeights:   categoryWeights,
 		CategoryWeightPercentage: categoryWeightPercentage,
+		CategoryData: categoryData,
 	}
 }
 
