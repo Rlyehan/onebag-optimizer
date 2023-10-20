@@ -180,7 +180,7 @@ const sampleData = [
     itemSubcategory: "Razor",
     itemPriority: "3",
     itemBagType: "personalItem",
-  }
+  },
 ]
 
 const loadSampleItemsButton = document.getElementById("loadSampleItems")
@@ -229,9 +229,7 @@ function loadOBItems() {
 }
 
 function clearItemList() {
-  var articles = document.querySelectorAll(
-    ".itemListItem"
-  )
+  var articles = document.querySelectorAll(".itemListItem")
   articles.forEach((entry) => entry.remove())
 }
 
@@ -337,13 +335,66 @@ function deleteItem(i) {
   loadOBItems()
 }
 
+function createChart() {
+  let goecharts_JTpTrFgGhhPI = echarts.init(
+    document.querySelector("section .item"),
+    "white"
+  )
+  let option_JTpTrFgGhhPI = {
+    animation: true,
+    color: [
+      "#5470c6",
+      "#91cc75",
+      "#fac858",
+      "#ee6666",
+      "#73c0de",
+      "#3ba272",
+      "#fc8452",
+      "#9a60b4",
+      "#ea7ccc",
+    ],
+    legend: { show: true, type: "" },
+    series: [
+      {
+        name: "Category Weights",
+        type: "pie",
+        smooth: false,
+        connectNulls: false,
+        showSymbol: false,
+        waveAnimation: false,
+        roseType: "",
+        radius: 200,
+        renderLabelForZeroData: false,
+        selectedMode: false,
+        animation: false,
+        data: [{ name: "bags", value: 3000 }],
+        label: { show: true, formatter: "{b}: {c}" },
+      },
+    ],
+    title: {
+      text: "Weight distribution per Category",
+      subtext: "Analyzed from travel items",
+    },
+    tooltip: { show: false },
+  }
+  let action_JTpTrFgGhhPI = { areas: {}, type: "" }
+  goecharts_JTpTrFgGhhPI.setOption(option_JTpTrFgGhhPI)
+  goecharts_JTpTrFgGhhPI.dispatchAction(action_JTpTrFgGhhPI)
+}
+
 function sendData() {
   var itemArray = localStorage.getItem("items")
   fetch("/process", {
     method: "POST",
     body: itemArray,
-    headers: {
-      "Content-type": "application/json; charset=UTF-8",
-    }
+    // headers: {
+    //   "Content-type": "application/json; charset=UTF-8",
+    // }
   })
+    .then((response) => response.text())
+    .then((data) => {
+      console.log(data)
+      document.getElementById("analysisResult").innerHTML = data
+      createChart()
+    })
 }
