@@ -28,7 +28,6 @@ func DataProcessing(items []models.TravelItem) models.AnalysisResult {
 		itemAmountInt := item.Amount
 		itemTotalWeight := itemWeightInt * itemAmountInt
 		totalWeight += itemTotalWeight
-		bagWeights[item.BagType] += itemTotalWeight
 		priorityWeights[item.Priority] += itemTotalWeight
 		categoryWeights[item.Category] += itemTotalWeight
 		formattedBagType := formatBagType(item.BagType)
