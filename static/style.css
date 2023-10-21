@@ -2,6 +2,7 @@
   font-family: "JetBrains Mono", monospace;
   color-scheme: dark light;
   --clr-accent: #0075ff;
+  --clr-complementary: #FF8A00;
 }
 
 *,
@@ -45,7 +46,7 @@ form {
 #itemName,
 #itemCategory,
 #itemSubcategory,
-input[type="submit"] {
+input[value="+"] {
   grid-column: span 2;
 }
 
@@ -67,11 +68,6 @@ input[type="submit"] {
   font-size: 1.5rem;
   border: 2px solid grey;
   background-color: var(--clr-accent);
-}
-
-.listSelector input[value="Load List"],
-.listSelector input[value="Load List"] {
-  display: block;
 }
 
 .filters {
@@ -253,7 +249,7 @@ footer p {
     grid-column: span 1;
   }
 
-  input[type="submit"] {
+  input[value="+"] {
     grid-column: span 6;
   }
 
@@ -294,12 +290,16 @@ footer p {
     grid-template-columns: repeat(3, 1fr);
   }
 
+  .analysisResult h2 {
+    grid-column: span 3;
+  }
+
   .analysisResult .itemListItem {
     grid-template-columns: 8ch 3ch 1fr;
   }
 
   .analysisResult .categoryData {
-    grid-template-columns: 8ch 8ch 1fr;
+    grid-template-columns: 8ch 9ch 1fr;
   }
 
   .analysisResult .itemAmount,
