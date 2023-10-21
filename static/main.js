@@ -349,14 +349,14 @@ function renderItems(itemArray) {
     if (item.itemBagType == "carryOn") {
       targetCarryOn.insertBefore(itemListItem, itemListSummaryCarryOn)
       totalWeightCarryOn += itemTotalWeight
-      carryOnTotalWeight.innerHTML = totalWeightCarryOn
+      carryOnTotalWeight.innerHTML = totalWeightCarryOn + " g"
     } else if (item.itemBagType == "personalItem") {
       targetPersonalItem.insertBefore(
         itemListItem,
         itemListSummaryPersonalItem
       )
       totalWeightPersonalItem += itemTotalWeight
-      personalItemTotalWeight.innerHTML = totalWeightPersonalItem
+      personalItemTotalWeight.innerHTML = totalWeightPersonalItem + " g"
     }
   })
 }
@@ -371,9 +371,9 @@ function createItemListItem(item, itemTotalWeight, index) {
   itemListItem.setAttribute("data-index", `${index}`)
   itemListItem.innerHTML = `
     <div class="itemName">${item.itemName}</div>
-    <div class="itemAmount">${item.itemAmount}</div>
-    <div class="itemWeight">${item.itemWeight}</div>
-    <div class="itemTotalWeight"><span class="mobileOnlyInfo">Total: </span>${itemTotalWeight}</div>
+    <div class="itemAmount">${item.itemAmount}x</div>
+    <div class="itemWeight">${item.itemWeight}<span class="mobileOnlyInfo"> g</span></div>
+    <div class="itemTotalWeight"><span class="mobileOnlyInfo">Total: </span>${itemTotalWeight}<span class="mobileOnlyInfo"> g</span></div>
     <div class="itemPriority"><span class="mobileOnlyInfo">Prio: </span>${item.itemPriority
     }</div>
     <div class="itemCategory">${item.itemCategory.charAt(0).toUpperCase() + item.itemCategory.slice(1)
