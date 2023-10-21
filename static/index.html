@@ -14,6 +14,17 @@
 
 <body>
   <h2>OneBag Optimizer</h2>
+  <section class="listSelector">
+    <form>
+      <input type="text" id="listName" placeholder="List Name">
+      <input type="submit" id="createListButton" value="Create List" />
+      <span style="text-align: center; margin-block: auto; font-size: 2rem;"> or </span>
+      <select name="List Selector" id="listSelector" required="required">
+      </select>
+      <!-- <input type="submit" id="loadListButton" value="Load List" /> -->
+      <input type="submit" id="deleteListButton" value="Delete List" />
+    </form>
+  </section>
   <section class="inputform">
     <form id="itemForm">
       <input id="itemName" value="Test" type="text" placeholder="Name" required="required" autofocus="autofocus" />
@@ -47,17 +58,6 @@
       <input type="submit" value="+" />
     </form>
   </section>
-  <!-- <section class="listSelector">
-    <form id="listSelector">
-      <select id="itemCategory" required="required">
-        <option value="" disabled="disabled" selected="selected">
-          Sample List
-        </option>
-      </select>
-      <input type="submit" value="Load List" />
-      <input type="submit" value="Delete List" />
-    </form>
-  </section> -->
   <button id="loadSampleItems">Load Sample Items</button>
   <button id="clearLocalStorage">Clear Local Storage</button>
   <section class="itemList bagCarryOn">
@@ -141,6 +141,8 @@
     </article>
   </section>
   <button id="startAnalysis">Start Analysis</button>
+  <section class="itemList analysisResult"></section>
+  <!-- <script src="main.js"></script> -->
   <script src="./static/main.js"></script>
 </body>
 <footer>
@@ -149,4 +151,5 @@
   <p></p><a href="https://github.com/Rlyehan">Maximilian Huber</a></p>
   <a href="https://github.com/Rlyehan/onebag-optimizer"><i class="fab fa-github fa-2x"></i></a>
 </footer>
+
 </html>
