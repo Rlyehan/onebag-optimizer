@@ -1,7 +1,39 @@
 document.addEventListener("DOMContentLoaded", loadOBItems)
 
-// let uuid = self.crypto.randomUUID();
+let uuid = self.crypto.randomUUID()
 // console.log(uuid);
+
+function addListToIndex(listName, uuid) {
+  var listIndex = localStorage.getItem("List Index")
+  var listIndexItems = listIndex ? JSON.parse(listIndex) : []
+
+  if (!listIndexItems.some((item) => item.listName === listName)) {
+    listIndexItems.push({
+      listName: listName,
+      uuid: uuid,
+    })
+  }
+  localStorage.setItem("List Index", JSON.stringify(listIndexItems))
+}
+
+addListToIndex("Sample List", uuid)
+// addListToIndex("Test List", self.crypto.randomUUID())
+
+function populateListSelector() {
+  var listIndex = JSON.parse(localStorage.getItem("List Index"))
+  var listSelector = document.getElementById("listSelector")
+  listSelector.innerHTML = '<option value="" selected disabled>Select List</option'
+  listIndex.forEach((listIndexItem, index) => {
+    // listSelector.appendChild(`<option value="${listIndexItem.listName}">${listIndexItem.listName}</option>`)
+    const option = document.createElement("option")
+    option.setAttribute("value", listIndexItem.listName)
+    option.setAttribute("data-index", index)
+    option.setHTML(listIndexItem.listName)
+    listSelector.appendChild(option)
+  })
+}
+
+populateListSelector()
 
 const sampleData = [
   {
@@ -186,16 +218,61 @@ const sampleData = [
   },
 ]
 
-const loadSampleItemsButton = document.getElementById("loadSampleItems")
+localStorage.setItem("Sample List", JSON.stringify(sampleData))
 
-const setSampleData = () => {
-  localStorage.setItem("items", JSON.stringify(sampleData))
-}
+const createListButton = document.getElementById("createListButton")
 
-loadSampleItemsButton.addEventListener("click", function () {
-  setSampleData()
-  loadOBItems()
+createListButton.addEventListener("click", function () {
+  event.preventDefault()
+  const listName = document.getElementById("listName").value
+  addListToIndex(listName, self.crypto.randomUUID())
+  setItemArray(listName, [])
+  populateListSelector()
+  let listSelector = document.getElementById("listSelector")
+  listSelector.value = listName
+  loadOBItems(listName)
 })
+
+const listSelectorDropdown = document.getElementById("listSelector")
+
+listSelectorDropdown.addEventListener("change", function () {
+  event.preventDefault()
+  const selectedList = listSelectorDropdown.value
+  getItemArray(selectedList)
+  loadOBItems(selectedList)
+})
+
+
+const deleteListButton = document.getElementById("deleteListButton")
+
+deleteListButton.addEventListener("click", function () {
+  event.preventDefault()
+  const selectedList = document.getElementById("listSelector").value
+  deleteList(selectedList)
+  populateListSelector()
+  loadOBItems(selectedList)
+})
+
+// const loadListButton = document.getElementById("loadListButton")
+
+// loadListButton.addEventListener("click", function () {
+//   event.preventDefault()
+//   const selectedList = document.getElementById("listSelector").value
+//   console.log(selectedList)
+//   getItemArray(selectedList)
+//   loadOBItems(selectedList)
+// })
+
+// const loadSampleItemsButton = document.getElementById("loadSampleItems")
+
+// const setSampleData = () => {
+//   localStorage.setItem("Sample List", JSON.stringify(sampleData))
+// }
+
+// loadSampleItemsButton.addEventListener("click", function () {
+//   setSampleData()
+//   loadOBItems()
+// })
 
 const itemForm = document.getElementById("itemForm")
 const clearLocalStorageButton = document.getElementById("clearLocalStorage")
@@ -212,7 +289,8 @@ clearLocalStorageButton.addEventListener("click", function () {
 })
 
 startAnalysisButton.addEventListener("click", function () {
-  sendData()
+  let selectedList = document.getElementById("listSelector").value
+  sendData(selectedList)
 })
 
 var targetCarryOn = document.querySelector(".bagCarryOn")
@@ -224,11 +302,11 @@ var itemListSummaryPersonalItem = document.querySelector(
   ".bagPersonalItem .itemListSummary"
 )
 
-function loadOBItems() {
+function loadOBItems(listName) {
   clearItemList()
-  var itemArray = getItemArray()
+  var itemArray = getItemArray(listName)
   renderItems(itemArray)
-  activateDeleteListeners()
+  activateDeleteListeners(listName)
 }
 
 function clearItemList() {
@@ -289,7 +367,9 @@ function createItemListItem(item, itemTotalWeight, index) {
 }
 
 function addListItem() {
-  var itemArray = getItemArray()
+  const listName = document.getElementById("listSelector").value
+
+  var itemArray = getItemArray(listName)
 
   var itemName = document.getElementById("itemName").value
   var itemAmount = parseInt(document.getElementById("itemAmount").value)
@@ -309,37 +389,54 @@ function addListItem() {
     itemPriority: itemPriority,
     itemBagType: itemBagType,
   })
-  setItemArray(itemArray)
-  loadOBItems()
+  setItemArray(listName, itemArray)
+  loadOBItems(listName)
 }
 
-function getItemArray() {
-  return JSON.parse(localStorage.getItem("items")) || []
+function getItemArray(listName) {
+  return JSON.parse(localStorage.getItem(listName)) || []
 }
 
-function setItemArray(itemArray) {
-  localStorage.setItem("items", JSON.stringify(itemArray))
+function setItemArray(listName, itemArray) {
+  localStorage.setItem(listName, JSON.stringify(itemArray))
 }
 
-function activateDeleteListeners() {
+function deleteItemArray(listName) {
+  localStorage.removeItem(listName)
+}
+
+function activateDeleteListeners(listName) {
   let deleteBtn = document.querySelectorAll(".deleteItem")
   deleteBtn.forEach((dB) => {
     dB.addEventListener("click", () => {
       const index = dB.parentElement.parentElement.getAttribute("data-index")
-      deleteItem(index)
+      deleteItem(listName, index)
     })
   })
 }
 
-function deleteItem(i) {
-  var itemArray = getItemArray()
+function deleteItem(listName, i) {
+  var itemArray = getItemArray(listName)
   itemArray.splice(i, 1)
-  setItemArray(itemArray)
-  loadOBItems()
+  setItemArray(listName, itemArray)
+  loadOBItems(listName)
 }
 
-function sendData() {
-  var itemArray = localStorage.getItem("items")
+function deleteList(listName) {
+  let i = document.querySelector('[value="'+listName+'"').getAttribute("data-index")
+  localStorage.removeItem(listName)
+  
+  var listIndex = getItemArray("List Index")
+  listIndex.splice(i, 1)
+  setItemArray("List Index", listIndex)
+  loadOBItems(listName)
+  let listSelector = document.getElementById("listSelector")
+  listSelector.value = ''
+}
+
+function sendData(listName) {
+  var itemArray = localStorage.getItem(listName)
+  // var itemArray = JSON.stringify(localStorage.getItem(listName))
 
   fetch("/process", {
     method: "POST",
@@ -350,10 +447,6 @@ function sendData() {
   })
     .then((response) => response.text())
     .then((data) => {
-      document.getElementById("startAnalysis").insertAdjacentHTML('afterend', data)
-      let script = document.querySelectorAll(".analysisResult script")
-      script.forEach((scriptTag) => {
-        eval(scriptTag.innerHTML)
-      })
+      document.querySelector(".analysisResult").innerHTML = data
     })
 }
