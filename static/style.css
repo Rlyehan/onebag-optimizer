@@ -2,7 +2,7 @@
   font-family: "JetBrains Mono", monospace;
   color-scheme: dark light;
   --clr-accent: #0075ff;
-  --clr-complementary: #FF8A00;
+  --clr-complementary: #ff8a00;
 }
 
 *,
@@ -15,12 +15,13 @@
 
 a {
   text-decoration: none;
-  color: white;
+  color: inherit;
   opacity: 0.5;
 
   &:hover {
     opacity: 1;
-    transition: opacity 300ms ease-in-out;
+    transition: all 300ms ease-in-out;
+    color: var(--clr-accent);
   }
 }
 
@@ -43,6 +44,11 @@ form {
   font-family: "JetBrains Mono", monospace;
 }
 
+#listNameForm,
+#listSelectorForm {
+  grid-template-columns: 1fr 15ch;
+}
+
 #itemName,
 #itemCategory,
 #itemSubcategory,
@@ -53,9 +59,10 @@ input[value="+"] {
 input,
 select {
   font-size: 1.25rem;
-  padding: 0.75rem 2rem;
+  padding: 0.75rem;
   border: 2px solid grey;
   font-family: "JetBrains Mono", monospace;
+  -webkit-appearance: none;
 }
 
 input:focus,
@@ -63,11 +70,58 @@ select:focus {
   outline: 2px solid var(--clr-accent);
 }
 
-input[type="submit"] {
-  padding: 1rem;
-  font-size: 1.5rem;
+input[type="submit"],
+input[type="button"],
+button {
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
   border: 2px solid grey;
   background-color: var(--clr-accent);
+  font-family: "JetBrains Mono", monospace;
+}
+
+
+input[type="submit"],
+input[type="button"],
+button,
+select {
+  &:hover {
+    cursor: pointer;
+    border: 2px solid var(--clr-complementary);
+  }
+}
+
+
+button {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.highlight {
+  animation: pulseOutline 2000ms forwards;
+  animation-iteration-count: 3;
+}
+
+@keyframes pulseOutline {
+  0% {
+    box-shadow: 0 0 0px 0px var(--clr-accent);
+  }
+  50% {
+    box-shadow: 0 0 10px 6px var(--clr-accent);
+  }
+  100% {
+    box-shadow: 0 0 0px 0px var(--clr-accent);
+  }
+}
+
+.listSelector {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+}
+
+.listSelector input[type="text"],
+.listSelector select {
+  width: 100%;
 }
 
 .filters {
@@ -235,9 +289,23 @@ footer p {
     max-width: 95dvw;
   }
 
+  .listSelector {
+    gap: 3rem;
+  }
+
+  .listSelector input[type="text"],
+  .listSelector select {
+    width: auto;
+  }
+
+  #listNameForm,
+  #listSelectorForm {
+    grid-template-columns: 1fr 15ch;
+  }
+
   input,
   select {
-    padding-inline: 1rem 0;
+    padding-inline: 0.75rem 0;
   }
 
   #itemName {
@@ -251,6 +319,14 @@ footer p {
 
   input[value="+"] {
     grid-column: span 6;
+  }
+
+  .listSelector {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+  #itemSelectorForm {
+    justify-self: end;
   }
 
   .itemListHeader {
