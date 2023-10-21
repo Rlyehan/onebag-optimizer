@@ -15,26 +15,27 @@
 <body>
   <h2>OneBag Optimizer</h2>
   <section class="listSelector">
-    <form>
-      <input type="text" id="listName" placeholder="List Name">
+    <form id="listNameForm">
+      <input type="text" id="listName" placeholder="List Name" />
       <input type="submit" id="createListButton" value="Create List" />
-      <span style="text-align: center; margin-block: auto; font-size: 2rem;"> or </span>
-      <select name="List Selector" id="listSelector" required="required">
-      </select>
-      <!-- <input type="submit" id="loadListButton" value="Load List" /> -->
+    </form>
+    <!-- <span style="text-align: center; margin-block: auto; font-size: 2rem;"> or </span> -->
+    <form id="listSelectorForm">
+      <select id="listSelector"></select>
       <input type="submit" id="deleteListButton" value="Delete List" />
     </form>
   </section>
+
   <section class="inputform">
     <form id="itemForm">
-      <input id="itemName" value="Test" type="text" placeholder="Name" required="required" autofocus="autofocus" />
-      <input id="itemAmount" value="1" type="number" placeholder="Amount" required="required" min="0" max="99" />
-      <input id="itemWeight" value="1000" type="number" placeholder="Weight" required="required" min="0" max="9999" />
-      <select id="itemCategory" required="required">
-        <option value="" disabled="disabled" selected="selected">
+      <input id="itemName" value="" type="text" placeholder="Name" required autofocus />
+      <input id="itemAmount" value="" type="number" placeholder="Amount" required min="0" max="99" />
+      <input id="itemWeight" value="" type="number" placeholder="Weight" required min="0" max="9999" />
+      <select id="itemCategory" required>
+        <option value="" disabled selected>
           Category
         </option>
-        <option value="bags" selected="selected">Bags</option>
+        <option value="bags">Bags</option>
         <option value="clothing">Clothing</option>
         <option value="footwear">Footwear</option>
         <option value="grooming">Grooming</option>
@@ -45,21 +46,21 @@
         <option value="necessities">Necessities</option>
         <option value="other">Other</option>
       </select>
-      <input id="itemSubcategory" value="Item Subcategory" placeholder="Subcategory" autocomplete="on" />
-      <select id="itemPriority" required="required">
+      <input id="itemSubcategory" value="" placeholder="Subcategory" autocomplete="on" />
+      <select id="itemPriority" required>
         <option value="1">Priority 1</option>
         <option value="2">Priority 2</option>
         <option value="3">Priority 3</option>
       </select>
-      <select id="itemBagType" required="required">
+      <select id="itemBagType" required>
         <option value="carryOn">Carry-On</option>
         <option value="personalItem">Personal Item</option>
       </select>
       <input type="submit" value="+" />
     </form>
   </section>
-  <button id="loadSampleItems">Load Sample Items</button>
-  <button id="clearLocalStorage">Clear Local Storage</button>
+  <!-- <button id="loadSampleItems">Load Sample Items</button> -->
+  <!-- <button id="clearLocalStorage">Clear Local Storage</button> -->
   <section class="itemList bagCarryOn">
     <h3>Carry-On</h3>
     <fieldset class="filters">
@@ -101,6 +102,7 @@
       <div class="totalWeight" id="carryOnTotalWeight"></div>
     </article>
   </section>
+
   <section class="itemList bagPersonalItem">
     <h3>Personal Item</h3>
     <fieldset class="filters">
@@ -140,16 +142,23 @@
       <div class="totalWeight" id="personalItemTotalWeight"></div>
     </article>
   </section>
+
   <button id="startAnalysis">Start Analysis</button>
+
   <section class="itemList analysisResult"></section>
   <!-- <script src="main.js"></script> -->
   <script src="./static/main.js"></script>
 </body>
+
 <footer>
-  <p>&copy; 2023</p>
-  <p><a href="https://github.com/lukas-berger">Lukas Berger</a></p>
-  <p></p><a href="https://github.com/Rlyehan">Maximilian Huber</a></p>
-  <a href="https://github.com/Rlyehan/onebag-optimizer"><i class="fab fa-github fa-2x"></i></a>
+  <!-- <p>&copy; 2023</p> -->
+  <h3>OneBag Optimizer</h3>
+  <p><a href="https://github.com/lukas-berger" target="_blank" rel="noopener noreferrer" title="Lukas Berger on GitHub">Lukas Berger</a>
+  </p>
+  <p></p><a href="https://github.com/Rlyehan" target="_blank" rel="noopener noreferrer" title="Maximilian Huber on GitHub">Maximilian
+    Huber</a></p>
+  <a href="https://github.com/Rlyehan/onebag-optimizer" target="_blank" rel="noopener noreferrer" title="This project's GitHub"><i
+      class="fab fa-github fa-2x"></i></a>
 </footer>
 
 </html>
