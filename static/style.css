@@ -404,11 +404,16 @@ footer p {
     grid-template-areas: "itemName itemAmount itemWeight itemTotalWeight itemCategory itemSubcategory itemPriority";
     gap: 1rem;
     text-align: start;
+    transition: background-color 100ms ease-in-out;
 
     & > * {
       grid-column: span 1;
     }
   }
+.itemListItem:hover {
+  background-color: #333;
+}
+
   .itemListItem .deleteItem {
     top: 50%;
     right: 0.5rem;
