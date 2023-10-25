@@ -1,0 +1,18 @@
+<div>
+    <canvas id="{{ .ID }}" width="400" height="400"></canvas>
+    <script>
+    const piectx = document.getElementById('{{ .ID }}').getContext('2d');
+    const piechart = new Chart(piectx, {
+        type: 'pie',
+        data: {
+            labels: {{ .Labels }},
+            datasets: [{
+                label: '{{ .Label }}',
+                data: {{ .Data }},
+                borderWidth: 1
+            }]
+        },
+        options: {}
+    });
+    </script>
+</div>
