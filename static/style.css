@@ -1,8 +1,9 @@
 :root {
   font-family: "JetBrains Mono", monospace;
   color-scheme: dark light;
-  --clr-accent: #0075ff;
-  --clr-complementary: #ff8a00;
+  --clr-accent: hsl(212, 100%, 50%);
+  --clr-warning: hsl(0, 60%, 50%);
+  --clr-complementary: hsl(32, 100%, 50%);
 }
 
 *,
@@ -74,11 +75,23 @@ select:focus {
 input[type="submit"],
 input[type="button"],
 button {
+  color: white;
   padding: 0.5rem 0.75rem;
   font-size: 1rem;
   border: 2px solid grey;
   background-color: var(--clr-accent);
   font-family: "JetBrains Mono", monospace;
+}
+
+input#deleteListButton {
+  background-color: var(--clr-warning);
+
+  &:hover {
+    border: 2px solid var(--clr-complementary);
+  }
+  &:focus {
+    border: 2px solid var(--clr-complementary);
+  }
 }
 
 input[type="submit"],
@@ -87,7 +100,7 @@ button,
 select {
   &:hover {
     cursor: pointer;
-    border: 2px solid var(--clr-complementary);
+    border: 2px solid var(--clr-accent);
   }
 }
 
@@ -389,11 +402,12 @@ footer p {
       font-size: 0.75rem;
     }
 
-    & .itemAmount, .itemWeight, .itemTotalWeight {
+    & .itemAmount,
+    .itemWeight,
+    .itemTotalWeight {
       text-align: end;
     }
   }
-
 
   .itemListItem,
   .itemListHeader,
@@ -410,14 +424,14 @@ footer p {
       grid-column: span 1;
     }
   }
-.itemListItem:hover {
-  background-color: #333;
-}
+  .itemListItem:hover {
+    background-color: #333;
+  }
 
   .itemListItem .deleteItem {
     top: 50%;
     right: 0.5rem;
-    translate: 0 -50%;
+    transform: translate(0, -50%);
     opacity: 0;
     border: none;
     padding: 0;
@@ -467,7 +481,6 @@ footer p {
   .itemListItem .itemPriority {
     text-align: center;
   }
-
 
   .itemAmount,
   .itemName {
