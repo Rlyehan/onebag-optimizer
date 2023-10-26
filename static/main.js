@@ -322,7 +322,19 @@ function loadList(listName) {
   renderItems(listItems)
   activateDeleteListeners(listName)
   const result = processData(listItems)
-  console.log(result)
+  const bagsPercentage = (result.categoryWeightPercentage.bags !== undefined) ? result.categoryWeightPercentage.bags : 0;
+  const clothingPercentage = (result.categoryWeightPercentage.clothing !== undefined) ? result.categoryWeightPercentage.clothing : 0;
+  const footwearPercentage = (result.categoryWeightPercentage.footwear !== undefined) ? result.categoryWeightPercentage.footwear : 0;
+  const groomingPercentage = (result.categoryWeightPercentage.grooming !== undefined) ? result.categoryWeightPercentage.grooming : 0;
+  const electronicsPercentage = (result.categoryWeightPercentage.electronics !== undefined) ? result.categoryWeightPercentage.electronics : 0;
+  const hygienePercentage = (result.categoryWeightPercentage.hygiene !== undefined) ? result.categoryWeightPercentage.hygiene : 0;
+  const medsPercentage = (result.categoryWeightPercentage.meds !== undefined) ? result.categoryWeightPercentage.meds : 0;
+  const consumablesPercentage = (result.categoryWeightPercentage.consumables !== undefined) ? result.categoryWeightPercentage.consumables : 0;
+  const necessitiesPercentage = (result.categoryWeightPercentage.necessities !== undefined) ? result.categoryWeightPercentage.necessities : 0;
+  const otherPercentage = (result.categoryWeightPercentage.other !== undefined) ? result.categoryWeightPercentage.other : 0;
+
+  document.querySelector(".weightDistribution").style.gridTemplateColumns = `${bagsPercentage}fr ${clothingPercentage}fr ${footwearPercentage}fr ${groomingPercentage}fr ${electronicsPercentage}fr ${hygienePercentage}fr ${medsPercentage}fr ${consumablesPercentage}fr ${necessitiesPercentage}fr ${otherPercentage}fr`
+  console.log(`"${bagsPercentage}fr ${clothingPercentage}fr ${footwearPercentage}fr ${groomingPercentage}fr ${electronicsPercentage}fr ${hygienePercentage}fr ${medsPercentage}fr ${consumablesPercentage}fr ${necessitiesPercentage}fr ${otherPercentage}fr"`)
 }
 
 function clearItemList() {
