@@ -1,4 +1,3 @@
-
 function formatBagType(bagType) {
     switch (bagType) {
         case "carryOn":
@@ -10,14 +9,14 @@ function formatBagType(bagType) {
     }
 }
 
-export function dataProcessing(items) {
+export function processData(items) {
     let totalWeight = 0;
     let bagWeights = {};
     let categoryWeights = {};
     let priorityWeights = {};
     let categoryData = {};
 
-    items.forEach(item => {
+    items.slice(1).forEach(item => {
         let itemTotalWeight = item.itemAmount * item.itemWeight;
         totalWeight += itemTotalWeight;
 
@@ -58,22 +57,22 @@ export function dataProcessing(items) {
     };
 }
 
-const sampleData = [
-    {
-        itemAmount: 2,
-        itemWeight: 100,
-        itemCategory: "electronics",
-        itemPriority: "high",
-        itemBagType: "carryOn"
-    },
-    {
-        itemAmount: 1,
-        itemWeight: 50,
-        itemCategory: "clothing",
-        itemPriority: "medium",
-        itemBagType: "personalItem"
-    },
-];
+// const sampleData = [
+//     {
+//         itemAmount: 2,
+//         itemWeight: 100,
+//         itemCategory: "electronics",
+//         itemPriority: "high",
+//         itemBagType: "carryOn"
+//     },
+//     {
+//         itemAmount: 1,
+//         itemWeight: 50,
+//         itemCategory: "clothing",
+//         itemPriority: "medium",
+//         itemBagType: "personalItem"
+//     },
+// ];
 
-const result = dataProcessing(sampleData);
-console.log(result);
+// const result = dataProcessing(sampleData);
+// console.log(result);
