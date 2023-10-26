@@ -317,9 +317,11 @@ localStorage.setItem("Sample List", JSON.stringify(sampleData))
 function loadList(listName) {
   clearItemList()
   const itemArray = getItemArray(listName)
-  renderItems(itemArray)
+  const listInfo = itemArray[0]
+  const listItems = itemArray.slice(1)
+  renderItems(listItems)
   activateDeleteListeners(listName)
-  const result = processData(itemArray)
+  const result = processData(listItems)
   console.log(result)
 }
 
@@ -328,7 +330,7 @@ function clearItemList() {
   articles.forEach((entry) => entry.remove())
 }
 
-function renderItems(itemArray) {
+function renderItems(listItem) {
   let totalWeightCarryOn = 0
   let totalWeightPersonalItem = 0
   const carryOnTotalWeight = document.getElementById("carryOnTotalWeight")
@@ -336,7 +338,7 @@ function renderItems(itemArray) {
   carryOnTotalWeight.innerHTML = 0
   personalItemTotalWeight.innerHTML = 0
 
-  itemArray.slice(1).forEach((item, index) => {
+  listItem.forEach((item, index) => {
     let itemTotalWeight = item.itemAmount * item.itemWeight
     const listItem = createItemListItem(item, itemTotalWeight, index + 1)
 

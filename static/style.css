@@ -26,6 +26,10 @@ a {
   }
 }
 
+html {  
+  scroll-behavior: smooth;
+}
+
 body {
   margin-block-start: 2rem;
   margin-inline: 2.5dvw;
@@ -347,6 +351,7 @@ footer {
 footer p {
   padding-block-start: 1rem;
 }
+
 
 @media (min-width: 64rem) {
   form {

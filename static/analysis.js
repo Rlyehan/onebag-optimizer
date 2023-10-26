@@ -16,7 +16,7 @@ export function processData(items) {
     let priorityWeights = {};
     let categoryData = {};
 
-    items.slice(1).forEach(item => {
+    items.forEach(item => {
         let itemTotalWeight = item.itemAmount * item.itemWeight;
         totalWeight += itemTotalWeight;
 
