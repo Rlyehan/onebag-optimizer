@@ -63,7 +63,9 @@
   </section>
   <!-- <button id="loadSampleItems">Load Sample Items</button> -->
   <!-- <button id="clearLocalStorage">Clear Local Storage</button> -->
-  <label for="carryOnList"><h3>Carry-On</h3><input type="checkbox" id="carryOnList" checked></input></label>
+  <label for="carryOnList">
+    <h3>Carry-On</h3><input type="checkbox" id="carryOnList" checked></input>
+  </label>
   <section class="itemList bagCarryOn">
     <fieldset class="filters">
       <legend>Filter by category:</legend>
@@ -87,6 +89,14 @@
       <label for="other">Other<input type="checkbox" name="other" id="other" />
       </label>
     </fieldset>
+    <div class="weightDistribution">
+      <div class="categoryBox bags" style="background-color: firebrick">33%</div>
+      <div class="categoryBox clothing" style="background-color: darkolivegreen">15%</div>
+      <div class="categoryBox footwear" style="background-color: darkgoldenrod">40%</div>
+      <div class="categoryBox grooming" style="background-color: darkkhaki">5%</div>
+      <div class="categoryBox electronics" style="background-color: maroon">2%</div>
+      <div class="categoryBox hygiene" style="background-color: peru">5%</div>
+    </div>
     <article class="itemListHeader">
       <div class="itemName">Item Name</div>
       <div class="itemAmount">Amount</div>
@@ -105,7 +115,9 @@
     </article>
   </section>
 
-  <label for="personalItemList"><h3>Personal Item</h3><input type="checkbox" id="personalItemList" checked></input></label>
+  <label for="personalItemList">
+    <h3>Personal Item</h3><input type="checkbox" id="personalItemList" checked></input>
+  </label>
   <section class="itemList bagPersonalItem">
     <fieldset class="filters">
       <legend>Filter by category:</legend>
@@ -153,12 +165,14 @@
 <footer>
   <!-- <p>&copy; 2023</p> -->
   <h3>OneBag Optimizer</h3>
-  <p><a href="https://github.com/lukas-berger" target="_blank" rel="noopener noreferrer" title="Lukas Berger on GitHub">Lukas Berger</a>
+  <p><a href="https://github.com/lukas-berger" target="_blank" rel="noopener noreferrer"
+      title="Lukas Berger on GitHub">Lukas Berger</a>
   </p>
-  <p></p><a href="https://github.com/Rlyehan" target="_blank" rel="noopener noreferrer" title="Maximilian Huber on GitHub">Maximilian
+  <p></p><a href="https://github.com/Rlyehan" target="_blank" rel="noopener noreferrer"
+    title="Maximilian Huber on GitHub">Maximilian
     Huber</a></p>
-  <a href="https://github.com/Rlyehan/onebag-optimizer" target="_blank" rel="noopener noreferrer" title="This project's GitHub"><i
-      class="fab fa-github fa-2x"></i></a>
+  <a href="https://github.com/Rlyehan/onebag-optimizer" target="_blank" rel="noopener noreferrer"
+    title="This project's GitHub"><i class="fab fa-github fa-2x"></i></a>
 
   <p><a href="#" id="backToTop">Back to Top</a></p>
 </footer>

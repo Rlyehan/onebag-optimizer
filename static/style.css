@@ -506,3 +506,15 @@ footer p {
     display: none;
   }
 }
+
+.weightDistribution {
+  display: grid;
+  grid-template-columns: 33fr 15fr 40fr 5fr 2fr 5fr;
+  width: 100%;
+  transition: all 300ms;
+
+  & .categoryBox {
+    transition: all 300ms;
+    width: 100%;
+  }
+}
