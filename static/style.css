@@ -191,11 +191,11 @@ label + .itemList {
   color: var(--clr-accent);
 }
 
-.filters:has(:not(:checked)) ~ .itemListItem {
+.filters:has(:not(:checked)) ~ .listItem {
   display: grid;
 }
 
-.filters:has(:checked) ~ .itemListItem {
+.filters:has(:checked) ~ .listItem {
   display: none;
 }
 
@@ -237,7 +237,7 @@ label + .itemList {
   font-style: italic;
 }
 
-.itemList:has(.itemListItem) .itemListEmpty {
+.itemList:has(.listItem) .itemListEmpty {
   display: none;
 }
 
@@ -245,7 +245,7 @@ label + .itemList {
   gap: 2rem;
 }
 
-.analysisResult .itemListItem {
+.analysisResult .listItem {
   grid-template-columns: 8ch 3ch 1fr;
 }
 
@@ -260,7 +260,7 @@ label + .itemList {
   grid-template-columns: 8ch 8ch 1fr;
 }
 
-.itemListItem,
+.listItem,
 .itemListSummary {
   display: grid;
   /* grid-template-rows: repeat(5, auto); */
@@ -272,7 +272,7 @@ label + .itemList {
   border-bottom: 1px solid grey;
 }
 
-.itemListItem .deleteItem {
+.listItem .deleteItem {
   position: absolute;
   right: 1rem;
   top: 2.5rem;
@@ -409,7 +409,7 @@ footer p {
     }
   }
 
-  .itemListItem,
+  .listItem,
   .itemListHeader,
   .itemListEmpty,
   .itemListSummary {
@@ -424,11 +424,11 @@ footer p {
       grid-column: span 1;
     }
   }
-  .itemListItem:hover {
+  .listItem:hover {
     background-color: #333;
   }
 
-  .itemListItem .deleteItem {
+  .listItem .deleteItem {
     top: 50%;
     right: 0.5rem;
     transform: translate(0, -50%);
@@ -436,7 +436,7 @@ footer p {
     border: none;
     padding: 0;
   }
-  .itemListItem:hover .deleteItem {
+  .listItem:hover .deleteItem {
     opacity: 1;
   }
 
@@ -458,7 +458,7 @@ footer p {
     grid-column: span 3;
   }
 
-  .analysisResult .itemListItem {
+  .analysisResult .listItem {
     grid-template-columns: 8ch 3ch 1fr;
   }
 
@@ -472,13 +472,13 @@ footer p {
     text-align: end;
   }
 
-  .itemListItem .itemAmount,
-  .itemListItem .itemWeight,
-  .itemListItem .itemTotalWeight {
+  .listItem .itemAmount,
+  .listItem .itemWeight,
+  .listItem .itemTotalWeight {
     text-align: end;
   }
 
-  .itemListItem .itemPriority {
+  .listItem .itemPriority {
     text-align: center;
   }
 
