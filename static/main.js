@@ -3,6 +3,9 @@
 //========
 
 import { processData } from "./analysis.js"
+import sampleData from "./sampleData.json" assert { type: 'json' }
+import sampleData2 from "./sampleData2.json" assert { type: 'json' }
+
 
 //==========
 // VARIABLES
@@ -18,192 +21,12 @@ const targetCarryOn = document.querySelector(".bagCarryOn")
 const targetPersonalItem = document.querySelector(".bagPersonalItem")
 const itemListSummaryCarryOn = document.querySelector(".bagCarryOn .itemListSummary")
 const itemListSummaryPersonalItem = document.querySelector(".bagPersonalItem .itemListSummary")
-const sampleData = [
-  {
-    listName: "Sample List",
-    listUUID: self.crypto.randomUUID(),
-  },
-  {
-    itemName: "Sample Item 1",
-    itemAmount: 2,
-    itemWeight: 500,
-    itemCategory: "bags",
-    itemSubcategory: "Backpack",
-    itemPriority: "1",
-    itemBagType: "carryOn",
-  },
-  {
-    itemName: "Sample Item 2",
-    itemAmount: 3,
-    itemWeight: 300,
-    itemCategory: "clothing",
-    itemSubcategory: "T-Shirts",
-    itemPriority: "2",
-    itemBagType: "carryOn",
-  },
-  {
-    itemName: "Sample Item 3",
-    itemAmount: 1,
-    itemWeight: 750,
-    itemCategory: "footwear",
-    itemSubcategory: "Sneakers",
-    itemPriority: "1",
-    itemBagType: "carryOn",
-  },
-  {
-    itemName: "Sample Item 4",
-    itemAmount: 2,
-    itemWeight: 250,
-    itemCategory: "grooming",
-    itemSubcategory: "Toiletries",
-    itemPriority: "3",
-    itemBagType: "personalItem",
-  },
-  {
-    itemName: "Sample Item 5",
-    itemAmount: 1,
-    itemWeight: 1500,
-    itemCategory: "electronics",
-    itemSubcategory: "Laptop",
-    itemPriority: "1",
-    itemBagType: "carryOn",
-  },
-  {
-    itemName: "Sample Item 6",
-    itemAmount: 4,
-    itemWeight: 200,
-    itemCategory: "hygiene",
-    itemSubcategory: "Soap",
-    itemPriority: "2",
-    itemBagType: "personalItem",
-  },
-  {
-    itemName: "Sample Item 7",
-    itemAmount: 2,
-    itemWeight: 500,
-    itemCategory: "meds",
-    itemSubcategory: "Painkillers",
-    itemPriority: "2",
-    itemBagType: "carryOn",
-  },
-  {
-    itemName: "Sample Item 8",
-    itemAmount: 1,
-    itemWeight: 1000,
-    itemCategory: "consumables",
-    itemSubcategory: "Snacks",
-    itemPriority: "3",
-    itemBagType: "carryOn",
-  },
-  {
-    itemName: "Sample Item 9",
-    itemAmount: 1,
-    itemWeight: 500,
-    itemCategory: "necessities",
-    itemSubcategory: "Passport",
-    itemPriority: "1",
-    itemBagType: "personalItem",
-  },
-  {
-    itemName: "Sample Item 10",
-    itemAmount: 2,
-    itemWeight: 300,
-    itemCategory: "clothing",
-    itemSubcategory: "Shorts",
-    itemPriority: "2",
-    itemBagType: "carryOn",
-  },
-  {
-    itemName: "Sample Item 11",
-    itemAmount: 1,
-    itemWeight: 750,
-    itemCategory: "footwear",
-    itemSubcategory: "Sandals",
-    itemPriority: "1",
-    itemBagType: "carryOn",
-  },
-  {
-    itemName: "Sample Item 12",
-    itemAmount: 2,
-    itemWeight: 250,
-    itemCategory: "grooming",
-    itemSubcategory: "Toothbrush",
-    itemPriority: "3",
-    itemBagType: "personalItem",
-  },
-  {
-    itemName: "Sample Item 13",
-    itemAmount: 1,
-    itemWeight: 1500,
-    itemCategory: "electronics",
-    itemSubcategory: "Tablet",
-    itemPriority: "1",
-    itemBagType: "carryOn",
-  },
-  {
-    itemName: "Sample Item 14",
-    itemAmount: 4,
-    itemWeight: 200,
-    itemCategory: "hygiene",
-    itemSubcategory: "Shampoo",
-    itemPriority: "2",
-    itemBagType: "personalItem",
-  },
-  {
-    itemName: "Sample Item 15",
-    itemAmount: 2,
-    itemWeight: 500,
-    itemCategory: "meds",
-    itemSubcategory: "Antihistamines",
-    itemPriority: "2",
-    itemBagType: "carryOn",
-  },
-  {
-    itemName: "Sample Item 16",
-    itemAmount: 1,
-    itemWeight: 1000,
-    itemCategory: "consumables",
-    itemSubcategory: "Water Bottle",
-    itemPriority: "3",
-    itemBagType: "carryOn",
-  },
-  {
-    itemName: "Sample Item 17",
-    itemAmount: 1,
-    itemWeight: 500,
-    itemCategory: "necessities",
-    itemSubcategory: "Travel Adapter",
-    itemPriority: "1",
-    itemBagType: "personalItem",
-  },
-  {
-    itemName: "Sample Item 18",
-    itemAmount: 2,
-    itemWeight: 300,
-    itemCategory: "clothing",
-    itemSubcategory: "Shirts",
-    itemPriority: "2",
-    itemBagType: "carryOn",
-  },
-  {
-    itemName: "Sample Item 19",
-    itemAmount: 1,
-    itemWeight: 750,
-    itemCategory: "footwear",
-    itemSubcategory: "Slippers",
-    itemPriority: "1",
-    itemBagType: "carryOn",
-  },
-  {
-    itemName: "Sample Item 20",
-    itemAmount: 2,
-    itemWeight: 250,
-    itemCategory: "grooming",
-    itemSubcategory: "Razor",
-    itemPriority: "3",
-    itemBagType: "personalItem",
-  },
-]
+
+addListToIndex("Sample List", "sampleListUUID")
+localStorage.setItem("Sample List", JSON.stringify(sampleData))
+
+addListToIndex("Sample List 2", "sampleList2UUID")
+localStorage.setItem("Sample List 2", JSON.stringify(sampleData2))
 
 
 //================
@@ -216,7 +39,7 @@ createListButton.addEventListener("click", function (event) {
   if (listName != "") {
     let listUUID = self.crypto.randomUUID()
     addListToIndex(listName, listUUID)
-    setItemArray(listName, [{"listName": listName, "uuid": listUUID}])
+    setItemArray(listName, [{"listName": listName, "listUUID": listUUID}])
     populateListSelector()
     const listSelector = document.getElementById("listSelector")
     listSelector.value = listName
@@ -278,7 +101,7 @@ function addListToIndex(listName, uuid) {
   if (!listIndexItems.some((item) => item.listName === listName)) {
     listIndexItems.push({
       listName: listName,
-      uuid: uuid,
+      listUUID: uuid,
     })
   }
   localStorage.setItem("List Index", JSON.stringify(listIndexItems))
@@ -286,8 +109,7 @@ function addListToIndex(listName, uuid) {
 
 // let sampleListUUID = "fancy UUID"
 // Not using crypto atm as it only works on localhost or HTTPS
-let sampleListUUID = self.crypto.randomUUID()
-addListToIndex("Sample List", sampleListUUID)
+
 
 function populateListSelector() {
   var listIndex = JSON.parse(localStorage.getItem("List Index"))
@@ -305,8 +127,6 @@ function populateListSelector() {
 
 populateListSelector()
 
-localStorage.setItem("Sample List", JSON.stringify(sampleData))
-
 
 // clearLocalStorageButton.addEventListener("click", function () {
 //   localStorage.clear()
@@ -322,6 +142,7 @@ function loadList(listName) {
   renderItems(listItems)
   activateDeleteListeners(listName)
   const result = processData(listItems)
+  console.log(result)
   const bagsPercentage = (result.categoryWeightPercentage.bags !== undefined) ? result.categoryWeightPercentage.bags : 0;
   const clothingPercentage = (result.categoryWeightPercentage.clothing !== undefined) ? result.categoryWeightPercentage.clothing : 0;
   const footwearPercentage = (result.categoryWeightPercentage.footwear !== undefined) ? result.categoryWeightPercentage.footwear : 0;

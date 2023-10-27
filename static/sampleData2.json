@@ -1,0 +1,238 @@
+[{
+  "listName": "Sample List",
+  "listUUID": "sampleList2UUID"
+},
+{
+  "itemName": "Peak Design Travel Backpack 30L",
+  "itemAmount": 1,
+  "itemWeight": 1385,
+  "itemCategory": "bags",
+  "itemSubcategory": "Backpack",
+  "itemPriority": "1",
+  "itemBagType": "carryOn"
+},
+{
+  "itemName": "Heimplanet Transit Line Sling Pocket XL",
+  "itemAmount": 1,
+  "itemWeight": 300,
+  "itemCategory": "bags",
+  "itemSubcategory": "Sling Bag",
+  "itemPriority": "1",
+  "itemBagType": "personalItem"
+},
+{
+  "itemName": "Peak Design Packing Cube Medium",
+  "itemAmount": 1,
+  "itemWeight": 142,
+  "itemCategory": "bags",
+  "itemSubcategory": "Packing Cube",
+  "itemPriority": "1",
+  "itemBagType": "carryOn"
+},
+{
+  "itemName": "Peak Design Sternum Strap",
+  "itemAmount": 1,
+  "itemWeight": 19,
+  "itemCategory": "bags",
+  "itemSubcategory": "Backpack Accessoires",
+  "itemPriority": "2",
+  "itemBagType": "carryOn"
+},
+{
+  "itemName": "Peak Design Accessory Straps",
+  "itemAmount": 1,
+  "itemWeight": 33,
+  "itemCategory": "bags",
+  "itemSubcategory": "Backpack Accessoires",
+  "itemPriority": "2",
+  "itemBagType": "carryOn"
+},
+{
+  "itemName": "Rainfly",
+  "itemAmount": 1,
+  "itemWeight": 45,
+  "itemCategory": "bags",
+  "itemSubcategory": "Backpack Accessoires",
+  "itemPriority": "1",
+  "itemBagType": "carryOn"
+},
+{
+  "itemName": "Calvin Klein Underwear",
+  "itemAmount": 4,
+  "itemWeight": 53,
+  "itemCategory": "clothing",
+  "itemSubcategory": "Underwear",
+  "itemPriority": "1",
+  "itemBagType": "carryOn"
+},
+{
+  "itemName": "Devold Running Merino Cover Zip Neck",
+  "itemAmount": 1,
+  "itemWeight": 210,
+  "itemCategory": "clothing",
+  "itemSubcategory": "Long Sleeve Shirt",
+  "itemPriority": "1",
+  "itemBagType": "carryOn"
+},
+{
+  "itemName": "H&M Socks Short",
+  "itemAmount": 4,
+  "itemWeight": 26,
+  "itemCategory": "clothing",
+  "itemSubcategory": "Socks",
+  "itemPriority": "1",
+  "itemBagType": "carryOn"
+},
+{
+  "itemName": "Rain Jacket (Hood)",
+  "itemAmount": 1,
+  "itemWeight": 167,
+  "itemCategory": "clothing",
+  "itemSubcategory": "Rain Jacket",
+  "itemPriority": "1",
+  "itemBagType": "carryOn"
+},
+{
+  "itemName": "on Running Cloudtech",
+  "itemAmount": 1,
+  "itemWeight": 528,
+  "itemCategory": "footwear",
+  "itemSubcategory": "Shoes",
+  "itemPriority": "1",
+  "itemBagType": "carryOn"
+},
+{
+  "itemName": "BASEUS 65W Charger Slim",
+  "itemAmount": 1,
+  "itemWeight": 95,
+  "itemCategory": "electronics",
+  "itemSubcategory": "Charger",
+  "itemPriority": "1",
+  "itemBagType": "carryOn"
+},
+{
+  "itemName": "RAVPower 60W Powerbank",
+  "itemAmount": 1,
+  "itemWeight": 370,
+  "itemCategory": "electronics",
+  "itemSubcategory": "Power Bank",
+  "itemPriority": "1",
+  "itemBagType": "personalItem"
+},
+{
+  "itemName": "USB-C Cable 0.8m",
+  "itemAmount": 1,
+  "itemWeight": 40,
+  "itemCategory": "electronics",
+  "itemSubcategory": "Cable",
+  "itemPriority": "1",
+  "itemBagType": "personalItem"
+},
+{
+  "itemName": "USB-C Cable 2m",
+  "itemAmount": 1,
+  "itemWeight": 115,
+  "itemCategory": "electronics",
+  "itemSubcategory": "Cable",
+  "itemPriority": "1",
+  "itemBagType": "carryOn"
+},
+{
+  "itemName": "Samsung T7 2TB",
+  "itemAmount": 1,
+  "itemWeight": 63,
+  "itemCategory": "electronics",
+  "itemSubcategory": "External SSD",
+  "itemPriority": "1",
+  "itemBagType": "personalItem"
+},
+{
+  "itemName": "Amazon Kindle Paperwhite Signature Edition",
+  "itemAmount": 1,
+  "itemWeight": 320,
+  "itemCategory": "electronics",
+  "itemSubcategory": "eReader",
+  "itemPriority": "1",
+  "itemBagType": "personalItem"
+},
+{
+  "itemName": "Apple AirPods Pro 2",
+  "itemAmount": 1,
+  "itemWeight": 61,
+  "itemCategory": "electronics",
+  "itemSubcategory": "Earphones",
+  "itemPriority": "1",
+  "itemBagType": "personalItem"
+},
+{
+  "itemName": "Fujifilm X-T5",
+  "itemAmount": 1,
+  "itemWeight": 570,
+  "itemCategory": "electronics",
+  "itemSubcategory": "Camera",
+  "itemPriority": "1",
+  "itemBagType": "carryOn"
+},
+{
+  "itemName": "Laowa Argus 33mm f/0.95 CF APO",
+  "itemAmount": 1,
+  "itemWeight": 636,
+  "itemCategory": "electronics",
+  "itemSubcategory": "Camera",
+  "itemPriority": "1",
+  "itemBagType": "carryOn"
+},
+{
+  "itemName": "H&M T-Shirt",
+  "itemAmount": 3,
+  "itemWeight": 124,
+  "itemCategory": "clothing",
+  "itemSubcategory": "T-Shirt",
+  "itemPriority": "1",
+  "itemBagType": "carryOn"
+},
+{
+  "itemName": "Western Rise Evolution Pant Slim",
+  "itemAmount": 1,
+  "itemWeight": 343,
+  "itemCategory": "clothing",
+  "itemSubcategory": "Pants",
+  "itemPriority": "1",
+  "itemBagType": "carryOn"
+},
+{
+  "itemName": "Apple MacBook Pro 16\"",
+  "itemAmount": 1,
+  "itemWeight": 2147,
+  "itemCategory": "electronics",
+  "itemSubcategory": "Laptop",
+  "itemPriority": "1",
+  "itemBagType": "carryOn"
+},
+{
+  "itemName": "Matador Freerain22",
+  "itemAmount": 1,
+  "itemWeight": 278,
+  "itemCategory": "bags",
+  "itemSubcategory": "Backpack",
+  "itemPriority": "1",
+  "itemBagType": "carryOn"
+},
+{
+  "itemName": "Matador Packing Net",
+  "itemAmount": 1,
+  "itemWeight": 17,
+  "itemCategory": "bags",
+  "itemSubcategory": "Backpack Accessoires",
+  "itemPriority": "1",
+  "itemBagType": "carryOn"
+},
+{
+  "itemName": "Fujifilm XF16-80MM f/4 R OIS WR",
+  "itemAmount": 1,
+  "itemWeight": 501,
+  "itemCategory": "electronics",
+  "itemSubcategory": "Camera",
+  "itemPriority": "1",
+  "itemBagType": "carryOn"
+}]
