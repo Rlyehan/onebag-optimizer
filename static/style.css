@@ -4,16 +4,26 @@
   --clr-accent: hsl(212, 100%, 50%);
   --clr-warning: hsl(0, 60%, 50%);
   --clr-complementary: hsl(32, 100%, 50%);
-  --clr-category-bags: #334D5C;
-  --clr-category-clothing: #45B29D;
-  --clr-category-footwear: #EFC94C;
-  --clr-category-grooming: #E27A3F;
-  --clr-category-electronics: #DF5A49;
-  --clr-category-hygiene: #962D3E;
-  --clr-category-meds: #8A84E2;
-  --clr-category-consumables: #63A69F;
-  --clr-category-necessities: #F4A261;
-  --clr-category-other: #AB83A1;
+  --clr-category-bags: hsl(202, 29%, 28%);
+  --clr-category-bags-dark: hsl(202, 29%, 15%);
+  --clr-category-consumables: hsl(174, 27%, 52%);
+  --clr-category-consumables-dark: hsl(174, 27%, 15%);
+  --clr-category-clothing: hsl(168, 44%, 48%);
+  --clr-category-clothing-dark: hsl(168, 44%, 15%);
+  --clr-category-electronics: hsl(7, 70%, 58%);
+  --clr-category-electronics-dark: hsl(7, 70%, 15%);
+  --clr-category-footwear: hsl(46, 84%, 62%);
+  --clr-category-footwear-dark: hsl(46, 84%, 15%);
+  --clr-category-grooming: hsl(22, 74%, 57%);
+  --clr-category-grooming-dark: hsl(22, 74%, 15%);
+  --clr-category-hygiene: hsl(350, 54%, 38%);
+  --clr-category-hygiene-dark: hsl(350, 54%, 15%);
+  --clr-category-meds: hsl(244, 62%, 70%);
+  --clr-category-meds-dark: hsl(244, 62%, 15%);
+  --clr-category-necessities: hsl(27, 87%, 67%);
+  --clr-category-necessities-dark: hsl(27, 87%, 15%);
+  --clr-category-other: hsl(315, 19%, 59%);
+  --clr-category-other-dark: hsl(315, 19%, 15%);
 }
 
 *,
@@ -522,7 +532,7 @@ footer p {
   grid-template-columns: repeat(10, 0fr);
   width: 100%;
   height: 3rem;
-  transition: all 300ms;
+  transition: all 300ms cubic-bezier(0.68, -0.6, 0.32, 1.6);
   margin-block: 0rem 2rem;
 }
 
@@ -530,9 +540,54 @@ footer p {
   transition: all 300ms;
   margin-block: auto;
   height: 3rem;
+  position: relative;
 
   &:hover {
     /* transform: translateY(-0.2rem); */
-    transform: scaleY(1.1);
+    /* transform: scaleY(1.1); */
+    filter: brightness(1.25);
   }
+}
+
+.chartItemTitle {
+  display: none;
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translate(-50%, 100%);
+}
+
+.categoryBox:hover .chartItemTitle {
+  display: block;
+}
+
+section:has(.categoryBox.bags:hover) article.bags {
+  background-color: var(--clr-category-bags-dark);
+}
+section:has(.categoryBox.clothing:hover) article.clothing {
+  background-color: var(--clr-category-clothing-dark);
+}
+section:has(.categoryBox.consumables:hover) article.consumables {
+  background-color: var(--clr-category-consumables-dark);
+}
+section:has(.categoryBox.electronics:hover) article.electronics {
+  background-color: var(--clr-category-electronics-dark);
+}
+section:has(.categoryBox.footwear:hover) article.footwear {
+  background-color: var(--clr-category-footwear-dark);
+}
+section:has(.categoryBox.grooming:hover) article.grooming {
+  background-color: var(--clr-category-grooming-dark);
+}
+section:has(.categoryBox.hygiene:hover) article.hygiene {
+  background-color: var(--clr-category-hygiene-dark);
+}
+section:has(.categoryBox.meds:hover) article.meds {
+  background-color: var(--clr-category-meds-dark);
+}
+section:has(.categoryBox.necessities:hover) article.necessities {
+  background-color: var(--clr-category-necessities-dark);
+}
+section:has(.categoryBox.other:hover) article.other {
+  background-color: var(--clr-category-other-dark);
 }

@@ -333,8 +333,8 @@ function loadList(listName) {
   const necessitiesPercentage = (result.categoryWeightPercentage.necessities !== undefined) ? result.categoryWeightPercentage.necessities : 0;
   const otherPercentage = (result.categoryWeightPercentage.other !== undefined) ? result.categoryWeightPercentage.other : 0;
 
-  document.querySelector(".weightDistribution").style.gridTemplateColumns = `${bagsPercentage}fr ${clothingPercentage}fr ${footwearPercentage}fr ${groomingPercentage}fr ${electronicsPercentage}fr ${hygienePercentage}fr ${medsPercentage}fr ${consumablesPercentage}fr ${necessitiesPercentage}fr ${otherPercentage}fr`
-  console.log(`"${bagsPercentage}fr ${clothingPercentage}fr ${footwearPercentage}fr ${groomingPercentage}fr ${electronicsPercentage}fr ${hygienePercentage}fr ${medsPercentage}fr ${consumablesPercentage}fr ${necessitiesPercentage}fr ${otherPercentage}fr"`)
+  document.querySelector(".weightDistribution").style.gridTemplateColumns = `${bagsPercentage}fr ${clothingPercentage}fr ${consumablesPercentage}fr ${electronicsPercentage}fr ${footwearPercentage}fr ${groomingPercentage}fr ${hygienePercentage}fr ${medsPercentage}fr ${necessitiesPercentage}fr ${otherPercentage}fr`
+  // console.log(`"${bagsPercentage}fr ${clothingPercentage}fr ${consumablesPercentage}fr ${electronicsPercentage}fr ${footwearPercentage}fr ${groomingPercentage}fr ${hygienePercentage}fr ${medsPercentage}fr ${necessitiesPercentage}fr ${otherPercentage}fr"`)
 }
 
 function clearItemList() {
