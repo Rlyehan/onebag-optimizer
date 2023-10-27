@@ -57,6 +57,7 @@ body {
   gap: 3rem;
 }
 
+
 h2 {
   text-align: center;
 }
@@ -65,7 +66,7 @@ form {
   display: grid;
   gap: 0.25rem;
   grid-template-columns: 1fr 1fr;
-  max-width: 95dvw;
+  /* max-width: 95dvw; */
   font-family: "JetBrains Mono", monospace;
 }
 
@@ -153,6 +154,7 @@ button {
 .listSelector {
   display: grid;
   grid-template-columns: repeat(1, 1fr);
+  gap: .5rem;
 }
 
 .listSelector input[type="text"],
@@ -374,19 +376,29 @@ footer p {
 
 
 @media (min-width: 64rem) {
+  body {
+    max-width: 100rem;
+    margin-inline: auto;
+  }
   form {
     grid-template-columns: repeat(6, 1fr);
-    max-width: 95dvw;
+    /* max-width: 95dvw; */
   }
+
+  body > label,
+  section {
+    margin-inline: 2.5rem;
+  }
+
 
   .listSelector {
-    gap: 3rem;
+    gap: 1rem;
   }
 
-  .listSelector input[type="text"],
+  /* .listSelector input[type="text"],
   .listSelector select {
     width: auto;
-  }
+  } */
 
   #listNameForm,
   #listSelectorForm {
@@ -413,7 +425,7 @@ footer p {
 
   .listSelector {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
   #itemSelectorForm {
     justify-self: end;
@@ -669,4 +681,15 @@ section:has(.categoryBox.necessities:hover) article.necessities {
 }
 section:has(.categoryBox.other:hover) article.other {
   background-color: var(--clr-category-other-dark);
+}
+
+.backup {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: .25rem;
+}
+
+.backup button,
+.backup input {
+  height: 100%;
 }
