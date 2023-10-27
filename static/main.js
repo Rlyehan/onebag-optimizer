@@ -2,7 +2,9 @@
 // IMPORTS
 //========
 
-import { processData } from "./analysis.js"
+import { processData } from "./modules/analysis.js"
+import { downloadList } from "./modules/jsonDownload.js"
+
 import sampleData from "./sampleData.json" assert { type: 'json' }
 import sampleData2 from "./sampleData2.json" assert { type: 'json' }
 
@@ -14,6 +16,9 @@ import sampleData2 from "./sampleData2.json" assert { type: 'json' }
 const createListButton = document.getElementById("createListButton")
 const listSelectorDropdown = document.getElementById("listSelector")
 const deleteListButton = document.getElementById("deleteListButton")
+const fileInput = document.getElementById("jsonFileInput")
+const uploadListButton = document.getElementById("uploadListButton")
+const downloadListButton = document.getElementById("downloadListButton")
 const itemForm = document.getElementById("itemForm")
 const clearLocalStorageButton = document.getElementById("clearLocalStorage")
 const startAnalysisButton = document.getElementById("startAnalysis")
@@ -39,7 +44,7 @@ createListButton.addEventListener("click", function (event) {
   if (listName != "") {
     let listUUID = self.crypto.randomUUID()
     addListToIndex(listName, listUUID)
-    setItemArray(listName, [{"listName": listName, "listUUID": listUUID}])
+    setItemArray(listName, [{ "listName": listName, "listUUID": listUUID }])
     populateListSelector()
     const listSelector = document.getElementById("listSelector")
     listSelector.value = listName
@@ -75,6 +80,54 @@ deleteListButton.addEventListener("click", function (event) {
     const listSelectorDropdown = document.getElementById("listSelector")
     listSelectorDropdown.focus()
     listSelectorDropdown.classList.add("highlight")
+  }
+})
+
+uploadListButton.addEventListener("click", () => {
+  fileInput.click();
+});
+
+fileInput.addEventListener("change", () => {
+  const file = fileInput.files[0]
+  // uploadList(file, fileInput)
+  fileInput.value = ""
+  console.log("event fired")
+  if (file) {
+    const reader = new FileReader()
+
+    reader.onload = (e) => {
+      try {
+        const itemArray = JSON.parse(e.target.result)
+        // const listUUID = self.crypto.randomUUID()
+        // itemArray[0].listUUID = listUUID
+        // console.log(itemArray)
+        const listInfo = itemArray[0]
+        const listIndex = getItemArray("List Index")
+        listIndex.push(listInfo)
+        setItemArray("List Index", listIndex)
+        populateListSelector()
+        setItemArray(listInfo.listName, itemArray)
+        const listSelector = document.getElementById("listSelector")
+        listSelector.value = listInfo.listName
+        loadList(listInfo.listName)
+
+      } catch (error) {
+        console.error("Error parsing JSON:", error)
+      }
+    }
+
+    reader.readAsText(file)
+  }
+})
+
+downloadListButton.addEventListener('click', function () {
+  let selectedList = document.getElementById("listSelector").value
+  const itemArray = getItemArray(selectedList)
+
+  if (itemArray) {
+    downloadList(itemArray, `${selectedList}.json`)
+  } else {
+    alert('No data found in localStorage.')
   }
 })
 
@@ -143,16 +196,16 @@ function loadList(listName) {
   activateDeleteListeners(listName)
   const result = processData(listItems)
   console.log(result)
-  const bagsPercentage = (result.categoryWeightPercentage.bags !== undefined) ? result.categoryWeightPercentage.bags : 0;
-  const clothingPercentage = (result.categoryWeightPercentage.clothing !== undefined) ? result.categoryWeightPercentage.clothing : 0;
-  const footwearPercentage = (result.categoryWeightPercentage.footwear !== undefined) ? result.categoryWeightPercentage.footwear : 0;
-  const groomingPercentage = (result.categoryWeightPercentage.grooming !== undefined) ? result.categoryWeightPercentage.grooming : 0;
-  const electronicsPercentage = (result.categoryWeightPercentage.electronics !== undefined) ? result.categoryWeightPercentage.electronics : 0;
-  const hygienePercentage = (result.categoryWeightPercentage.hygiene !== undefined) ? result.categoryWeightPercentage.hygiene : 0;
-  const medsPercentage = (result.categoryWeightPercentage.meds !== undefined) ? result.categoryWeightPercentage.meds : 0;
-  const consumablesPercentage = (result.categoryWeightPercentage.consumables !== undefined) ? result.categoryWeightPercentage.consumables : 0;
-  const necessitiesPercentage = (result.categoryWeightPercentage.necessities !== undefined) ? result.categoryWeightPercentage.necessities : 0;
-  const otherPercentage = (result.categoryWeightPercentage.other !== undefined) ? result.categoryWeightPercentage.other : 0;
+  const bagsPercentage = (result.categoryWeightPercentage.bags !== undefined) ? result.categoryWeightPercentage.bags : 0
+  const clothingPercentage = (result.categoryWeightPercentage.clothing !== undefined) ? result.categoryWeightPercentage.clothing : 0
+  const footwearPercentage = (result.categoryWeightPercentage.footwear !== undefined) ? result.categoryWeightPercentage.footwear : 0
+  const groomingPercentage = (result.categoryWeightPercentage.grooming !== undefined) ? result.categoryWeightPercentage.grooming : 0
+  const electronicsPercentage = (result.categoryWeightPercentage.electronics !== undefined) ? result.categoryWeightPercentage.electronics : 0
+  const hygienePercentage = (result.categoryWeightPercentage.hygiene !== undefined) ? result.categoryWeightPercentage.hygiene : 0
+  const medsPercentage = (result.categoryWeightPercentage.meds !== undefined) ? result.categoryWeightPercentage.meds : 0
+  const consumablesPercentage = (result.categoryWeightPercentage.consumables !== undefined) ? result.categoryWeightPercentage.consumables : 0
+  const necessitiesPercentage = (result.categoryWeightPercentage.necessities !== undefined) ? result.categoryWeightPercentage.necessities : 0
+  const otherPercentage = (result.categoryWeightPercentage.other !== undefined) ? result.categoryWeightPercentage.other : 0
 
   document.querySelector(".weightDistribution").style.gridTemplateColumns = `${bagsPercentage}fr ${clothingPercentage}fr ${consumablesPercentage}fr ${electronicsPercentage}fr ${footwearPercentage}fr ${groomingPercentage}fr ${hygienePercentage}fr ${medsPercentage}fr ${necessitiesPercentage}fr ${otherPercentage}fr`
   // console.log(`"${bagsPercentage}fr ${clothingPercentage}fr ${consumablesPercentage}fr ${electronicsPercentage}fr ${footwearPercentage}fr ${groomingPercentage}fr ${hygienePercentage}fr ${medsPercentage}fr ${necessitiesPercentage}fr ${otherPercentage}fr"`)
@@ -180,7 +233,7 @@ function renderItems(listItem) {
       totalWeightCarryOn += itemTotalWeight
       carryOnTotalWeight.innerHTML = totalWeightCarryOn + " g"
     } else if (item.itemBagType == "personalItem") {
-      targetPersonalItem.insertBefore(listItem,itemListSummaryPersonalItem)
+      targetPersonalItem.insertBefore(listItem, itemListSummaryPersonalItem)
       totalWeightPersonalItem += itemTotalWeight
       personalItemTotalWeight.innerHTML = totalWeightPersonalItem + " g"
     }
