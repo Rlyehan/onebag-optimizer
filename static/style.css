@@ -283,7 +283,6 @@ label + .itemList {
   display: grid;
   padding-block: 0.5rem;
   border-bottom: 1px solid grey;
-  font-style: italic;
 }
 
 .itemList:has(.listItem) .itemListEmpty {
@@ -312,7 +311,6 @@ label + .itemList {
 .listItem,
 .itemListSummary {
   display: grid;
-  /* grid-template-rows: repeat(5, auto); */
   grid-template-columns: 3ch 7ch 14ch 1fr;
   position: relative;
   max-width: 95dvw;

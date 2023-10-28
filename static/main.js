@@ -9,12 +9,14 @@ import sampleData from "./sampleData.json" assert { type: 'json' }
 import sampleData2 from "./sampleData2.json" assert { type: 'json' }
 
 
+
+
 //==========
 // VARIABLES
 //==========
 
 // Array holding all available categories
-const categories = ["bags", "clothing", "consumables", "electronics", "footwear", "grooming", "hygiene", "meds", "necessities", "other"];
+const categories = ["bags", "clothing", "consumables", "electronics", "footwear", "grooming", "hygiene", "meds", "necessities", "other"]
 
 const createListButton = document.getElementById("createListButton")
 const listSelectorDropdown = document.getElementById("listSelector")
@@ -37,6 +39,8 @@ localStorage.setItem("Sample List", JSON.stringify(sampleData))
 
 addListToIndex("Sample List 2", generateUUID())
 localStorage.setItem("Sample List 2", JSON.stringify(sampleData2))
+
+
 
 
 //================
@@ -89,19 +93,13 @@ deleteListButton.addEventListener("click", function (event) {
 })
 
 uploadListButton.addEventListener("click", () => {
-  fileInput.click();
-});
-
-// clearLocalStorageButton.addEventListener("click", function () {
-//   localStorage.clear()
-//   loadList()
-// })
+  fileInput.click()
+})
 
 fileInput.addEventListener("change", () => {
   const file = fileInput.files[0]
   // uploadList(file, fileInput)
   fileInput.value = ""
-  console.log("event fired")
   if (file) {
     const reader = new FileReader()
 
@@ -110,7 +108,6 @@ fileInput.addEventListener("change", () => {
         const itemArray = JSON.parse(e.target.result)
         // const listUUID = generateUUID()
         // itemArray[0].listUUID = listUUID
-        // console.log(itemArray)
         const listInfo = itemArray[0]
         const listIndex = getItemArray("List Index")
         listIndex.push(listInfo)
@@ -160,14 +157,14 @@ itemForm.addEventListener("submit", function (event) {
 
 function generateUUID() {
   if (crypto && crypto.randomUUID) {
-    return crypto.randomUUID();
+    return crypto.randomUUID()
   } else {
     function randomHex(length) {
-      let result = '';
+      let result = ''
       for (let i = 0; i < length; i++) {
-        result += Math.floor(Math.random() * 16).toString(16);
+        result += Math.floor(Math.random() * 16).toString(16)
       }
-      return result;
+      return result
     }
 
     return (
@@ -183,7 +180,7 @@ function generateUUID() {
       randomHex(3) +
       '-' +
       randomHex(12)
-    );
+    )
   }
 }
 
@@ -196,7 +193,6 @@ function createCategoryElements() {
       selectOption.innerHTML = category
       option.appendChild(selectOption)
     })
-
     // Filters
     listFilters.forEach((filter, index) => {
       const filterItem = document.createElement("label")
@@ -205,7 +201,6 @@ function createCategoryElements() {
       input.setAttribute("type", "checkbox")
       span.innerHTML = "▶"
       const text = document.createTextNode(category)
-
       if (index === 0) {
         filterItem.setAttribute("for", category)
         input.setAttribute("name", category)
@@ -215,13 +210,11 @@ function createCategoryElements() {
         input.setAttribute("name", `${category}${index + 1}`)
         input.setAttribute("id", `${category}${index + 1}`)
       }
-
       filterItem.appendChild(span)
       filterItem.appendChild(text)
       filterItem.appendChild(input)
       filter.appendChild(filterItem)
     })
-
   })
 }
 createCategoryElements()
@@ -249,20 +242,43 @@ function loadList(listName) {
   renderItems(listItems)
   activateDeleteListeners(listName)
   const result = processData(listItems)
-  const percentages = [];
+  let percentages = []
 
-  for (const category of categories) {
-    if (result.categoryWeightPercentage[category] !== undefined) {
-      percentages.push(result.categoryWeightPercentage[category]);
-    } else {
-      percentages.push(0);
+  for (const bagType in result.bagCategoryWeightsPercentage) {
+    percentages = []
+    switch (bagType) {
+      case "Carry On": {
+        for (const category of categories) {
+          if (result.bagCategoryWeightsPercentage[bagType][category] !== undefined) {
+            percentages.push(result.bagCategoryWeightsPercentage[bagType][category])
+          } else {
+            percentages.push(0)
+          }
+        }
+        let gridTemplateColumns = percentages.map(percentage => `${percentage}fr`).join(' ')
+        document.querySelector(".bagCarryOn .weightDistribution").style.gridTemplateColumns = gridTemplateColumns
+        gridTemplateColumns = []
+        break
+
+      }
+        case "Personal Item": {
+          for (const category of categories) {
+            if (result.bagCategoryWeightsPercentage[bagType][category] !== undefined) {
+              percentages.push(result.bagCategoryWeightsPercentage[bagType][category])
+            } else {
+              percentages.push(0)
+            }
+          }
+          let gridTemplateColumns = percentages.map(percentage => `${percentage}fr`).join(' ')
+
+          document.querySelector(".bagPersonalItem .weightDistribution").style.gridTemplateColumns = gridTemplateColumns
+          gridTemplateColumns = []
+          break
+      }
     }
   }
-  // Create the grid template column value
-  const gridTemplateColumns = percentages.map(percentage => `${percentage}fr`).join(' ');
-  document.querySelector(".bagCarryOn .weightDistribution").style.gridTemplateColumns = gridTemplateColumns;
-  document.querySelector(".bagPersonalItem .weightDistribution").style.gridTemplateColumns = gridTemplateColumns;
 }
+
 
 function renderItems(listItem) {
   let totalWeightCarryOn = 0
@@ -294,10 +310,6 @@ function getItemArray(listName) {
 
 function setItemArray(listName, itemArray) {
   localStorage.setItem(listName, JSON.stringify(itemArray))
-}
-
-function deleteItemArray(listName) {
-  localStorage.removeItem(listName)
 }
 
 function activateDeleteListeners(listName) {
