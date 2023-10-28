@@ -5,25 +5,39 @@
   --clr-warning: hsl(0, 60%, 50%);
   --clr-complementary: hsl(32, 100%, 50%);
   --clr-category-bags: hsl(202, 29%, 28%);
-  --clr-category-bags-dark: hsl(202, 29%, 15%);
+  --clr-category-bags-highlight: hsl(202, 29%, var(--lightness));
   --clr-category-consumables: hsl(174, 27%, 52%);
-  --clr-category-consumables-dark: hsl(174, 27%, 15%);
+  --clr-category-consumables-highlight: hsl(174, 27%, var(--lightness));
   --clr-category-clothing: hsl(168, 44%, 48%);
-  --clr-category-clothing-dark: hsl(168, 44%, 15%);
+  --clr-category-clothing-highlight: hsl(168, 44%, var(--lightness));
   --clr-category-electronics: hsl(7, 70%, 58%);
-  --clr-category-electronics-dark: hsl(7, 70%, 15%);
+  --clr-category-electronics-highlight: hsl(7, 70%, var(--lightness));
   --clr-category-footwear: hsl(46, 84%, 62%);
-  --clr-category-footwear-dark: hsl(46, 84%, 15%);
+  --clr-category-footwear-highlight: hsl(46, 84%, var(--lightness));
   --clr-category-grooming: hsl(22, 74%, 57%);
-  --clr-category-grooming-dark: hsl(22, 74%, 15%);
+  --clr-category-grooming-highlight: hsl(22, 74%, var(--lightness));
   --clr-category-hygiene: hsl(350, 54%, 38%);
-  --clr-category-hygiene-dark: hsl(350, 54%, 15%);
+  --clr-category-hygiene-highlight: hsl(350, 54%, var(--lightness));
   --clr-category-meds: hsl(244, 62%, 70%);
-  --clr-category-meds-dark: hsl(244, 62%, 15%);
+  --clr-category-meds-highlight: hsl(244, 62%, var(--lightness));
   --clr-category-necessities: hsl(27, 87%, 67%);
-  --clr-category-necessities-dark: hsl(27, 87%, 15%);
+  --clr-category-necessities-highlight: hsl(27, 87%, var(--lightness));
   --clr-category-other: hsl(315, 19%, 59%);
-  --clr-category-other-dark: hsl(315, 19%, 15%);
+  --clr-category-other-highlight: hsl(315, 19%, var(--lightness));
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --lightness: 15%;
+    --clr-hover-background: #333;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --lightness: 75%;
+    --clr-hover-background: #DDD;
+  }
 }
 
 *,
@@ -82,6 +96,10 @@ input[value="+"] {
   grid-column: span 2;
 }
 
+#itemCategory {
+  text-transform: capitalize;
+}
+
 input,
 select {
   font-size: 1.25rem;
@@ -127,6 +145,10 @@ select {
     cursor: pointer;
     border: 2px solid var(--clr-accent);
   }
+}
+
+input::placeholder {
+  font-style: italic;
 }
 
 button {
@@ -197,6 +219,7 @@ label + .itemList {
   padding: 0.5rem;
   gap: 1rem;
   margin-block: 1rem;
+  text-transform: capitalize;
 }
 
 .filters input {
@@ -305,6 +328,10 @@ label + .itemList {
   padding: 0.25rem;
   color: red;
   cursor: pointer;
+}
+
+.listItem:hover {
+  background-color: var(--clr-hover-background);
 }
 
 .itemName {
@@ -460,9 +487,6 @@ footer p {
     & > * {
       grid-column: span 1;
     }
-  }
-  .listItem:hover {
-    background-color: #333;
   }
 
   .listItem .deleteItem {
@@ -653,34 +677,34 @@ label[for="other2"] span {
 }
 
 section:has(.categoryBox.bags:hover) article.bags {
-  background-color: var(--clr-category-bags-dark);
+  background-color: var(--clr-category-bags-highlight);
 }
 section:has(.categoryBox.clothing:hover) article.clothing {
-  background-color: var(--clr-category-clothing-dark);
+  background-color: var(--clr-category-clothing-highlight);
 }
 section:has(.categoryBox.consumables:hover) article.consumables {
-  background-color: var(--clr-category-consumables-dark);
+  background-color: var(--clr-category-consumables-highlight);
 }
 section:has(.categoryBox.electronics:hover) article.electronics {
-  background-color: var(--clr-category-electronics-dark);
+  background-color: var(--clr-category-electronics-highlight);
 }
 section:has(.categoryBox.footwear:hover) article.footwear {
-  background-color: var(--clr-category-footwear-dark);
+  background-color: var(--clr-category-footwear-highlight);
 }
 section:has(.categoryBox.grooming:hover) article.grooming {
-  background-color: var(--clr-category-grooming-dark);
+  background-color: var(--clr-category-grooming-highlight);
 }
 section:has(.categoryBox.hygiene:hover) article.hygiene {
-  background-color: var(--clr-category-hygiene-dark);
+  background-color: var(--clr-category-hygiene-highlight);
 }
 section:has(.categoryBox.meds:hover) article.meds {
-  background-color: var(--clr-category-meds-dark);
+  background-color: var(--clr-category-meds-highlight);
 }
 section:has(.categoryBox.necessities:hover) article.necessities {
-  background-color: var(--clr-category-necessities-dark);
+  background-color: var(--clr-category-necessities-highlight);
 }
 section:has(.categoryBox.other:hover) article.other {
-  background-color: var(--clr-category-other-dark);
+  background-color: var(--clr-category-other-highlight);
 }
 
 .backup {

@@ -228,6 +228,24 @@
   "itemBagType": "carryOn"
 },
 {
+  "itemName": "Passport",
+  "itemAmount": 1,
+  "itemWeight": 37,
+  "itemCategory": "necessities",
+  "itemSubcategory": "Passport",
+  "itemPriority": "1",
+  "itemBagType": "personalItem"
+},
+{
+  "itemName": "Ibuprofen Genericon 10x 400mg",
+  "itemAmount": 1,
+  "itemWeight": 8,
+  "itemCategory": "meds",
+  "itemSubcategory": "Headache Meds",
+  "itemPriority": "1",
+  "itemBagType": "personalItem"
+},
+{
   "itemName": "Fujifilm XF16-80MM f/4 R OIS WR",
   "itemAmount": 1,
   "itemWeight": 501,

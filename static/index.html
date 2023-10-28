@@ -42,22 +42,15 @@
         <option value="" disabled selected>
           Category
         </option>
-        <option value="bags">Bags</option>
-        <option value="clothing">Clothing</option>
-        <option value="footwear">Footwear</option>
-        <option value="grooming">Grooming</option>
-        <option value="electronics">Electronics</option>
-        <option value="hygiene">Hygiene</option>
-        <option value="meds">Meds</option>
-        <option value="consumables">Consumables</option>
-        <option value="necessities">Necessities</option>
-        <option value="other">Other</option>
       </select>
       <input id="itemSubcategory" value="" placeholder="Subcategory" autocomplete="on" />
       <select id="itemPriority" required>
-        <option value="1">Priority 1</option>
-        <option value="2">Priority 2</option>
-        <option value="3">Priority 3</option>
+        <option value="" disabled selected>
+          Priority
+        </option>
+        <option value="1">High</option>
+        <option value="2">Medium</option>
+        <option value="3">Low</option>
       </select>
       <select id="itemBagType" required>
         <option value="carryOn">Carry-On</option>
@@ -74,35 +67,6 @@
   <section class="itemList bagCarryOn">
     <fieldset class="filters">
       <legend>Filter by category:</legend>
-      <label for="bags"><span>▶</span>Bags<input type="checkbox" name="Bags"
-          id="bags" /></label>
-      <label for="clothing"><span>▶</span>Clothing<input type="checkbox"
-          name="clothing" id="clothing" />
-      </label>
-      <label for="consumables"><span>▶</span>Consumables<input
-          type="checkbox" name="consumables" id="consumables" />
-      </label>
-      <label for="electronics"><span>▶</span>Electronics<input
-          type="checkbox" name="electronics" id="electronics" />
-      </label>
-      <label for="footwear"><span>▶</span>Footwear<input type="checkbox"
-          name="footwear" id="footwear" />
-      </label>
-      <label for="grooming"><span>▶</span>Grooming<input type="checkbox"
-          name="grooming" id="grooming" />
-      </label>
-      <label for="hygiene"><span>▶</span>Hygiene<input type="checkbox"
-          name="hygiene" id="hygiene" />
-      </label>
-      <label for="meds"><span>▶</span>Meds<input type="checkbox" name="meds"
-          id="meds" />
-      </label>
-      <label for="necessities"><span>▶</span>Necessities<input
-          type="checkbox" name="necessities" id="necessities" />
-      </label>
-      <label for="other"><span>▶</span>Other<input type="checkbox" name="other"
-          id="other" />
-      </label>
     </fieldset>
     <div class="weightDistribution">
       <div class="categoryBox bags">
@@ -160,26 +124,39 @@
   <section class="itemList bagPersonalItem">
     <fieldset class="filters">
       <legend>Filter by category:</legend>
-      <label for="bags2"><span>▶</span>Bags<input type="checkbox" name="bags2" id="bags2" /></label>
-      <label for="clothing2"><span>▶</span>Clothing<input type="checkbox" name="clothing2" id="clothing2" />
-      </label>
-      <label for="consumables2"><span>▶</span>Consumables<input type="checkbox" name="consumables2" id="consumables2" />
-      </label>
-      <label for="electronics2"><span>▶</span>Electronics<input type="checkbox" name="electronics2" id="electronics2" />
-      </label>
-      <label for="footwear2"><span>▶</span>Footwear<input type="checkbox" name="footwear2" id="footwear2" />
-      </label>
-      <label for="grooming2"><span>▶</span>Grooming<input type="checkbox" name="grooming2" id="grooming2" />
-      </label>
-      <label for="hygiene2"><span>▶</span>Hygiene<input type="checkbox" name="hygiene2" id="hygiene2" />
-      </label>
-      <label for="meds2"><span>▶</span>Meds<input type="checkbox" name="meds2" id="meds2" />
-      </label>
-      <label for="necessities2"><span>▶</span>Necessities<input type="checkbox" name="necessities2" id="necessities2" />
-      </label>
-      <label for="other2"><span>▶</span>Other<input type="checkbox" name="other2" id="other2" />
-      </label>
     </fieldset>
+    <div class="weightDistribution">
+      <div class="categoryBox bags">
+        <span class="chartItemTitle">Bags</span>
+      </div>
+      <div class="categoryBox clothing">
+        <span class="chartItemTitle">Clothing</span>
+      </div>
+      <div class="categoryBox consumables">
+        <span class="chartItemTitle">Consumables</span>
+      </div>
+      <div class="categoryBox electronics">
+        <span class="chartItemTitle">Electronics</span>
+      </div>
+      <div class="categoryBox footwear">
+        <span class="chartItemTitle">Footwear</span>
+      </div>
+      <div class="categoryBox grooming">
+        <span class="chartItemTitle">Grooming</span>
+      </div>
+      <div class="categoryBox hygiene">
+        <span class="chartItemTitle">Hygiene</span>
+      </div>
+      <div class="categoryBox meds">
+        <span class="chartItemTitle">Meds</span>
+      </div>
+      <div class="categoryBox necessities">
+        <span class="chartItemTitle">Necessities</span>
+      </div>
+      <div class="categoryBox other">
+        <span class="chartItemTitle">Other</span>
+      </div>
+    </div>
     <article class="itemListHeader">
       <div class="itemName">Item Name</div>
       <div class="itemAmount">Amount</div>

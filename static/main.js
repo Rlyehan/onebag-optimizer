@@ -13,6 +13,9 @@ import sampleData2 from "./sampleData2.json" assert { type: 'json' }
 // VARIABLES
 //==========
 
+// Array holding all available categories
+const categories = ["bags", "clothing", "consumables", "electronics", "footwear", "grooming", "hygiene", "meds", "necessities", "other"];
+
 const createListButton = document.getElementById("createListButton")
 const listSelectorDropdown = document.getElementById("listSelector")
 const deleteListButton = document.getElementById("deleteListButton")
@@ -20,17 +23,19 @@ const fileInput = document.getElementById("jsonFileInput")
 const uploadListButton = document.getElementById("uploadListButton")
 const downloadListButton = document.getElementById("downloadListButton")
 const itemForm = document.getElementById("itemForm")
-const clearLocalStorageButton = document.getElementById("clearLocalStorage")
-const startAnalysisButton = document.getElementById("startAnalysis")
+const categoryDropdown = document.querySelectorAll("#itemCategory")
+const listFilters = document.querySelectorAll(".filters")
+// const clearLocalStorageButton = document.getElementById("clearLocalStorage")
+// const startAnalysisButton = document.getElementById("startAnalysis")
 const targetCarryOn = document.querySelector(".bagCarryOn")
 const targetPersonalItem = document.querySelector(".bagPersonalItem")
 const itemListSummaryCarryOn = document.querySelector(".bagCarryOn .itemListSummary")
 const itemListSummaryPersonalItem = document.querySelector(".bagPersonalItem .itemListSummary")
 
-addListToIndex("Sample List", "sampleListUUID")
+addListToIndex("Sample List", generateUUID())
 localStorage.setItem("Sample List", JSON.stringify(sampleData))
 
-addListToIndex("Sample List 2", "sampleList2UUID")
+addListToIndex("Sample List 2", generateUUID())
 localStorage.setItem("Sample List 2", JSON.stringify(sampleData2))
 
 
@@ -42,7 +47,7 @@ createListButton.addEventListener("click", function (event) {
   event.preventDefault()
   const listName = document.getElementById("listName").value
   if (listName != "") {
-    let listUUID = self.crypto.randomUUID()
+    let listUUID = generateUUID()
     addListToIndex(listName, listUUID)
     setItemArray(listName, [{ "listName": listName, "listUUID": listUUID }])
     populateListSelector()
@@ -87,6 +92,11 @@ uploadListButton.addEventListener("click", () => {
   fileInput.click();
 });
 
+// clearLocalStorageButton.addEventListener("click", function () {
+//   localStorage.clear()
+//   loadList()
+// })
+
 fileInput.addEventListener("change", () => {
   const file = fileInput.files[0]
   // uploadList(file, fileInput)
@@ -98,7 +108,7 @@ fileInput.addEventListener("change", () => {
     reader.onload = (e) => {
       try {
         const itemArray = JSON.parse(e.target.result)
-        // const listUUID = self.crypto.randomUUID()
+        // const listUUID = generateUUID()
         // itemArray[0].listUUID = listUUID
         // console.log(itemArray)
         const listInfo = itemArray[0]
@@ -122,12 +132,17 @@ fileInput.addEventListener("change", () => {
 
 downloadListButton.addEventListener('click', function () {
   let selectedList = document.getElementById("listSelector").value
-  const itemArray = getItemArray(selectedList)
 
-  if (itemArray) {
-    downloadList(itemArray, `${selectedList}.json`)
+  if (selectedList != "") {
+    const itemArray = getItemArray(selectedList)
+
+    if (itemArray) {
+      downloadList(itemArray, `${selectedList}.json`)
+    } else {
+      alert('No data found in localStorage.')
+    }
   } else {
-    alert('No data found in localStorage.')
+    alert('You need to select a list first.')
   }
 })
 
@@ -136,33 +151,80 @@ itemForm.addEventListener("submit", function (event) {
   addListItem()
 })
 
-// startAnalysisButton.addEventListener("click", function (event) {
-//   event.preventDefault()
-//   const selectedList = document.getElementById("listSelector").value
-//   // const itemList = getItemArray(selectedList)
-//   // const result = processData(itemList)
-//   // console.log(result)
-//   // sendData(selectedList)
-// })
 
 
+//=================
+// HELPER FUNCTIONS
+//=================
 
-function addListToIndex(listName, uuid) {
-  var listIndex = localStorage.getItem("List Index")
-  var listIndexItems = listIndex ? JSON.parse(listIndex) : []
 
-  if (!listIndexItems.some((item) => item.listName === listName)) {
-    listIndexItems.push({
-      listName: listName,
-      listUUID: uuid,
-    })
+function generateUUID() {
+  if (crypto && crypto.randomUUID) {
+    return crypto.randomUUID();
+  } else {
+    function randomHex(length) {
+      let result = '';
+      for (let i = 0; i < length; i++) {
+        result += Math.floor(Math.random() * 16).toString(16);
+      }
+      return result;
+    }
+
+    return (
+      randomHex(8) +
+      '-' +
+      randomHex(4) +
+      '-4' + // Version 4 UUID (random)
+      randomHex(3) +
+      '-' +
+      (8 | (Math.random() * 4)) // 8, 9, A, or B (random)
+        .toString(16)
+        .substring(1) +
+      randomHex(3) +
+      '-' +
+      randomHex(12)
+    );
   }
-  localStorage.setItem("List Index", JSON.stringify(listIndexItems))
 }
 
-// let sampleListUUID = "fancy UUID"
-// Not using crypto atm as it only works on localhost or HTTPS
+function createCategoryElements() {
+  categories.forEach((category) => {
+    // Category Selector Dropdowns
+    categoryDropdown.forEach((option) => {
+      const selectOption = document.createElement("option")
+      selectOption.setAttribute("value", category)
+      selectOption.innerHTML = category
+      option.appendChild(selectOption)
+    })
 
+    // Filters
+    listFilters.forEach((filter, index) => {
+      const filterItem = document.createElement("label")
+      const span = document.createElement("span")
+      const input = document.createElement("input")
+      input.setAttribute("type", "checkbox")
+      span.innerHTML = "▶"
+      const text = document.createTextNode(category)
+
+      if (index === 0) {
+        filterItem.setAttribute("for", category)
+        input.setAttribute("name", category)
+        input.setAttribute("id", category)
+      } else {
+        filterItem.setAttribute("for", `${category}${index + 1}`)
+        input.setAttribute("name", `${category}${index + 1}`)
+        input.setAttribute("id", `${category}${index + 1}`)
+      }
+
+      filterItem.appendChild(span)
+      filterItem.appendChild(text)
+      filterItem.appendChild(input)
+      filter.appendChild(filterItem)
+    })
+
+  })
+}
+createCategoryElements()
 
 function populateListSelector() {
   var listIndex = JSON.parse(localStorage.getItem("List Index"))
@@ -177,15 +239,7 @@ function populateListSelector() {
     listSelector.appendChild(option)
   })
 }
-
 populateListSelector()
-
-
-// clearLocalStorageButton.addEventListener("click", function () {
-//   localStorage.clear()
-//   loadList()
-// })
-
 
 function loadList(listName) {
   clearItemList()
@@ -195,25 +249,19 @@ function loadList(listName) {
   renderItems(listItems)
   activateDeleteListeners(listName)
   const result = processData(listItems)
-  console.log(result)
-  const bagsPercentage = (result.categoryWeightPercentage.bags !== undefined) ? result.categoryWeightPercentage.bags : 0
-  const clothingPercentage = (result.categoryWeightPercentage.clothing !== undefined) ? result.categoryWeightPercentage.clothing : 0
-  const footwearPercentage = (result.categoryWeightPercentage.footwear !== undefined) ? result.categoryWeightPercentage.footwear : 0
-  const groomingPercentage = (result.categoryWeightPercentage.grooming !== undefined) ? result.categoryWeightPercentage.grooming : 0
-  const electronicsPercentage = (result.categoryWeightPercentage.electronics !== undefined) ? result.categoryWeightPercentage.electronics : 0
-  const hygienePercentage = (result.categoryWeightPercentage.hygiene !== undefined) ? result.categoryWeightPercentage.hygiene : 0
-  const medsPercentage = (result.categoryWeightPercentage.meds !== undefined) ? result.categoryWeightPercentage.meds : 0
-  const consumablesPercentage = (result.categoryWeightPercentage.consumables !== undefined) ? result.categoryWeightPercentage.consumables : 0
-  const necessitiesPercentage = (result.categoryWeightPercentage.necessities !== undefined) ? result.categoryWeightPercentage.necessities : 0
-  const otherPercentage = (result.categoryWeightPercentage.other !== undefined) ? result.categoryWeightPercentage.other : 0
+  const percentages = [];
 
-  document.querySelector(".weightDistribution").style.gridTemplateColumns = `${bagsPercentage}fr ${clothingPercentage}fr ${consumablesPercentage}fr ${electronicsPercentage}fr ${footwearPercentage}fr ${groomingPercentage}fr ${hygienePercentage}fr ${medsPercentage}fr ${necessitiesPercentage}fr ${otherPercentage}fr`
-  // console.log(`"${bagsPercentage}fr ${clothingPercentage}fr ${consumablesPercentage}fr ${electronicsPercentage}fr ${footwearPercentage}fr ${groomingPercentage}fr ${hygienePercentage}fr ${medsPercentage}fr ${necessitiesPercentage}fr ${otherPercentage}fr"`)
-}
-
-function clearItemList() {
-  const articles = document.querySelectorAll(".listItem")
-  articles.forEach((entry) => entry.remove())
+  for (const category of categories) {
+    if (result.categoryWeightPercentage[category] !== undefined) {
+      percentages.push(result.categoryWeightPercentage[category]);
+    } else {
+      percentages.push(0);
+    }
+  }
+  // Create the grid template column value
+  const gridTemplateColumns = percentages.map(percentage => `${percentage}fr`).join(' ');
+  document.querySelector(".bagCarryOn .weightDistribution").style.gridTemplateColumns = gridTemplateColumns;
+  document.querySelector(".bagPersonalItem .weightDistribution").style.gridTemplateColumns = gridTemplateColumns;
 }
 
 function renderItems(listItem) {
@@ -238,6 +286,68 @@ function renderItems(listItem) {
       personalItemTotalWeight.innerHTML = totalWeightPersonalItem + " g"
     }
   })
+}
+
+function getItemArray(listName) {
+  return JSON.parse(localStorage.getItem(listName)) || []
+}
+
+function setItemArray(listName, itemArray) {
+  localStorage.setItem(listName, JSON.stringify(itemArray))
+}
+
+function deleteItemArray(listName) {
+  localStorage.removeItem(listName)
+}
+
+function activateDeleteListeners(listName) {
+  let deleteBtn = document.querySelectorAll(".deleteItem")
+  deleteBtn.forEach((dB) => {
+    dB.addEventListener("click", () => {
+      const index = dB.parentElement.parentElement.getAttribute("data-index")
+      deleteItem(listName, index)
+    })
+  })
+}
+
+function sendData(listName) {
+  let itemArray = localStorage.getItem(listName)
+  // let itemArray = JSON.stringify(localStorage.getItem(listName))
+
+  fetch("/process", {
+    method: "POST",
+    body: itemArray,
+    // headers: {
+    //   "Content-type": "application/json; charset=UTF-8",
+    // }
+  })
+    .then((response) => response.text())
+    .then((data) => {
+      document.querySelector(".analysisResult").innerHTML = data
+    })
+}
+
+
+//==================
+// LIST MANIPULATION
+//==================
+
+function addListToIndex(listName, uuid) {
+  var listIndex = localStorage.getItem("List Index")
+  var listIndexItems = listIndex ? JSON.parse(listIndex) : []
+
+  if (!listIndexItems.some((item) => item.listName === listName)) {
+    listIndexItems.push({
+      listName: listName,
+      listUUID: uuid,
+    })
+  }
+  localStorage.setItem("List Index", JSON.stringify(listIndexItems))
+}
+
+function clearItemList() {
+  const articles = document.querySelectorAll(".listItem")
+  articles.forEach((entry) => entry.remove())
 }
 
 function createItemListItem(item, itemTotalWeight, index) {
@@ -297,28 +407,6 @@ function addListItem() {
   }
 }
 
-function getItemArray(listName) {
-  return JSON.parse(localStorage.getItem(listName)) || []
-}
-
-function setItemArray(listName, itemArray) {
-  localStorage.setItem(listName, JSON.stringify(itemArray))
-}
-
-function deleteItemArray(listName) {
-  localStorage.removeItem(listName)
-}
-
-function activateDeleteListeners(listName) {
-  let deleteBtn = document.querySelectorAll(".deleteItem")
-  deleteBtn.forEach((dB) => {
-    dB.addEventListener("click", () => {
-      const index = dB.parentElement.parentElement.getAttribute("data-index")
-      deleteItem(listName, index)
-    })
-  })
-}
-
 function deleteItem(listName, i) {
   let itemArray = getItemArray(listName)
   itemArray.splice(i, 1)
@@ -336,21 +424,4 @@ function deleteList(listName) {
   loadList(listName)
   let listSelector = document.getElementById("listSelector")
   listSelector.value = ""
-}
-
-function sendData(listName) {
-  let itemArray = localStorage.getItem(listName)
-  // let itemArray = JSON.stringify(localStorage.getItem(listName))
-
-  fetch("/process", {
-    method: "POST",
-    body: itemArray,
-    // headers: {
-    //   "Content-type": "application/json; charset=UTF-8",
-    // }
-  })
-    .then((response) => response.text())
-    .then((data) => {
-      document.querySelector(".analysisResult").innerHTML = data
-    })
 }
