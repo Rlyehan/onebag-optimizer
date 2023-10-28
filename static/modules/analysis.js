@@ -51,6 +51,14 @@ export function processData(items) {
         };
     }
 
+    const bagCategoryWeightsPercentage = {};
+    for (let bagType in bagCategoryWeights) {
+        bagCategoryWeightsPercentage[bagType] = {};
+        for (let category in bagCategoryWeights[bagType]) {
+            bagCategoryWeightsPercentage[bagType][category] = (bagCategoryWeights[bagType][category] / bagWeights[bagType]) * 100;
+        }
+    }
+
     return {
         totalWeight: totalWeight,
         topHeaviestItems: topHeaviestItems,
@@ -60,7 +68,8 @@ export function processData(items) {
         categoryWeights: categoryWeights,
         categoryWeightPercentage: categoryWeightPercentage,
         categoryData: categoryData,
-        bagCategoryWeights: bagCategoryWeights
+        bagCategoryWeights: bagCategoryWeights,
+        bagCategoryWeightsPercentage: bagCategoryWeightsPercentage
     };
 }
 
