@@ -2,11 +2,19 @@
 // IMPORTS
 //========
 
-import { processData } from "./modules/analysis.js"
-import { downloadList } from "./modules/jsonDownload.js"
+
+
+
+//============
+// SAMPLE DATA
+//============
 
 import sampleData from "./sampleData.json" assert { type: 'json' }
 import sampleData2 from "./sampleData2.json" assert { type: 'json' }
+addListToIndex("Sample List", generateUUID())
+localStorage.setItem("Sample List", JSON.stringify(sampleData))
+addListToIndex("Sample List 2", generateUUID())
+localStorage.setItem("Sample List 2", JSON.stringify(sampleData2))
 
 
 
@@ -27,18 +35,10 @@ const downloadListButton = document.getElementById("downloadListButton")
 const itemForm = document.getElementById("itemForm")
 const categoryDropdown = document.querySelectorAll("#itemCategory")
 const listFilters = document.querySelectorAll(".filters")
-// const clearLocalStorageButton = document.getElementById("clearLocalStorage")
-// const startAnalysisButton = document.getElementById("startAnalysis")
 const targetCarryOn = document.querySelector(".bagCarryOn")
 const targetPersonalItem = document.querySelector(".bagPersonalItem")
 const itemListSummaryCarryOn = document.querySelector(".bagCarryOn .itemListSummary")
 const itemListSummaryPersonalItem = document.querySelector(".bagPersonalItem .itemListSummary")
-
-addListToIndex("Sample List", generateUUID())
-localStorage.setItem("Sample List", JSON.stringify(sampleData))
-
-addListToIndex("Sample List 2", generateUUID())
-localStorage.setItem("Sample List 2", JSON.stringify(sampleData2))
 
 
 
@@ -98,7 +98,6 @@ uploadListButton.addEventListener("click", () => {
 
 fileInput.addEventListener("change", () => {
   const file = fileInput.files[0]
-  // uploadList(file, fileInput)
   fileInput.value = ""
   if (file) {
     const reader = new FileReader()
@@ -150,10 +149,10 @@ itemForm.addEventListener("submit", function (event) {
 
 
 
+
 //=================
 // HELPER FUNCTIONS
 //=================
-
 
 function generateUUID() {
   if (crypto && crypto.randomUUID) {
@@ -184,23 +183,25 @@ function generateUUID() {
   }
 }
 
+function capitalizeFirstLetter(inputString) {
+  return inputString.charAt(0).toUpperCase() + inputString.slice(1);
+}
+
 function createCategoryElements() {
   categories.forEach((category) => {
     // Category Selector Dropdowns
     categoryDropdown.forEach((option) => {
       const selectOption = document.createElement("option")
       selectOption.setAttribute("value", category)
-      selectOption.innerHTML = category
+      selectOption.innerHTML = capitalizeFirstLetter(category)
       option.appendChild(selectOption)
     })
     // Filters
     listFilters.forEach((filter, index) => {
       const filterItem = document.createElement("label")
-      const span = document.createElement("span")
       const input = document.createElement("input")
       input.setAttribute("type", "checkbox")
-      span.innerHTML = "▶"
-      const text = document.createTextNode(category)
+      const text = document.createTextNode(capitalizeFirstLetter(category))
       if (index === 0) {
         filterItem.setAttribute("for", category)
         input.setAttribute("name", category)
@@ -210,7 +211,6 @@ function createCategoryElements() {
         input.setAttribute("name", `${category}${index + 1}`)
         input.setAttribute("id", `${category}${index + 1}`)
       }
-      filterItem.appendChild(span)
       filterItem.appendChild(text)
       filterItem.appendChild(input)
       filter.appendChild(filterItem)
@@ -218,6 +218,7 @@ function createCategoryElements() {
   })
 }
 createCategoryElements()
+
 
 function populateListSelector() {
   var listIndex = JSON.parse(localStorage.getItem("List Index"))
@@ -233,6 +234,7 @@ function populateListSelector() {
   })
 }
 populateListSelector()
+
 
 function loadList(listName) {
   clearItemList()
@@ -261,19 +263,19 @@ function loadList(listName) {
         break
 
       }
-        case "Personal Item": {
-          for (const category of categories) {
-            if (result.bagCategoryWeightsPercentage[bagType][category] !== undefined) {
-              percentages.push(result.bagCategoryWeightsPercentage[bagType][category])
-            } else {
-              percentages.push(0)
-            }
+      case "Personal Item": {
+        for (const category of categories) {
+          if (result.bagCategoryWeightsPercentage[bagType][category] !== undefined) {
+            percentages.push(result.bagCategoryWeightsPercentage[bagType][category])
+          } else {
+            percentages.push(0)
           }
-          let gridTemplateColumns = percentages.map(percentage => `${percentage}fr`).join(' ')
+        }
+        let gridTemplateColumns = percentages.map(percentage => `${percentage}fr`).join(' ')
 
-          document.querySelector(".bagPersonalItem .weightDistribution").style.gridTemplateColumns = gridTemplateColumns
-          gridTemplateColumns = []
-          break
+        document.querySelector(".bagPersonalItem .weightDistribution").style.gridTemplateColumns = gridTemplateColumns
+        gridTemplateColumns = []
+        break
       }
     }
   }
@@ -304,13 +306,16 @@ function renderItems(listItem) {
   })
 }
 
+
 function getItemArray(listName) {
   return JSON.parse(localStorage.getItem(listName)) || []
 }
 
+
 function setItemArray(listName, itemArray) {
   localStorage.setItem(listName, JSON.stringify(itemArray))
 }
+
 
 function activateDeleteListeners(listName) {
   let deleteBtn = document.querySelectorAll(".deleteItem")
@@ -321,6 +326,7 @@ function activateDeleteListeners(listName) {
     })
   })
 }
+
 
 function sendData(listName) {
   let itemArray = localStorage.getItem(listName)
@@ -340,6 +346,167 @@ function sendData(listName) {
 }
 
 
+function downloadList(itemArray, listName) {
+  const data = JSON.stringify(itemArray)
+  const blob = new Blob([data], { type: 'application/json' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = listName
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+  URL.revokeObjectURL(url)
+}
+
+
+
+
+//=========
+// ANALYSIS
+//=========
+
+function formatBagType(bagType) {
+  switch (bagType) {
+    case "carryOn":
+      return "Carry On"
+    case "personalItem":
+      return "Personal Item"
+    default:
+      return bagType
+  }
+}
+
+
+function processData(items) {
+  let totalWeight = 0
+  let bagWeights = {}
+  let categoryWeights = {}
+  let priorityWeights = {}
+  let categoryData = {}
+  let bagCategoryWeights = {}
+
+  items.forEach(item => {
+    let itemTotalWeight = item.itemAmount * item.itemWeight
+    totalWeight += itemTotalWeight
+
+    priorityWeights[item.itemPriority] = (priorityWeights[item.itemPriority] || 0) + itemTotalWeight
+    categoryWeights[item.itemCategory] = (categoryWeights[item.itemCategory] || 0) + itemTotalWeight
+
+    const formattedBagType = formatBagType(item.itemBagType)
+    bagWeights[formattedBagType] = (bagWeights[formattedBagType] || 0) + itemTotalWeight
+
+    if (!bagCategoryWeights[formattedBagType]) {
+      bagCategoryWeights[formattedBagType] = {}
+    }
+    bagCategoryWeights[formattedBagType][item.itemCategory] = (bagCategoryWeights[formattedBagType][item.itemCategory] || 0) + itemTotalWeight
+  })
+
+  let averageWeight = items.length > 0 ? totalWeight / items.length : 0
+
+  items.sort((a, b) => b.itemWeight - a.itemWeight)
+  let topHeaviestItems = items.slice(0, 5)
+
+  let categoryWeightPercentage = {}
+  for (let category in categoryWeights) {
+    categoryWeightPercentage[category] = (categoryWeights[category] / totalWeight) * 100
+  }
+
+  for (let category in categoryWeights) {
+    let percentage = (categoryWeights[category] / totalWeight) * 100
+    categoryData[category] = {
+      weight: categoryWeights[category],
+      percentage: percentage
+    }
+  }
+
+  const bagCategoryWeightsPercentage = {}
+  for (let bagType in bagCategoryWeights) {
+    bagCategoryWeightsPercentage[bagType] = {}
+    for (let category in bagCategoryWeights[bagType]) {
+      bagCategoryWeightsPercentage[bagType][category] = (bagCategoryWeights[bagType][category] / bagWeights[bagType]) * 100
+    }
+  }
+
+  return {
+    totalWeight: totalWeight,
+    topHeaviestItems: topHeaviestItems,
+    bagWeights: bagWeights,
+    averageWeight: averageWeight,
+    priorityWeights: priorityWeights,
+    categoryWeights: categoryWeights,
+    categoryWeightPercentage: categoryWeightPercentage,
+    categoryData: categoryData,
+    bagCategoryWeights: bagCategoryWeights,
+    bagCategoryWeightsPercentage: bagCategoryWeightsPercentage
+  }
+}
+
+
+function updateForAddedItem(metrics, newItem) {
+  let itemTotalWeight = newItem.itemAmount * newItem.itemWeight
+  metrics.totalWeight += itemTotalWeight
+  metrics.priorityWeights[newItem.itemPriority] = (metrics.priorityWeights[newItem.itemPriority] || 0) + itemTotalWeight
+  metrics.categoryWeights[newItem.itemCategory] = (metrics.categoryWeights[newItem.itemCategory] || 0) + itemTotalWeight
+
+  const formattedBagType = formatBagType(newItem.itemBagType)
+  metrics.bagWeights[formattedBagType] = (metrics.bagWeights[formattedBagType] || 0) + itemTotalWeight
+
+  if (!metrics.bagCategoryWeights[formattedBagType]) {
+    metrics.bagCategoryWeights[formattedBagType] = {}
+  }
+  metrics.bagCategoryWeights[formattedBagType][newItem.itemCategory] = (metrics.bagCategoryWeights[formattedBagType][newItem.itemCategory] || 0) + itemTotalWeight
+
+
+  if (newItem.itemWeight > metrics.topHeaviestItems[metrics.topHeaviestItems.length - 1].itemWeight) {
+    metrics.topHeaviestItems.pop()
+    metrics.topHeaviestItems.push(newItem)
+    metrics.topHeaviestItems.sort((a, b) => b.itemWeight - a.itemWeight)
+  }
+
+  let percentage = (metrics.categoryWeights[newItem.itemCategory] / metrics.totalWeight) * 100
+  metrics.categoryData[newItem.itemCategory] = {
+    weight: metrics.categoryWeights[newItem.itemCategory],
+    percentage: percentage
+  }
+
+  return metrics
+}
+
+
+function updateForRemovedItem(metrics, removedItem, allItems) {
+
+  let itemTotalWeight = removedItem.itemAmount * removedItem.itemWeight
+  metrics.totalWeight -= itemTotalWeight
+  metrics.priorityWeights[removedItem.itemPriority] -= itemTotalWeight
+  metrics.categoryWeights[removedItem.itemCategory] -= itemTotalWeight
+
+  const formattedBagType = formatBagType(removedItem.itemBagType)
+  metrics.bagWeights[formattedBagType] -= itemTotalWeight
+
+  metrics.bagCategoryWeights[formattedBagType][removedItem.itemCategory] -= itemTotalWeight
+
+  if (metrics.topHeaviestItems.includes(removedItem)) {
+    metrics.topHeaviestItems = metrics.topHeaviestItems.filter(item => item !== removedItem)
+    let remainingItems = allItems.filter(item => !metrics.topHeaviestItems.includes(item))
+    let nextTopItem = remainingItems.sort((a, b) => b.itemWeight - a.itemWeight)[0]
+    if (nextTopItem) {
+      metrics.topHeaviestItems.push(nextTopItem)
+    }
+  }
+
+  let percentage = (metrics.categoryWeights[removedItem.itemCategory] / metrics.totalWeight) * 100
+  metrics.categoryData[removedItem.itemCategory] = {
+    weight: metrics.categoryWeights[removedItem.itemCategory],
+    percentage: percentage
+  }
+
+  return metrics
+}
+
+
+
+
 //==================
 // LIST MANIPULATION
 //==================
@@ -357,10 +524,12 @@ function addListToIndex(listName, uuid) {
   localStorage.setItem("List Index", JSON.stringify(listIndexItems))
 }
 
+
 function clearItemList() {
   const articles = document.querySelectorAll(".listItem")
   articles.forEach((entry) => entry.remove())
 }
+
 
 function createItemListItem(item, itemTotalWeight, index) {
   const listItem = document.createElement("article")
@@ -384,6 +553,7 @@ function createItemListItem(item, itemTotalWeight, index) {
 
   return listItem
 }
+
 
 function addListItem() {
 
@@ -419,12 +589,14 @@ function addListItem() {
   }
 }
 
+
 function deleteItem(listName, i) {
   let itemArray = getItemArray(listName)
   itemArray.splice(i, 1)
   setItemArray(listName, itemArray)
   loadList(listName)
 }
+
 
 function deleteList(listName) {
   let i = document.querySelector('[value="' + listName + '"').getAttribute("data-index")

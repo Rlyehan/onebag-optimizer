@@ -96,10 +96,6 @@ input[value="+"] {
   grid-column: span 2;
 }
 
-#itemCategory {
-  text-transform: capitalize;
-}
-
 input,
 select {
   font-size: 1.25rem;
@@ -217,9 +213,9 @@ label + .itemList {
   display: flex;
   flex-wrap: wrap;
   padding: 0.5rem;
-  gap: 1rem;
+  row-gap: 1rem;
+  column-gap: 2.25rem;
   margin-block: 1rem;
-  text-transform: capitalize;
 }
 
 .filters input {
@@ -459,9 +455,10 @@ footer p {
   .itemListHeader {
     display: grid;
     border-bottom: 2px solid grey;
+    padding-block-end: .5rem;
 
     & div {
-      font-size: 0.75rem;
+      font-size: .8rem;
     }
 
     & .itemAmount,
@@ -601,46 +598,55 @@ footer p {
   visibility: visible;
 }
 
+.filters label {
+  position: relative;
+}
 
-label[for="bags"] span,
-label[for="bags2"] span {
-  color: var(--clr-category-bags);
+.filters label::before {
+  content: "";
+  position: absolute;
+  left: -1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  /* border-radius: 20%; */
+  height: 1rem;
+  width: 1rem;
 }
-label[for="clothing"] span,
-label[for="clothing2"] span {
-  color: var(--clr-category-clothing);
+
+
+.filters {
+  padding-inline-start: 2.25rem;
 }
-label[for="consumables"] span,
-label[for="consumables2"] span {
-  color: var(--clr-category-consumables);
+
+.filters label[for*="bags"]::before {
+  background-color: var(--clr-category-bags);
 }
-label[for="electronics"] span,
-label[for="electronics2"] span {
-  color: var(--clr-category-electronics);
+.filters label[for*="clothing"]::before {
+  background-color: var(--clr-category-clothing);
 }
-label[for="footwear"] span,
-label[for="footwear2"] span {
-  color: var(--clr-category-footwear);
+.filters label[for*="consumables"]::before {
+  background-color: var(--clr-category-consumables);
 }
-label[for="grooming"] span,
-label[for="grooming2"] span {
-  color: var(--clr-category-grooming);
+.filters label[for*="electronics"]::before {
+  background-color: var(--clr-category-electronics);
 }
-label[for="hygiene"] span,
-label[for="hygiene2"] span {
-  color: var(--clr-category-hygiene);
+.filters label[for*="footwear"]::before {
+  background-color: var(--clr-category-footwear);
 }
-label[for="meds"] span,
-label[for="meds2"] span {
-  color: var(--clr-category-meds);
+.filters label[for*="grooming"]::before {
+  background-color: var(--clr-category-grooming);
 }
-label[for="necessities"] span,
-label[for="necessities2"] span {
-  color: var(--clr-category-necessities);
+.filters label[for*="hygiene"]::before {
+  background-color: var(--clr-category-hygiene);
 }
-label[for="other"] span,
-label[for="other2"] span {
-  color: var(--clr-category-other);
+.filters label[for*="meds"]::before {
+  background-color: var(--clr-category-meds);
+}
+.filters label[for*="necessities"]::before {
+  background-color: var(--clr-category-necessities);
+}
+.filters label[for*="other"]::before {
+  background-color: var(--clr-category-other);
 }
 
 .categoryBox.bags {
