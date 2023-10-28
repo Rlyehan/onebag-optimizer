@@ -18,7 +18,6 @@ func setupLogger() {
 	if err != nil {
 		log.Fatalf("Failed to open log file: %v", err)
 	}
-	// defer logFile.Close()
 
 	fileLogger = log.New(logFile, "", log.LstdFlags)
 }
