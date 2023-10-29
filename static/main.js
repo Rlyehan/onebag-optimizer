@@ -24,7 +24,7 @@ localStorage.setItem("Sample List 2", JSON.stringify(sampleData2))
 //==========
 
 // Array holding all available categories
-const categories = ["bags", "clothing", "consumables", "electronics", "footwear", "grooming", "hygiene", "meds", "necessities", "other"]
+const categories = ["bags", "clothing", "consumables", "electronics", "footwear", "grooming", "hygiene", "meds", "necessities", "toiletries", "other"]
 
 const createListButton = document.getElementById("createListButton")
 const listSelectorDropdown = document.getElementById("listSelector")
@@ -37,6 +37,7 @@ const categoryDropdown = document.querySelectorAll("#itemCategory")
 const listFilters = document.querySelectorAll(".filters")
 const targetCarryOn = document.querySelector(".bagCarryOn")
 const targetPersonalItem = document.querySelector(".bagPersonalItem")
+const weightDistribution = document.querySelectorAll(".weightDistribution")
 const itemListSummaryCarryOn = document.querySelector(".bagCarryOn .itemListSummary")
 const itemListSummaryPersonalItem = document.querySelector(".bagPersonalItem .itemListSummary")
 
@@ -184,7 +185,7 @@ function generateUUID() {
 }
 
 function capitalizeFirstLetter(inputString) {
-  return inputString.charAt(0).toUpperCase() + inputString.slice(1);
+  return inputString.charAt(0).toUpperCase() + inputString.slice(1)
 }
 
 function createCategoryElements() {
@@ -215,6 +216,16 @@ function createCategoryElements() {
       filterItem.appendChild(input)
       filter.appendChild(filterItem)
     })
+    weightDistribution.forEach((element) => {
+      const span = document.createElement("span")
+      span.classList.add("chartItemTitle")
+      span.innerHTML = capitalizeFirstLetter(category)
+      const categoryBox = document.createElement("div")
+      categoryBox.classList.add("categoryBox")
+      categoryBox.classList.add(category)
+      categoryBox.appendChild(span)
+      element.appendChild(categoryBox)
+    })
   })
 }
 createCategoryElements()
@@ -236,13 +247,7 @@ function populateListSelector() {
 populateListSelector()
 
 
-function loadList(listName) {
-  clearItemList()
-  const itemArray = getItemArray(listName)
-  const listInfo = itemArray[0]
-  const listItems = itemArray.slice(1)
-  renderItems(listItems)
-  activateDeleteListeners(listName)
+function setChartItemWidths(listItems) {
   const result = processData(listItems)
   let percentages = []
 
@@ -252,7 +257,7 @@ function loadList(listName) {
       case "Carry On": {
         for (const category of categories) {
           if (result.bagCategoryWeightsPercentage[bagType][category] !== undefined) {
-            percentages.push(result.bagCategoryWeightsPercentage[bagType][category])
+            percentages.push(Math.ceil(result.bagCategoryWeightsPercentage[bagType][category]))
           } else {
             percentages.push(0)
           }
@@ -266,7 +271,7 @@ function loadList(listName) {
       case "Personal Item": {
         for (const category of categories) {
           if (result.bagCategoryWeightsPercentage[bagType][category] !== undefined) {
-            percentages.push(result.bagCategoryWeightsPercentage[bagType][category])
+            percentages.push(Math.ceil(result.bagCategoryWeightsPercentage[bagType][category]))
           } else {
             percentages.push(0)
           }
@@ -279,6 +284,17 @@ function loadList(listName) {
       }
     }
   }
+}
+
+
+function loadList(listName) {
+  clearItemList()
+  const itemArray = getItemArray(listName)
+  const listInfo = itemArray[0]
+  const listItems = itemArray.slice(1)
+  renderItems(listItems)
+  activateDeleteListeners(listName)
+  setChartItemWidths(listItems)
 }
 
 

@@ -14,7 +14,7 @@
 
 <body>
   <h2>OneBag Optimizer</h2>
-  <section class="listSelector">
+  <section class="listSelector" aria-label="List Selector">
     <form id="listNameForm">
       <input type="text" id="listName" placeholder="List Name" />
       <input type="submit" id="createListButton" value="Create List" />
@@ -30,7 +30,7 @@
     </div>
   </section>
 
-  <section class="inputform">
+  <section class="inputform" aria-label="Item Details Form">
     <form id="itemForm">
       <input id="itemName" value="" type="text" placeholder="Name" required />
       <input id="itemAmount" value="" type="number" placeholder="Amount" required min="0" max="99" />
@@ -64,36 +64,6 @@
       <legend>Filter by category:</legend>
     </fieldset>
     <div class="weightDistribution">
-      <div class="categoryBox bags">
-        <span class="chartItemTitle">Bags</span>
-      </div>
-      <div class="categoryBox clothing">
-        <span class="chartItemTitle">Clothing</span>
-      </div>
-      <div class="categoryBox consumables">
-        <span class="chartItemTitle">Consumables</span>
-      </div>
-      <div class="categoryBox electronics">
-        <span class="chartItemTitle">Electronics</span>
-      </div>
-      <div class="categoryBox footwear">
-        <span class="chartItemTitle">Footwear</span>
-      </div>
-      <div class="categoryBox grooming">
-        <span class="chartItemTitle">Grooming</span>
-      </div>
-      <div class="categoryBox hygiene">
-        <span class="chartItemTitle">Hygiene</span>
-      </div>
-      <div class="categoryBox meds">
-        <span class="chartItemTitle">Meds</span>
-      </div>
-      <div class="categoryBox necessities">
-        <span class="chartItemTitle">Necessities</span>
-      </div>
-      <div class="categoryBox other">
-        <span class="chartItemTitle">Other</span>
-      </div>
     </div>
     <article class="itemListHeader">
       <div class="itemName">Item Name</div>
@@ -121,36 +91,6 @@
       <legend>Filter by category:</legend>
     </fieldset>
     <div class="weightDistribution">
-      <div class="categoryBox bags">
-        <span class="chartItemTitle">Bags</span>
-      </div>
-      <div class="categoryBox clothing">
-        <span class="chartItemTitle">Clothing</span>
-      </div>
-      <div class="categoryBox consumables">
-        <span class="chartItemTitle">Consumables</span>
-      </div>
-      <div class="categoryBox electronics">
-        <span class="chartItemTitle">Electronics</span>
-      </div>
-      <div class="categoryBox footwear">
-        <span class="chartItemTitle">Footwear</span>
-      </div>
-      <div class="categoryBox grooming">
-        <span class="chartItemTitle">Grooming</span>
-      </div>
-      <div class="categoryBox hygiene">
-        <span class="chartItemTitle">Hygiene</span>
-      </div>
-      <div class="categoryBox meds">
-        <span class="chartItemTitle">Meds</span>
-      </div>
-      <div class="categoryBox necessities">
-        <span class="chartItemTitle">Necessities</span>
-      </div>
-      <div class="categoryBox other">
-        <span class="chartItemTitle">Other</span>
-      </div>
     </div>
     <article class="itemListHeader">
       <div class="itemName">Item Name</div>
@@ -176,15 +116,15 @@
 <footer>
   <h3>OneBag Optimizer</h3>
   <p><a href="https://github.com/lukas-berger" target="_blank" rel="noopener noreferrer"
-      title="Lukas Berger on GitHub">Lukas Berger</a>
+      title="Lukas Berger on GitHub" aria-label="Lukas Berger on GitHub">Lukas Berger</a>
   </p>
   <p></p><a href="https://github.com/Rlyehan" target="_blank" rel="noopener noreferrer"
-    title="Maximilian Huber on GitHub">Maximilian
+    title="Maximilian Huber on GitHub" aria-label="Maximilian Huber on GitHub">Maximilian
     Huber</a></p>
   <a href="https://github.com/Rlyehan/onebag-optimizer" target="_blank" rel="noopener noreferrer"
-    title="This project's GitHub"><i class="fab fa-github fa-2x"></i></a>
+    title="This project's GitHub" aria-label="This project's GitHub"><i class="fab fa-github fa-2x"></i></a>
 
-  <p><a href="#" id="backToTop">Back to Top</a></p>
+  <p><a href="#" id="backToTop" aria-label="Go back to top">Back to Top</a></p>
 </footer>
 
 </html>
