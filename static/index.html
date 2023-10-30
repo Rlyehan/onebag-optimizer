@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,11 +8,9 @@
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300&amp;display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <script type="module" src="./static/main.js"></script>
-
 </head>
-
 <body>
-  <h2>OneBag Optimizer</h2>
+  <h1>OneBag Optimizer</h1>
   <section class="listSelector" aria-label="List Selector">
     <form id="listNameForm">
       <input type="text" id="listName" placeholder="List Name" />
@@ -29,7 +26,6 @@
       <button id="downloadListButton">Download List</button>
     </div>
   </section>
-
   <section class="inputform" aria-label="Item Details Form">
     <form id="itemForm">
       <input id="itemName" value="" type="text" placeholder="Name" required />
@@ -82,7 +78,6 @@
       <div class="totalWeight" id="carryOnTotalWeight"></div>
     </article>
   </section>
-
   <label for="personalItemList">
     <h3>Personal Item</h3><input type="checkbox" id="personalItemList" checked></input>
   </label>
@@ -109,10 +104,8 @@
       <div class="totalWeight" id="personalItemTotalWeight"></div>
     </article>
   </section>
-
   <section class="itemList analysisResult"></section>
 </body>
-
 <footer>
   <h3>OneBag Optimizer</h3>
   <p><a href="https://github.com/lukas-berger" target="_blank" rel="noopener noreferrer"
@@ -126,5 +119,4 @@
 
   <p><a href="#" id="backToTop" aria-label="Go back to top">Back to Top</a></p>
 </footer>
-
 </html>
