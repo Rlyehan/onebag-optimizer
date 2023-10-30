@@ -596,7 +596,8 @@ function createItemListItem(item, itemTotalWeight, index) {
   const divItemTotalWeight = createDivWithClass('itemTotalWeight', itemTotalWeight);
   divItemTotalWeight.prepend(mobileOnlyTotal);
   divItemTotalWeight.append(mobileOnlyTotalGrams);
-  const divItemPriority = createDivWithClass('itemPriority', item.itemPriority);
+  const divItemPriority = createDivWithClass('itemPriority', item.itemPriority==="1"?"HI":item.itemPriority==="2"?"MD":"LO");
+  divItemPriority.classList.add("prio-" + item.itemPriority)
   divItemPriority.prepend(mobileOnlyPrio);
   const divItemCategory = createDivWithClass('itemCategory', item.itemCategory.charAt(0).toUpperCase() + item.itemCategory.slice(1));
   const divItemSubcategory = createDivWithClass('itemSubcategory', item.itemSubcategory);
