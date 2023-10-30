@@ -35,7 +35,7 @@
   :root {
     --lightness: 65%;
     --chroma: 0.24;
-    --clr-hover-background: #DDD;
+    --clr-hover-background: #ddd;
   }
 }
 
@@ -59,7 +59,7 @@ a {
   }
 }
 
-html {  
+html {
   scroll-behavior: smooth;
 }
 
@@ -70,8 +70,9 @@ body {
   gap: 3rem;
 }
 
-h2 {
+h1 {
   text-align: center;
+  margin-block-start: 2rem;
 }
 
 form {
@@ -89,7 +90,7 @@ form {
 .backup {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: .25rem;
+  gap: 0.25rem;
 }
 
 .backup button,
@@ -179,7 +180,7 @@ button {
 .listSelector {
   display: grid;
   grid-template-columns: repeat(1, 1fr);
-  gap: .5rem;
+  gap: 0.5rem;
 }
 
 .listSelector input[type="text"],
@@ -253,25 +254,52 @@ label + .itemList {
 
 .filters:has(#bags:checked) ~ article.carryOn.bags,
 .filters:has(#clothing:checked) ~ article.carryOn.clothing,
+.filters:has(#consumables:checked) ~ article.carryOn.consumables,
+.filters:has(#electronics:checked) ~ article.carryOn.electronics,
 .filters:has(#footwear:checked) ~ article.carryOn.footwear,
 .filters:has(#grooming:checked) ~ article.carryOn.grooming,
-.filters:has(#electronics:checked) ~ article.carryOn.electronics,
 .filters:has(#hygiene:checked) ~ article.carryOn.hygiene,
 .filters:has(#meds:checked) ~ article.carryOn.meds,
-.filters:has(#consumables:checked) ~ article.carryOn.consumables,
 .filters:has(#necessities:checked) ~ article.carryOn.necessities,
+.filters:has(#toiletries:checked) ~ article.carryOn.toiletries,
 .filters:has(#other:checked) ~ article.carryOn.other,
 .filters:has(#bags2:checked) ~ article.personalItem.bags,
 .filters:has(#clothing2:checked) ~ article.personalItem.clothing,
+.filters:has(#consumables2:checked) ~ article.personalItem.consumables,
+.filters:has(#electronics2:checked) ~ article.personalItem.electronics,
 .filters:has(#footwear2:checked) ~ article.personalItem.footwear,
 .filters:has(#grooming2:checked) ~ article.personalItem.grooming,
-.filters:has(#electronics2:checked) ~ article.personalItem.electronics,
 .filters:has(#hygiene2:checked) ~ article.personalItem.hygiene,
 .filters:has(#meds2:checked) ~ article.personalItem.meds,
-.filters:has(#consumables2:checked) ~ article.personalItem.consumables,
 .filters:has(#necessities2:checked) ~ article.personalItem.necessities,
+.filters:has(#toiletries2:checked) ~ article.personalItem.toiletries,
 .filters:has(#other2:checked) ~ article.personalItem.other {
   display: grid;
+}
+
+.itemList.bagCarryOn:not(:has(article.bags)) [for="bags"],
+.itemList.bagCarryOn:not(:has(article.clothing)) [for="clothing"],
+.itemList.bagCarryOn:not(:has(article.consumables)) [for="consumables"],
+.itemList.bagCarryOn:not(:has(article.electronics)) [for="electronics"],
+.itemList.bagCarryOn:not(:has(article.footwear)) [for="footwear"],
+.itemList.bagCarryOn:not(:has(article.grooming)) [for="grooming"],
+.itemList.bagCarryOn:not(:has(article.hygiene)) [for="hygiene"],
+.itemList.bagCarryOn:not(:has(article.meds)) [for="meds"],
+.itemList.bagCarryOn:not(:has(article.necessities)) [for="necessities"],
+.itemList.bagCarryOn:not(:has(article.toiletries)) [for="toiletries"],
+.itemList.bagCarryOn:not(:has(article.other)) [for="other"],
+.itemList.bagPersonalItem:not(:has(article.bags)) [for="bags2"],
+.itemList.bagPersonalItem:not(:has(article.clothing)) [for="clothing2"],
+.itemList.bagPersonalItem:not(:has(article.consumables)) [for="consumables2"],
+.itemList.bagPersonalItem:not(:has(article.electronics)) [for="electronics2"],
+.itemList.bagPersonalItem:not(:has(article.footwear)) [for="footwear2"],
+.itemList.bagPersonalItem:not(:has(article.grooming)) [for="grooming2"],
+.itemList.bagPersonalItem:not(:has(article.hygiene)) [for="hygiene2"],
+.itemList.bagPersonalItem:not(:has(article.meds)) [for="meds2"],
+.itemList.bagPersonalItem:not(:has(article.necessities)) [for="necessities2"],
+.itemList.bagPersonalItem:not(:has(article.toiletries)) [for="toiletries2"],
+.itemList.bagPersonalItem:not(:has(article.other)) [for="other2"] {
+  display: none;
 }
 
 .itemList {
@@ -286,10 +314,22 @@ label + .itemList {
   display: grid;
   padding-block: 0.5rem;
   border-bottom: 1px solid grey;
+  font-style: italic;
 }
 
 .itemList:has(.listItem) .itemListEmpty {
   display: none;
+}
+
+.itemList:not(:has(.listItem)) .itemListSummary .totalWeight {
+  display: none;
+}
+
+.itemList:not(:has(.listItem)) .weightDistribution {
+  opacity: 0;
+  /* transform: scaleY(0); */
+  height: 0;
+  width: 0;
 }
 
 .analysisResult {
@@ -376,7 +416,6 @@ footer p {
   padding-block-start: 1rem;
 }
 
-
 @media (min-width: 64rem) {
   body {
     max-width: 100rem;
@@ -390,7 +429,6 @@ footer p {
   section {
     margin-inline: 2.5rem;
   }
-
 
   .listSelector {
     gap: 1rem;
@@ -430,10 +468,10 @@ footer p {
   .itemListHeader {
     display: grid;
     border-bottom: 2px solid grey;
-    padding-block-end: .5rem;
+    padding-block-end: 0.5rem;
 
     & div {
-      font-size: .8rem;
+      font-size: 0.8rem;
     }
 
     & .itemAmount,
@@ -518,7 +556,7 @@ footer p {
     grid-column: span 1;
   }
 
-  .itemListSummary .totalWeight{
+  .itemListSummary .totalWeight {
     grid-column: span 3;
   }
   .itemListSummary .itemName {
@@ -539,14 +577,13 @@ footer p {
   grid-template-columns: repeat(10, 0fr);
   width: 100%;
   height: 3rem;
-  /* transition: all 300ms cubic-bezier(0.68, -0.6, 0.32, 1.6); */
-  transition: all 500ms cubic-bezier(.9,0,.5,1);
-  margin-block: 0rem 2rem;
+  transition: all 500ms cubic-bezier(0.9, 0, 0.5, 1);
+  margin-block: 0rem 1rem;
 }
 
 .categoryBox {
   margin-block: auto;
-  height: 3rem;
+  height: 2rem;
   position: relative;
   cursor: pointer;
 }
@@ -558,11 +595,10 @@ footer p {
 .chartItemTitle {
   visibility: hidden;
   position: absolute;
-  right: 0;
-  bottom: -.25rem;
+  right: 0.5rem;
+  bottom: 3.25rem;
   transform: translate(0, 100%);
 }
-
 
 .categoryBox:hover .chartItemTitle {
   visibility: visible;
@@ -570,7 +606,7 @@ footer p {
 
 .filters label {
   position: relative;
-  transform: translateY(-.25rem);
+  transform: translateY(-0.25rem);
 }
 
 .filters label::before {
@@ -583,7 +619,6 @@ footer p {
   height: 1rem;
   width: 1rem;
 }
-
 
 .filters {
   padding-inline-start: 2.25rem;
