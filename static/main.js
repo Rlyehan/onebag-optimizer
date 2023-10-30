@@ -11,10 +11,16 @@
 
 import sampleData from "./sampleData.json" assert { type: 'json' }
 import sampleData2 from "./sampleData2.json" assert { type: 'json' }
-addListToIndex("Sample List", generateUUID())
+const sampleListUUID = generateUUID()
+const sampleListUUID2 = generateUUID()
+addListToIndex("Sample List", sampleListUUID)
+sampleData.unshift({ listName: "Sample List", listUUID: sampleListUUID })
 localStorage.setItem("Sample List", JSON.stringify(sampleData))
-addListToIndex("Sample List 2", generateUUID())
+// localStorage.setItem("Sample List", sanitizeData(JSON.stringify(sampleData)))
+addListToIndex("Sample List 2", sampleListUUID2)
+sampleData2.unshift({ listName: "Sample List 2", listUUID: sampleListUUID2 })
 localStorage.setItem("Sample List 2", JSON.stringify(sampleData2))
+// localStorage.setItem("Sample List 2", sanitizeData(JSON.stringify(sampleData2)))
 
 
 
@@ -52,7 +58,7 @@ createListButton.addEventListener("click", function (event) {
   event.preventDefault()
   const listName = document.getElementById("listName").value
   if (listName != "") {
-    let listUUID = generateUUID()
+    const listUUID = generateUUID()
     addListToIndex(listName, listUUID)
     setItemArray(listName, [{ "listName": listName, "listUUID": listUUID }])
     populateListSelector()
@@ -184,9 +190,16 @@ function generateUUID() {
   }
 }
 
+
 function capitalizeFirstLetter(inputString) {
   return inputString.charAt(0).toUpperCase() + inputString.slice(1)
 }
+
+
+function sanitizeData(inputString) {
+  return inputString.replace(/(<([^>]+)>)/g, '')
+}
+
 
 function createCategoryElements() {
   categories.forEach((category) => {
@@ -194,15 +207,15 @@ function createCategoryElements() {
     categoryDropdown.forEach((option) => {
       const selectOption = document.createElement("option")
       selectOption.setAttribute("value", category)
-      selectOption.innerHTML = capitalizeFirstLetter(category)
-      option.appendChild(selectOption)
+      selectOption.innerText = capitalizeFirstLetter(category)
+      option.append(selectOption)
     })
     // Filters
     listFilters.forEach((filter, index) => {
       const filterItem = document.createElement("label")
       const input = document.createElement("input")
       input.setAttribute("type", "checkbox")
-      const text = document.createTextNode(capitalizeFirstLetter(category))
+      const text = capitalizeFirstLetter(category)
       if (index === 0) {
         filterItem.setAttribute("for", category)
         input.setAttribute("name", category)
@@ -212,19 +225,18 @@ function createCategoryElements() {
         input.setAttribute("name", `${category}${index + 1}`)
         input.setAttribute("id", `${category}${index + 1}`)
       }
-      filterItem.appendChild(text)
-      filterItem.appendChild(input)
-      filter.appendChild(filterItem)
+      filterItem.append(text, input)
+      filter.append(filterItem)
     })
     weightDistribution.forEach((element) => {
       const span = document.createElement("span")
       span.classList.add("chartItemTitle")
-      span.innerHTML = capitalizeFirstLetter(category)
+      span.innerText = capitalizeFirstLetter(category)
       const categoryBox = document.createElement("div")
       categoryBox.classList.add("categoryBox")
       categoryBox.classList.add(category)
-      categoryBox.appendChild(span)
-      element.appendChild(categoryBox)
+      categoryBox.append(span)
+      element.append(categoryBox)
     })
   })
 }
@@ -232,16 +244,23 @@ createCategoryElements()
 
 
 function populateListSelector() {
-  var listIndex = JSON.parse(localStorage.getItem("List Index"))
-  var listSelector = document.getElementById("listSelector")
-  listSelector.innerHTML =
-    '<option value="" selected disabled>Select List</option>'
+  const listIndex = JSON.parse(localStorage.getItem("List Index"))
+  const listSelector = document.getElementById("listSelector")
+  listSelector.textContent = ""
+
+  const defaultOption = document.createElement("option")
+  defaultOption.setAttribute("value", "")
+  defaultOption.setAttribute("selected", "")
+  defaultOption.setAttribute("disabled", "")
+  defaultOption.innerText = "Select List"
+  listSelector.append(defaultOption)
+
   listIndex.forEach((listIndexItem, index) => {
     const option = document.createElement("option")
     option.setAttribute("value", listIndexItem.listName)
     option.setAttribute("data-index", index)
-    option.innerHTML = listIndexItem.listName
-    listSelector.appendChild(option)
+    option.innerText = listIndexItem.listName
+    listSelector.append(option)
   })
 }
 populateListSelector()
@@ -266,7 +285,6 @@ function setChartItemWidths(listItems) {
         document.querySelector(".bagCarryOn .weightDistribution").style.gridTemplateColumns = gridTemplateColumns
         gridTemplateColumns = []
         break
-
       }
       case "Personal Item": {
         for (const category of categories) {
@@ -277,7 +295,6 @@ function setChartItemWidths(listItems) {
           }
         }
         let gridTemplateColumns = percentages.map(percentage => `${percentage}fr`).join(' ')
-
         document.querySelector(".bagPersonalItem .weightDistribution").style.gridTemplateColumns = gridTemplateColumns
         gridTemplateColumns = []
         break
@@ -298,26 +315,26 @@ function loadList(listName) {
 }
 
 
-function renderItems(listItem) {
+function renderItems(listItems) {
   let totalWeightCarryOn = 0
   let totalWeightPersonalItem = 0
   const carryOnTotalWeight = document.getElementById("carryOnTotalWeight")
   const personalItemTotalWeight = document.getElementById("personalItemTotalWeight")
-  carryOnTotalWeight.innerHTML = 0
-  personalItemTotalWeight.innerHTML = 0
+  carryOnTotalWeight.innerText = 0
+  personalItemTotalWeight.innerText = 0
 
-  listItem.forEach((item, index) => {
+  listItems.forEach((item, index) => {
     let itemTotalWeight = item.itemAmount * item.itemWeight
     const listItem = createItemListItem(item, itemTotalWeight, index + 1)
 
     if (item.itemBagType == "carryOn") {
       targetCarryOn.insertBefore(listItem, itemListSummaryCarryOn)
       totalWeightCarryOn += itemTotalWeight
-      carryOnTotalWeight.innerHTML = totalWeightCarryOn + " g"
+      carryOnTotalWeight.innerText = totalWeightCarryOn + " g"
     } else if (item.itemBagType == "personalItem") {
       targetPersonalItem.insertBefore(listItem, itemListSummaryPersonalItem)
       totalWeightPersonalItem += itemTotalWeight
-      personalItemTotalWeight.innerHTML = totalWeightPersonalItem + " g"
+      personalItemTotalWeight.innerText = totalWeightPersonalItem + " g"
     }
   })
 }
@@ -337,7 +354,7 @@ function activateDeleteListeners(listName) {
   let deleteBtn = document.querySelectorAll(".deleteItem")
   deleteBtn.forEach((dB) => {
     dB.addEventListener("click", () => {
-      const index = dB.parentElement.parentElement.getAttribute("data-index")
+      const index = dB.getAttribute("data-index")
       deleteItem(listName, index)
     })
   })
@@ -345,20 +362,25 @@ function activateDeleteListeners(listName) {
 
 
 function sendData(listName) {
-  let itemArray = localStorage.getItem(listName)
-  // let itemArray = JSON.stringify(localStorage.getItem(listName))
-
-  fetch("/process", {
-    method: "POST",
-    body: itemArray,
-    // headers: {
-    //   "Content-type": "application/json; charset=UTF-8",
-    // }
-  })
-    .then((response) => response.text())
-    .then((data) => {
-      document.querySelector(".analysisResult").innerHTML = data
-    })
+  const itemArray = JSON.parse(localStorage.getItem("Sample List"))
+  for (let item of itemArray) {
+    for (const key in item) {
+      if (typeof item[key] === 'string') {
+        item[key] = item[key].replace(/(<([^>]+)>)/g, '')
+      }
+    }
+  }  
+  // fetch("/process", {
+  //   method: "POST",
+  //   body: itemArray,
+  //   // headers: {
+  //   //   "Content-type": "application/json; charset=UTF-8",
+  //   // }
+  // })
+  //   .then((response) => response.text())
+  //   .then((data) => {
+  //     document.querySelector(".analysisResult").innerHTML = data
+  //   })
 }
 
 
@@ -547,27 +569,133 @@ function clearItemList() {
 }
 
 
-function createItemListItem(item, itemTotalWeight, index) {
-  const listItem = document.createElement("article")
-  listItem.classList.add(
-    "listItem",
-    item.itemCategory,
-    item.itemBagType
-  )
-  listItem.setAttribute("data-index", `${index}`)
-  listItem.innerHTML = `
-    <div class="itemName">${item.itemName}</div>
-    <div class="itemAmount">${item.itemAmount}x</div>
-    <div class="itemWeight">${item.itemWeight}<span class="mobileOnlyInfo"> g</span></div>
-    <div class="itemTotalWeight"><span class="mobileOnlyInfo">Total: </span>${itemTotalWeight}<span class="mobileOnlyInfo"> g</span></div>
-    <div class="itemPriority"><span class="mobileOnlyInfo">Prio: </span>${item.itemPriority
-    }</div>
-    <div class="itemCategory">${item.itemCategory.charAt(0).toUpperCase() + item.itemCategory.slice(1)
-    }</div>
-    <div class="itemSubcategory">${item.itemSubcategory}
-    <span class="deleteItem" data-index="${index}">❌</span>`
+// function createItemListItem(item, itemTotalWeight, index) {
+//   const listItem = document.createElement("article")
+//   listItem.classList.add(
+//     "listItem",
+//     item.itemCategory,
+//     item.itemBagType
+//   )
+//   listItem.setAttribute("data-index", `${index}`)
 
-  return listItem
+//   const mobileOnlyTotal = document.createElement("span")
+//   mobileOnlyTotal.classList.add("mobileOnlyInfo")
+//   mobileOnlyTotal.append("Total: ")
+
+//   const mobileOnlyGrams = document.createElement("span")
+//   mobileOnlyGrams.classList.add("mobileOnlyInfo")
+//   mobileOnlyGrams.append(" g")
+
+//   const mobileOnlyTotalGrams = document.createElement("span")
+//   mobileOnlyTotalGrams.classList.add("mobileOnlyInfo")
+//   mobileOnlyTotalGrams.append(" g")
+
+//   const mobileOnlyPrio = document.createElement("span")
+//   mobileOnlyPrio.classList.add("mobileOnlyInfo")
+//   mobileOnlyPrio.append("Prio: ")
+
+//   const divItemName = document.createElement('div')
+//   divItemName.classList.add('itemName')
+//   divItemName.append(item.itemName)
+
+//   const divItemAmount = document.createElement('div')
+//   divItemAmount.classList.add('itemAmount')
+//   divItemAmount.append(item.itemAmount + 'x')
+
+//   const divItemWeight = document.createElement('div')
+//   divItemWeight.classList.add('itemWeight')
+//   divItemWeight.append(item.itemWeight)
+//   divItemWeight.append(mobileOnlyGrams)
+
+//   const divItemTotalWeight = document.createElement('div')
+//   divItemTotalWeight.classList.add('itemTotalWeight')
+//   divItemTotalWeight.append(mobileOnlyTotal)
+//   divItemTotalWeight.append(itemTotalWeight)
+//   divItemTotalWeight.append(mobileOnlyTotalGrams)
+
+//   const divItemPriority = document.createElement('div')
+//   divItemPriority.classList.add('itemPriority')
+//   divItemPriority.append(mobileOnlyPrio)
+//   divItemPriority.append(item.itemPriority)
+
+//   const divItemCategory = document.createElement('div')
+//   divItemCategory.classList.add('itemCategory')
+//   divItemCategory.append(item.itemCategory.charAt(0).toUpperCase() + item.itemCategory.slice(1))
+
+//   const divItemSubcategory = document.createElement('div')
+//   divItemSubcategory.classList.add('itemSubcategory')
+//   divItemSubcategory.append(item.itemSubcategory)
+
+//   const deleteItem = document.createElement('span')
+//   deleteItem.classList.add('deleteItem')
+//   deleteItem.dataset.index = index
+//   deleteItem.append('❌')
+
+//   listItem.append(divItemName)
+//   listItem.append(divItemAmount)
+//   listItem.append(divItemWeight)
+//   listItem.append(divItemTotalWeight)
+//   listItem.append(divItemPriority)
+//   listItem.append(divItemCategory)
+//   listItem.append(divItemSubcategory)
+//   listItem.append(deleteItem)
+
+//   return listItem
+// }
+
+function createItemListItem(item, itemTotalWeight, index) {
+  const listItem = document.createElement("article");
+  listItem.classList.add("listItem", item.itemCategory, item.itemBagType);
+  listItem.setAttribute("data-index", index);
+
+  const createSpan = (className, text) => {
+    const span = document.createElement("span");
+    span.classList.add(className);
+    span.textContent = text;
+    return span;
+  };
+
+  const mobileOnlyTotal = createSpan("mobileOnlyInfo", "Total: ");
+  const mobileOnlyGrams = createSpan("mobileOnlyInfo", " g");
+  const mobileOnlyTotalGrams = createSpan("mobileOnlyInfo", " g");
+  const mobileOnlyPrio = createSpan("mobileOnlyInfo", "Prio: ");
+
+  const divItemName = createDivWithClass('itemName', item.itemName);
+  const divItemAmount = createDivWithClass('itemAmount', `${item.itemAmount}x`);
+  const divItemWeight = createDivWithClass('itemWeight', item.itemWeight);
+  divItemWeight.append(mobileOnlyGrams);
+  const divItemTotalWeight = createDivWithClass('itemTotalWeight', itemTotalWeight);
+  divItemTotalWeight.prepend(mobileOnlyTotal);
+  divItemTotalWeight.append(mobileOnlyTotalGrams);
+  const divItemPriority = createDivWithClass('itemPriority', item.itemPriority);
+  divItemPriority.prepend(mobileOnlyPrio);
+  const divItemCategory = createDivWithClass('itemCategory', item.itemCategory.charAt(0).toUpperCase() + item.itemCategory.slice(1));
+  const divItemSubcategory = createDivWithClass('itemSubcategory', item.itemSubcategory);
+
+  const deleteItem = document.createElement('span');
+  deleteItem.classList.add('deleteItem');
+  deleteItem.dataset.index = index;
+  deleteItem.textContent = '❌';
+
+  listItem.append(
+    divItemName,
+    divItemAmount,
+    divItemWeight,
+    divItemTotalWeight,
+    divItemPriority,
+    divItemCategory,
+    divItemSubcategory,
+    deleteItem
+  );
+
+  return listItem;
+}
+
+function createDivWithClass(className, text) {
+  const div = document.createElement('div');
+  div.classList.add(className);
+  div.textContent = text;
+  return div;
 }
 
 
