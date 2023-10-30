@@ -1,9 +1,5 @@
 [
   {
-    "listName": "Sample List",
-    "listUUID": "sampleListUUID"
-  },
-  {
     "itemName": "Travel Backpack",
     "itemAmount": 2,
     "itemWeight": 500,
