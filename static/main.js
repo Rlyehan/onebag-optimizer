@@ -11,16 +11,17 @@
 
 import sampleData from "./sampleData.json" assert { type: 'json' }
 import sampleData2 from "./sampleData2.json" assert { type: 'json' }
+
 const sampleListUUID = generateUUID()
 const sampleListUUID2 = generateUUID()
+
 addListToIndex("Sample List", sampleListUUID)
 sampleData.unshift({ listName: "Sample List", listUUID: sampleListUUID })
 localStorage.setItem("Sample List", JSON.stringify(sampleData))
-// localStorage.setItem("Sample List", sanitizeData(JSON.stringify(sampleData)))
+
 addListToIndex("Sample List 2", sampleListUUID2)
 sampleData2.unshift({ listName: "Sample List 2", listUUID: sampleListUUID2 })
 localStorage.setItem("Sample List 2", JSON.stringify(sampleData2))
-// localStorage.setItem("Sample List 2", sanitizeData(JSON.stringify(sampleData2)))
 
 
 
@@ -196,11 +197,6 @@ function capitalizeFirstLetter(inputString) {
 }
 
 
-function sanitizeData(inputString) {
-  return inputString.replace(/(<([^>]+)>)/g, '')
-}
-
-
 function createCategoryElements() {
   categories.forEach((category) => {
     // Category Selector Dropdowns
@@ -361,26 +357,21 @@ function activateDeleteListeners(listName) {
 }
 
 
-function sendData(listName) {
-  const itemArray = JSON.parse(localStorage.getItem("Sample List"))
+function sanitizeList(listName) {
+  const itemArray = JSON.parse(localStorage.getItem(listName))
   for (let item of itemArray) {
     for (const key in item) {
       if (typeof item[key] === 'string') {
-        item[key] = item[key].replace(/(<([^>]+)>)/g, '')
+        item[key] = sanitizeString(item[key])
       }
     }
-  }  
-  // fetch("/process", {
-  //   method: "POST",
-  //   body: itemArray,
-  //   // headers: {
-  //   //   "Content-type": "application/json; charset=UTF-8",
-  //   // }
-  // })
-  //   .then((response) => response.text())
-  //   .then((data) => {
-  //     document.querySelector(".analysisResult").innerHTML = data
-  //   })
+  }
+  return itemArray
+}
+
+
+function sanitizeString(inputString) {
+  return inputString.replace(/(<([^>]+)>)/g, '')
 }
 
 
@@ -395,6 +386,18 @@ function downloadList(itemArray, listName) {
   a.click()
   document.body.removeChild(a)
   URL.revokeObjectURL(url)
+}
+
+
+function sendData(listName) {
+  // fetch("/process", {
+  //   method: "POST",
+  //   body: sanitizeData(listName),
+  // })
+  //   .then((response) => response.text())
+  //   .then((data) => {
+  //     console.log(data)
+  //   })
 }
 
 
@@ -569,80 +572,6 @@ function clearItemList() {
 }
 
 
-// function createItemListItem(item, itemTotalWeight, index) {
-//   const listItem = document.createElement("article")
-//   listItem.classList.add(
-//     "listItem",
-//     item.itemCategory,
-//     item.itemBagType
-//   )
-//   listItem.setAttribute("data-index", `${index}`)
-
-//   const mobileOnlyTotal = document.createElement("span")
-//   mobileOnlyTotal.classList.add("mobileOnlyInfo")
-//   mobileOnlyTotal.append("Total: ")
-
-//   const mobileOnlyGrams = document.createElement("span")
-//   mobileOnlyGrams.classList.add("mobileOnlyInfo")
-//   mobileOnlyGrams.append(" g")
-
-//   const mobileOnlyTotalGrams = document.createElement("span")
-//   mobileOnlyTotalGrams.classList.add("mobileOnlyInfo")
-//   mobileOnlyTotalGrams.append(" g")
-
-//   const mobileOnlyPrio = document.createElement("span")
-//   mobileOnlyPrio.classList.add("mobileOnlyInfo")
-//   mobileOnlyPrio.append("Prio: ")
-
-//   const divItemName = document.createElement('div')
-//   divItemName.classList.add('itemName')
-//   divItemName.append(item.itemName)
-
-//   const divItemAmount = document.createElement('div')
-//   divItemAmount.classList.add('itemAmount')
-//   divItemAmount.append(item.itemAmount + 'x')
-
-//   const divItemWeight = document.createElement('div')
-//   divItemWeight.classList.add('itemWeight')
-//   divItemWeight.append(item.itemWeight)
-//   divItemWeight.append(mobileOnlyGrams)
-
-//   const divItemTotalWeight = document.createElement('div')
-//   divItemTotalWeight.classList.add('itemTotalWeight')
-//   divItemTotalWeight.append(mobileOnlyTotal)
-//   divItemTotalWeight.append(itemTotalWeight)
-//   divItemTotalWeight.append(mobileOnlyTotalGrams)
-
-//   const divItemPriority = document.createElement('div')
-//   divItemPriority.classList.add('itemPriority')
-//   divItemPriority.append(mobileOnlyPrio)
-//   divItemPriority.append(item.itemPriority)
-
-//   const divItemCategory = document.createElement('div')
-//   divItemCategory.classList.add('itemCategory')
-//   divItemCategory.append(item.itemCategory.charAt(0).toUpperCase() + item.itemCategory.slice(1))
-
-//   const divItemSubcategory = document.createElement('div')
-//   divItemSubcategory.classList.add('itemSubcategory')
-//   divItemSubcategory.append(item.itemSubcategory)
-
-//   const deleteItem = document.createElement('span')
-//   deleteItem.classList.add('deleteItem')
-//   deleteItem.dataset.index = index
-//   deleteItem.append('❌')
-
-//   listItem.append(divItemName)
-//   listItem.append(divItemAmount)
-//   listItem.append(divItemWeight)
-//   listItem.append(divItemTotalWeight)
-//   listItem.append(divItemPriority)
-//   listItem.append(divItemCategory)
-//   listItem.append(divItemSubcategory)
-//   listItem.append(deleteItem)
-
-//   return listItem
-// }
-
 function createItemListItem(item, itemTotalWeight, index) {
   const listItem = document.createElement("article");
   listItem.classList.add("listItem", item.itemCategory, item.itemBagType);
@@ -690,6 +619,7 @@ function createItemListItem(item, itemTotalWeight, index) {
 
   return listItem;
 }
+
 
 function createDivWithClass(className, text) {
   const div = document.createElement('div');
