@@ -31,6 +31,7 @@
     --chroma: 0.175;
     /* --chroma: 0.15; */
     --clr-hover-background: #333;
+    --clr-text-fainted: #bbb;
   }
 }
 
@@ -39,8 +40,25 @@
     --lightness: 65%;
     --chroma: 0.24;
     --clr-hover-background: #ddd;
+    --clr-text-fainted: #666;
   }
 }
+
+
+/* 
+  Hide filters, empty list text and show/hide buttons
+  for browsers without support for :has(), as they would
+  not be functional. 
+*/
+@supports not selector(:has(+ *)) {
+  label span,
+  .filters,
+  .itemListEmpty {
+    display: none !important;
+  }
+}
+
+
 
 *,
 *::before,
@@ -421,7 +439,7 @@ label + .itemList {
 .itemCategory,
 .itemSubcategory {
   font-size: 0.8rem;
-  color: lightgray;
+  color: var(--clr-text-fainted);
 }
 
 .itemListSummary .totalWeight,
@@ -619,7 +637,7 @@ footer p {
   cursor: pointer;
 }
 
-.weightDistribution:has(:hover) .categoryBox:not(:hover) {
+.weightDistribution:hover .categoryBox:not(:hover) {
   filter: brightness(0.7);
 }
 
