@@ -605,7 +605,7 @@ function createItemListItem(item, itemTotalWeight, index) {
   const deleteItem = document.createElement('span');
   deleteItem.classList.add('deleteItem');
   deleteItem.dataset.index = index;
-  deleteItem.textContent = '❌';
+  deleteItem.innerHTML = '<i class="fa-solid fa-delete-left fa-xl"></i>';
 
   listItem.append(
     divItemName,
