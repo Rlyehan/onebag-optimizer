@@ -4,39 +4,57 @@
   --clr-accent: hsl(212, 100%, 50%);
   --clr-warning: hsl(0, 60%, 50%);
   --clr-complementary: hsl(32, 100%, 50%);
-  --clr-category-bags: hsl(202, 29%, 28%);
-  --clr-category-bags-highlight: hsl(202, 29%, var(--lightness));
-  --clr-category-consumables: hsl(174, 27%, 52%);
-  --clr-category-consumables-highlight: hsl(174, 27%, var(--lightness));
-  --clr-category-clothing: hsl(168, 44%, 48%);
-  --clr-category-clothing-highlight: hsl(168, 44%, var(--lightness));
-  --clr-category-electronics: hsl(7, 70%, 58%);
-  --clr-category-electronics-highlight: hsl(7, 70%, var(--lightness));
-  --clr-category-footwear: hsl(46, 84%, 62%);
-  --clr-category-footwear-highlight: hsl(46, 84%, var(--lightness));
-  --clr-category-grooming: hsl(22, 74%, 57%);
-  --clr-category-grooming-highlight: hsl(22, 74%, var(--lightness));
-  --clr-category-hygiene: hsl(350, 54%, 38%);
-  --clr-category-hygiene-highlight: hsl(350, 54%, var(--lightness));
-  --clr-category-meds: hsl(244, 62%, 70%);
-  --clr-category-meds-highlight: hsl(244, 62%, var(--lightness));
-  --clr-category-necessities: hsl(27, 87%, 67%);
-  --clr-category-necessities-highlight: hsl(27, 87%, var(--lightness));
-  --clr-category-other: hsl(315, 19%, 59%);
-  --clr-category-other-highlight: hsl(315, 19%, var(--lightness));
+  --clr-prio-1: hsl(0, 60%, 50%);
+  --clr-prio-2: hsl(44, 96%, 36%);
+  --clr-prio-3: hsl(0, 0%, 55%);
+
+  --clr-category-1: oklch(var(--lightness) var(--chroma) 0);
+  --clr-category-2: oklch(var(--lightness) var(--chroma) 65);
+  --clr-category-3: oklch(var(--lightness) var(--chroma) 130);
+  --clr-category-4: oklch(var(--lightness) var(--chroma) 195);
+  --clr-category-5: oklch(var(--lightness) var(--chroma) 260);
+  --clr-category-6: oklch(var(--lightness) var(--chroma) 325);
+  --clr-category-7: oklch(var(--lightness) var(--chroma) 390);
+  --clr-category-8: oklch(var(--lightness) var(--chroma) 455);
+  --clr-category-9: oklch(var(--lightness) var(--chroma) 520);
+  --clr-category-10: oklch(var(--lightness) var(--chroma) 585);
+  --clr-category-11: oklch(var(--lightness) var(--chroma) 650);
+  --clr-category-12: oklch(var(--lightness) var(--chroma) 715);
+  --clr-category-13: oklch(var(--lightness) var(--chroma) 780);
+  --clr-category-14: oklch(var(--lightness) var(--chroma) 845);
+  --clr-category-15: oklch(var(--lightness) var(--chroma) 910);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --lightness: 15%;
+    --lightness: 47.5%;
+    --chroma: 0.175;
+    --clr-hover-border: white;
     --clr-hover-background: #333;
+    --clr-text-fainted: #bbb;
   }
 }
 
 @media (prefers-color-scheme: light) {
   :root {
-    --lightness: 75%;
-    --clr-hover-background: #DDD;
+    --lightness: 65%;
+    --chroma: 0.24;
+    --clr-hover-border: black;
+    --clr-hover-background: #ddd;
+    --clr-text-fainted: #666;
+  }
+}
+
+/* 
+  Hide filters, empty list text and show/hide buttons
+  for browsers without support for :has(), as they would
+  not be functional. 
+*/
+@supports not selector(:has(+ *)) {
+  label span,
+  .filters,
+  .itemListEmpty {
+    display: none !important;
   }
 }
 
@@ -52,41 +70,52 @@ a {
   text-decoration: none;
   color: inherit;
   opacity: 0.5;
-
-  &:hover {
-    opacity: 1;
-    transition: all 300ms ease-in-out;
-    color: var(--clr-accent);
-  }
 }
 
-html {  
+a:is(:hover, :focus) {
+  opacity: 1;
+  transition: all 300ms ease-in-out;
+  color: var(--clr-accent);
+}
+
+html {
   scroll-behavior: smooth;
 }
 
 body {
   margin-block-start: 2rem;
   margin-inline: 2.5dvw;
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 3rem;
 }
 
-
-h2 {
+h1 {
   text-align: center;
+  margin-block-start: 2rem;
 }
 
 form {
   display: grid;
   gap: 0.25rem;
   grid-template-columns: 1fr 1fr;
-  /* max-width: 95dvw; */
   font-family: "JetBrains Mono", monospace;
 }
 
 #listNameForm,
 #listSelectorForm {
   grid-template-columns: 1fr 15ch;
+}
+
+.backup {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.25rem;
+}
+
+.backup button,
+.backup input {
+  height: 100%;
 }
 
 #itemName,
@@ -96,28 +125,17 @@ input[value="+"] {
   grid-column: span 2;
 }
 
-#itemCategory {
-  text-transform: capitalize;
-}
-
 input,
 select {
   font-size: 1.25rem;
   padding: 0.75rem;
   border: 2px solid grey;
   font-family: "JetBrains Mono", monospace;
-  -webkit-appearance: none;
   transition: all 300ms ease-in-out;
 }
 
-input:focus,
-select:focus {
-  outline: 2px solid var(--clr-accent);
-}
-
 input[type="submit"],
-input[type="button"],
-button {
+input[type="button"] {
   color: white;
   padding: 0.5rem 0.75rem;
   font-size: 1rem;
@@ -126,25 +144,16 @@ button {
   font-family: "JetBrains Mono", monospace;
 }
 
-input#deleteListButton {
-  background-color: var(--clr-warning);
-
-  &:hover {
-    border: 2px solid var(--clr-complementary);
-  }
-  &:focus {
-    border: 2px solid var(--clr-complementary);
-  }
+:is(input, select):is(:hover, :focus) {
+  border: 2px solid var(--clr-hover-border);
 }
 
-input[type="submit"],
-input[type="button"],
-button,
-select {
-  &:hover {
-    cursor: pointer;
-    border: 2px solid var(--clr-accent);
-  }
+input#deleteListButton {
+  background-color: var(--clr-warning);
+}
+
+input#deleteListButton:is(:hover, :focus) {
+  border: 2px solid var(--clr-complementary);
 }
 
 input::placeholder {
@@ -158,7 +167,7 @@ button {
 
 .highlight {
   animation: pulseOutline 2000ms forwards;
-  animation-iteration-count: 3;
+  animation-iteration-count: 1;
 }
 
 @keyframes pulseOutline {
@@ -176,7 +185,7 @@ button {
 .listSelector {
   display: grid;
   grid-template-columns: repeat(1, 1fr);
-  gap: .5rem;
+  gap: 0.5rem;
 }
 
 .listSelector input[type="text"],
@@ -188,20 +197,40 @@ input[type="checkbox"] {
   visibility: hidden;
 }
 
-label:has(input[type="checkbox"]) {
+label:has(:is(#carryOnList, #personalItemList)) {
   display: flex;
-  max-width: max-content;
+  align-items: end;
+  gap: 1rem;
+  max-width: fit-content;
 }
 
-label:has(input[type="checkbox"]:checked) {
+label:has(:is(#carryOnList, #personalItemList)) span {
+  text-decoration: underline;
+  color: inherit;
+  opacity: 0.5;
+}
+
+label:has(:is(#carryOnList, #personalItemList)):hover span {
+  opacity: 1;
+  transition: all 300ms ease-in-out;
   color: var(--clr-accent);
 }
 
-label:has(#carryOnList:not(:checked)) + .itemList.bagCarryOn {
+label:has(#carryOnList:not(:checked)) + .itemList.bagCarryOn,
+label:has(#carryOnList:not(:checked)) span:last-of-type {
   display: none;
 }
 
-label:has(#personalItemList:not(:checked)) + .itemList.bagPersonalItem {
+label:has(#carryOnList:checked) span:first-of-type {
+  display: none;
+}
+
+label:has(#personalItemList:not(:checked)) + .itemList.bagPersonalItem,
+label:has(#personalItemList:not(:checked)) span:last-of-type {
+  display: none;
+}
+
+label:has(#personalItemList:checked) span:first-of-type {
   display: none;
 }
 
@@ -217,9 +246,9 @@ label + .itemList {
   display: flex;
   flex-wrap: wrap;
   padding: 0.5rem;
-  gap: 1rem;
+  row-gap: 1rem;
+  column-gap: 2.25rem;
   margin-block: 1rem;
-  text-transform: capitalize;
 }
 
 .filters input {
@@ -250,25 +279,52 @@ label + .itemList {
 
 .filters:has(#bags:checked) ~ article.carryOn.bags,
 .filters:has(#clothing:checked) ~ article.carryOn.clothing,
+.filters:has(#consumables:checked) ~ article.carryOn.consumables,
+.filters:has(#electronics:checked) ~ article.carryOn.electronics,
 .filters:has(#footwear:checked) ~ article.carryOn.footwear,
 .filters:has(#grooming:checked) ~ article.carryOn.grooming,
-.filters:has(#electronics:checked) ~ article.carryOn.electronics,
 .filters:has(#hygiene:checked) ~ article.carryOn.hygiene,
 .filters:has(#meds:checked) ~ article.carryOn.meds,
-.filters:has(#consumables:checked) ~ article.carryOn.consumables,
 .filters:has(#necessities:checked) ~ article.carryOn.necessities,
+.filters:has(#toiletries:checked) ~ article.carryOn.toiletries,
 .filters:has(#other:checked) ~ article.carryOn.other,
 .filters:has(#bags2:checked) ~ article.personalItem.bags,
 .filters:has(#clothing2:checked) ~ article.personalItem.clothing,
+.filters:has(#consumables2:checked) ~ article.personalItem.consumables,
+.filters:has(#electronics2:checked) ~ article.personalItem.electronics,
 .filters:has(#footwear2:checked) ~ article.personalItem.footwear,
 .filters:has(#grooming2:checked) ~ article.personalItem.grooming,
-.filters:has(#electronics2:checked) ~ article.personalItem.electronics,
 .filters:has(#hygiene2:checked) ~ article.personalItem.hygiene,
 .filters:has(#meds2:checked) ~ article.personalItem.meds,
-.filters:has(#consumables2:checked) ~ article.personalItem.consumables,
 .filters:has(#necessities2:checked) ~ article.personalItem.necessities,
+.filters:has(#toiletries2:checked) ~ article.personalItem.toiletries,
 .filters:has(#other2:checked) ~ article.personalItem.other {
   display: grid;
+}
+
+.itemList.bagCarryOn:not(:has(article.bags)) [for="bags"],
+.itemList.bagCarryOn:not(:has(article.clothing)) [for="clothing"],
+.itemList.bagCarryOn:not(:has(article.consumables)) [for="consumables"],
+.itemList.bagCarryOn:not(:has(article.electronics)) [for="electronics"],
+.itemList.bagCarryOn:not(:has(article.footwear)) [for="footwear"],
+.itemList.bagCarryOn:not(:has(article.grooming)) [for="grooming"],
+.itemList.bagCarryOn:not(:has(article.hygiene)) [for="hygiene"],
+.itemList.bagCarryOn:not(:has(article.meds)) [for="meds"],
+.itemList.bagCarryOn:not(:has(article.necessities)) [for="necessities"],
+.itemList.bagCarryOn:not(:has(article.toiletries)) [for="toiletries"],
+.itemList.bagCarryOn:not(:has(article.other)) [for="other"],
+.itemList.bagPersonalItem:not(:has(article.bags)) [for="bags2"],
+.itemList.bagPersonalItem:not(:has(article.clothing)) [for="clothing2"],
+.itemList.bagPersonalItem:not(:has(article.consumables)) [for="consumables2"],
+.itemList.bagPersonalItem:not(:has(article.electronics)) [for="electronics2"],
+.itemList.bagPersonalItem:not(:has(article.footwear)) [for="footwear2"],
+.itemList.bagPersonalItem:not(:has(article.grooming)) [for="grooming2"],
+.itemList.bagPersonalItem:not(:has(article.hygiene)) [for="hygiene2"],
+.itemList.bagPersonalItem:not(:has(article.meds)) [for="meds2"],
+.itemList.bagPersonalItem:not(:has(article.necessities)) [for="necessities2"],
+.itemList.bagPersonalItem:not(:has(article.toiletries)) [for="toiletries2"],
+.itemList.bagPersonalItem:not(:has(article.other)) [for="other2"] {
+  display: none;
 }
 
 .itemList {
@@ -283,10 +339,21 @@ label + .itemList {
   display: grid;
   padding-block: 0.5rem;
   border-bottom: 1px solid grey;
+  font-style: italic;
 }
 
 .itemList:has(.listItem) .itemListEmpty {
   display: none;
+}
+
+.itemList:not(:has(.listItem)) .itemListSummary .totalWeight {
+  display: none;
+}
+
+.itemList:not(:has(.listItem)) .weightDistribution {
+  opacity: 0;
+  height: 0;
+  width: 0;
 }
 
 .analysisResult {
@@ -354,40 +421,26 @@ label + .itemList {
 .itemCategory,
 .itemSubcategory {
   font-size: 0.8rem;
-  color: lightgray;
+  color: var(--clr-text-fainted);
 }
-
-/* .itemCategory,
-.itemSubcategory,
-.itemPriority,
-.itemBagType,
-.itemWeight,
-.itemAmount {
-  grid-column: span 3;
-}
-
-.itemName,
-.itemPriority,
-.itemTotalWeight {
-  grid-column: span 6;
-} */
-
-/* .itemAmount,
-.itemCategory {
-  text-align: end;
-} */
-/* 
-.itemWeight,
-.itemSubcategory,
-.itemBagType {
-  text-align: start;
-} */
 
 .itemListSummary .totalWeight,
 .itemListSummary .itemName {
   grid-column: span 6;
   font-size: larger;
   color: var(--clr-accent);
+}
+
+.itemPriority.prio-1 {
+  color: var(--clr-prio-1);
+}
+
+.itemPriority.prio-2 {
+  color: var(--clr-prio-2);
+}
+
+.itemPriority.prio-3 {
+  color: var(--clr-prio-3);
 }
 
 footer {
@@ -399,7 +452,6 @@ footer p {
   padding-block-start: 1rem;
 }
 
-
 @media (min-width: 64rem) {
   body {
     max-width: 100rem;
@@ -407,7 +459,6 @@ footer p {
   }
   form {
     grid-template-columns: repeat(6, 1fr);
-    /* max-width: 95dvw; */
   }
 
   body > label,
@@ -415,15 +466,9 @@ footer p {
     margin-inline: 2.5rem;
   }
 
-
   .listSelector {
     gap: 1rem;
   }
-
-  /* .listSelector input[type="text"],
-  .listSelector select {
-    width: auto;
-  } */
 
   #listNameForm,
   #listSelectorForm {
@@ -436,12 +481,7 @@ footer p {
   }
 
   #itemName {
-    grid-column: span 6;
-  }
-
-  #itemCategory,
-  #itemSubcategory {
-    grid-column: span 1;
+    grid-column: span 4;
   }
 
   input[value="+"] {
@@ -459,9 +499,10 @@ footer p {
   .itemListHeader {
     display: grid;
     border-bottom: 2px solid grey;
+    padding-block-end: 0.5rem;
 
     & div {
-      font-size: 0.75rem;
+      font-size: 0.8rem;
     }
 
     & .itemAmount,
@@ -477,10 +518,10 @@ footer p {
   .itemListSummary {
     grid-template-columns: 1fr 6ch 8ch 8ch 3ch 15ch 1fr;
     grid-template-rows: 1fr;
-    grid-template-areas: "itemName itemAmount itemWeight itemTotalWeight itemCategory itemSubcategory itemPriority";
+    grid-template-areas: "itemName itemAmount itemWeight itemTotalWeight itemPriority itemCategory itemSubcategory";
     gap: 1rem;
     text-align: start;
-    transition: background-color 250ms ease-in-out;
+    /* transition: background-color 250ms ease-in-out; */
 
     & > * {
       grid-column: span 1;
@@ -546,7 +587,7 @@ footer p {
     grid-column: span 1;
   }
 
-  .itemListSummary .totalWeight{
+  .itemListSummary .totalWeight {
     grid-column: span 3;
   }
   .itemListSummary .itemName {
@@ -567,151 +608,143 @@ footer p {
   grid-template-columns: repeat(10, 0fr);
   width: 100%;
   height: 3rem;
-  transition: all 300ms cubic-bezier(0.68, -0.6, 0.32, 1.6);
-  margin-block: 0rem 2rem;
-  /* overflow-x: hidden;
-  overflow-y: initial; */
+  transition: all 500ms cubic-bezier(0.9, 0, 0.5, 1);
+  margin-block: 0rem 1rem;
 }
 
 .categoryBox {
   margin-block: auto;
-  height: 3rem;
+  height: 2rem;
   position: relative;
   cursor: pointer;
+}
 
-  &:hover {
-    /* transform: translateY(-0.2rem); */
-    /* transform: scaleY(1.1); */
-    filter: brightness(1.25);
-  }
+.weightDistribution:hover .categoryBox:not(:hover) {
+  filter: brightness(0.7);
 }
 
 .chartItemTitle {
   visibility: hidden;
   position: absolute;
-  right: 0;
-  /* left: 50%; */
-  bottom: -.25rem;
+  right: 0.5rem;
+  bottom: 3.25rem;
   transform: translate(0, 100%);
-  /* transform: translate(-50%, 100%); */
 }
-
 
 .categoryBox:hover .chartItemTitle {
   visibility: visible;
 }
 
-
-label[for="bags"] span,
-label[for="bags2"] span {
-  color: var(--clr-category-bags);
-}
-label[for="clothing"] span,
-label[for="clothing2"] span {
-  color: var(--clr-category-clothing);
-}
-label[for="consumables"] span,
-label[for="consumables2"] span {
-  color: var(--clr-category-consumables);
-}
-label[for="electronics"] span,
-label[for="electronics2"] span {
-  color: var(--clr-category-electronics);
-}
-label[for="footwear"] span,
-label[for="footwear2"] span {
-  color: var(--clr-category-footwear);
-}
-label[for="grooming"] span,
-label[for="grooming2"] span {
-  color: var(--clr-category-grooming);
-}
-label[for="hygiene"] span,
-label[for="hygiene2"] span {
-  color: var(--clr-category-hygiene);
-}
-label[for="meds"] span,
-label[for="meds2"] span {
-  color: var(--clr-category-meds);
-}
-label[for="necessities"] span,
-label[for="necessities2"] span {
-  color: var(--clr-category-necessities);
-}
-label[for="other"] span,
-label[for="other2"] span {
-  color: var(--clr-category-other);
+.filters label {
+  position: relative;
+  transform: translateY(-0.25rem);
 }
 
-.categoryBox.bags {
-  background-color: var(--clr-category-bags);
+.filters label::before {
+  content: "";
+  position: absolute;
+  left: -1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 1rem;
+  width: 1rem;
 }
-.categoryBox.clothing {
-  background-color: var(--clr-category-clothing);
+
+.filters {
+  padding-inline-start: 2.25rem;
 }
-.categoryBox.consumables {
-  background-color: var(--clr-category-consumables);
+
+.categoryBox:nth-child(1),
+.filters label:nth-child(2)::before {
+  background-color: var(--clr-category-1);
 }
-.categoryBox.electronics {
-  background-color: var(--clr-category-electronics);
+.categoryBox:nth-child(2),
+.filters label:nth-child(3)::before {
+  background-color: var(--clr-category-2);
 }
-.categoryBox.footwear {
-  background-color: var(--clr-category-footwear);
+.categoryBox:nth-child(3),
+.filters label:nth-child(4)::before {
+  background-color: var(--clr-category-3);
 }
-.categoryBox.grooming {
-  background-color: var(--clr-category-grooming);
+.categoryBox:nth-child(4),
+.filters label:nth-child(5)::before {
+  background-color: var(--clr-category-4);
 }
-.categoryBox.hygiene {
-  background-color: var(--clr-category-hygiene);
+.categoryBox:nth-child(5),
+.filters label:nth-child(6)::before {
+  background-color: var(--clr-category-5);
 }
-.categoryBox.meds {
-  background-color: var(--clr-category-meds);
+.categoryBox:nth-child(6),
+.filters label:nth-child(7)::before {
+  background-color: var(--clr-category-6);
 }
-.categoryBox.necessities {
-  background-color: var(--clr-category-necessities);
+.categoryBox:nth-child(7),
+.filters label:nth-child(8)::before {
+  background-color: var(--clr-category-7);
 }
-.categoryBox.other {
-  background-color: var(--clr-category-other);
+.categoryBox:nth-child(8),
+.filters label:nth-child(9)::before {
+  background-color: var(--clr-category-8);
+}
+.categoryBox:nth-child(9),
+.filters label:nth-child(10)::before {
+  background-color: var(--clr-category-9);
+}
+.categoryBox:nth-child(10),
+.filters label:nth-child(11)::before {
+  background-color: var(--clr-category-10);
+}
+.categoryBox:nth-child(11),
+.filters label:nth-child(12)::before {
+  background-color: var(--clr-category-11);
+}
+.categoryBox:nth-child(12),
+.filters label:nth-child(13)::before {
+  background-color: var(--clr-category-12);
+}
+.categoryBox:nth-child(13),
+.filters label:nth-child(14)::before {
+  background-color: var(--clr-category-13);
+}
+.categoryBox:nth-child(14),
+.filters label:nth-child(15)::before {
+  background-color: var(--clr-category-14);
+}
+.categoryBox:nth-child(15),
+.filters label:nth-child(16)::before {
+  background-color: var(--clr-category-15);
 }
 
 section:has(.categoryBox.bags:hover) article.bags {
-  background-color: var(--clr-category-bags-highlight);
+  background-color: var(--clr-category-1);
 }
 section:has(.categoryBox.clothing:hover) article.clothing {
-  background-color: var(--clr-category-clothing-highlight);
+  background-color: var(--clr-category-2);
 }
 section:has(.categoryBox.consumables:hover) article.consumables {
-  background-color: var(--clr-category-consumables-highlight);
+  background-color: var(--clr-category-3);
 }
 section:has(.categoryBox.electronics:hover) article.electronics {
-  background-color: var(--clr-category-electronics-highlight);
+  background-color: var(--clr-category-4);
 }
 section:has(.categoryBox.footwear:hover) article.footwear {
-  background-color: var(--clr-category-footwear-highlight);
+  background-color: var(--clr-category-5);
 }
 section:has(.categoryBox.grooming:hover) article.grooming {
-  background-color: var(--clr-category-grooming-highlight);
+  background-color: var(--clr-category-6);
 }
 section:has(.categoryBox.hygiene:hover) article.hygiene {
-  background-color: var(--clr-category-hygiene-highlight);
+  background-color: var(--clr-category-7);
 }
 section:has(.categoryBox.meds:hover) article.meds {
-  background-color: var(--clr-category-meds-highlight);
+  background-color: var(--clr-category-8);
 }
 section:has(.categoryBox.necessities:hover) article.necessities {
-  background-color: var(--clr-category-necessities-highlight);
+  background-color: var(--clr-category-9);
+}
+section:has(.categoryBox.toiletries:hover) article.toiletries {
+  background-color: var(--clr-category-10);
 }
 section:has(.categoryBox.other:hover) article.other {
-  background-color: var(--clr-category-other-highlight);
-}
-
-.backup {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: .25rem;
-}
-
-.backup button,
-.backup input {
-  height: 100%;
+  background-color: var(--clr-category-11);
 }

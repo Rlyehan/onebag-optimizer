@@ -9,24 +9,3 @@ type TravelItem struct {
 	Priority    string `json:"itemPriority"`
 	BagType     string `json:"itemBagType"`
 }
-
-type AnalysisResult struct {
-	TotalWeight      int
-	TopHeaviestItems []TravelItem
-	BagWeights       map[string]int
-	CategoryWeights  map[string]int
-	PriorityWeights  map[string]int
-	AverageWeight    int
-	CategoryWeightPercentage map[string]float64
-	CategoryData map[string]CategoryInfo
-}
-
-type CategoryWeight struct {
-	Category string
-	Weight   int
-}
-
-type CategoryInfo struct {
-	Weight     int
-	Percentage float64
-}

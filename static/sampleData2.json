@@ -1,8 +1,5 @@
-[{
-  "listName": "Sample List",
-  "listUUID": "sampleList2UUID"
-},
-{
+[
+  {
   "itemName": "Peak Design Travel Backpack 30L",
   "itemAmount": 1,
   "itemWeight": 1385,

@@ -2,11 +2,26 @@
 // IMPORTS
 //========
 
-import { processData } from "./modules/analysis.js"
-import { downloadList } from "./modules/jsonDownload.js"
 
-import sampleData from "./sampleData.json" assert { type: 'json' }
-import sampleData2 from "./sampleData2.json" assert { type: 'json' }
+
+
+//============
+// SAMPLE DATA
+//============
+
+// import sampleData from "./sampleData.json" assert { type: 'json' }
+// import sampleData2 from "./sampleData2.json" assert { type: 'json' }
+
+// const sampleListUUID = generateUUID()
+// const sampleListUUID2 = generateUUID()
+
+// addListToIndex("Sample List", sampleListUUID)
+// sampleData.unshift({ listName: "Sample List", listUUID: sampleListUUID })
+// localStorage.setItem("Sample List", JSON.stringify(sampleData))
+
+// addListToIndex("Sample List 2", sampleListUUID2)
+// sampleData2.unshift({ listName: "Sample List 2", listUUID: sampleListUUID2 })
+// localStorage.setItem("Sample List 2", JSON.stringify(sampleData2))
 
 
 
@@ -16,7 +31,8 @@ import sampleData2 from "./sampleData2.json" assert { type: 'json' }
 //==========
 
 // Array holding all available categories
-const categories = ["bags", "clothing", "consumables", "electronics", "footwear", "grooming", "hygiene", "meds", "necessities", "other"]
+const categories = ["bags", "clothing", "consumables", "electronics", "footwear", "grooming", "hygiene", "meds", "necessities", "toiletries", "other"]
+const bagTypes = ["carryOn", "personalItem"]
 
 const createListButton = document.getElementById("createListButton")
 const listSelectorDropdown = document.getElementById("listSelector")
@@ -27,18 +43,11 @@ const downloadListButton = document.getElementById("downloadListButton")
 const itemForm = document.getElementById("itemForm")
 const categoryDropdown = document.querySelectorAll("#itemCategory")
 const listFilters = document.querySelectorAll(".filters")
-// const clearLocalStorageButton = document.getElementById("clearLocalStorage")
-// const startAnalysisButton = document.getElementById("startAnalysis")
 const targetCarryOn = document.querySelector(".bagCarryOn")
 const targetPersonalItem = document.querySelector(".bagPersonalItem")
+const weightDistribution = document.querySelectorAll(".weightDistribution")
 const itemListSummaryCarryOn = document.querySelector(".bagCarryOn .itemListSummary")
 const itemListSummaryPersonalItem = document.querySelector(".bagPersonalItem .itemListSummary")
-
-addListToIndex("Sample List", generateUUID())
-localStorage.setItem("Sample List", JSON.stringify(sampleData))
-
-addListToIndex("Sample List 2", generateUUID())
-localStorage.setItem("Sample List 2", JSON.stringify(sampleData2))
 
 
 
@@ -51,7 +60,7 @@ createListButton.addEventListener("click", function (event) {
   event.preventDefault()
   const listName = document.getElementById("listName").value
   if (listName != "") {
-    let listUUID = generateUUID()
+    const listUUID = generateUUID()
     addListToIndex(listName, listUUID)
     setItemArray(listName, [{ "listName": listName, "listUUID": listUUID }])
     populateListSelector()
@@ -98,7 +107,6 @@ uploadListButton.addEventListener("click", () => {
 
 fileInput.addEventListener("change", () => {
   const file = fileInput.files[0]
-  // uploadList(file, fileInput)
   fileInput.value = ""
   if (file) {
     const reader = new FileReader()
@@ -150,10 +158,10 @@ itemForm.addEventListener("submit", function (event) {
 
 
 
+
 //=================
 // HELPER FUNCTIONS
 //=================
-
 
 function generateUUID() {
   if (crypto && crypto.randomUUID) {
@@ -184,23 +192,27 @@ function generateUUID() {
   }
 }
 
+
+function capitalizeFirstLetter(inputString) {
+  return inputString.charAt(0).toUpperCase() + inputString.slice(1)
+}
+
+
 function createCategoryElements() {
   categories.forEach((category) => {
     // Category Selector Dropdowns
     categoryDropdown.forEach((option) => {
       const selectOption = document.createElement("option")
       selectOption.setAttribute("value", category)
-      selectOption.innerHTML = category
-      option.appendChild(selectOption)
+      selectOption.innerText = capitalizeFirstLetter(category)
+      option.append(selectOption)
     })
     // Filters
     listFilters.forEach((filter, index) => {
       const filterItem = document.createElement("label")
-      const span = document.createElement("span")
       const input = document.createElement("input")
       input.setAttribute("type", "checkbox")
-      span.innerHTML = "▶"
-      const text = document.createTextNode(category)
+      const text = capitalizeFirstLetter(category)
       if (index === 0) {
         filterItem.setAttribute("for", category)
         input.setAttribute("name", category)
@@ -210,37 +222,48 @@ function createCategoryElements() {
         input.setAttribute("name", `${category}${index + 1}`)
         input.setAttribute("id", `${category}${index + 1}`)
       }
-      filterItem.appendChild(span)
-      filterItem.appendChild(text)
-      filterItem.appendChild(input)
-      filter.appendChild(filterItem)
+      filterItem.append(text, input)
+      filter.append(filterItem)
+    })
+    weightDistribution.forEach((element) => {
+      const span = document.createElement("span")
+      span.classList.add("chartItemTitle")
+      span.innerText = capitalizeFirstLetter(category)
+      const categoryBox = document.createElement("div")
+      categoryBox.classList.add("categoryBox")
+      categoryBox.classList.add(category)
+      categoryBox.append(span)
+      element.append(categoryBox)
     })
   })
 }
 createCategoryElements()
 
+
 function populateListSelector() {
-  var listIndex = JSON.parse(localStorage.getItem("List Index"))
-  var listSelector = document.getElementById("listSelector")
-  listSelector.innerHTML =
-    '<option value="" selected disabled>Select List</option>'
+  const listIndex = JSON.parse(localStorage.getItem("List Index"))
+  const listSelector = document.getElementById("listSelector")
+  listSelector.textContent = ""
+
+  const defaultOption = document.createElement("option")
+  defaultOption.setAttribute("value", "")
+  defaultOption.setAttribute("selected", "")
+  defaultOption.setAttribute("disabled", "")
+  defaultOption.innerText = "Select List"
+  listSelector.append(defaultOption)
+
   listIndex.forEach((listIndexItem, index) => {
     const option = document.createElement("option")
     option.setAttribute("value", listIndexItem.listName)
     option.setAttribute("data-index", index)
-    option.innerHTML = listIndexItem.listName
-    listSelector.appendChild(option)
+    option.innerText = listIndexItem.listName
+    listSelector.append(option)
   })
 }
 populateListSelector()
 
-function loadList(listName) {
-  clearItemList()
-  const itemArray = getItemArray(listName)
-  const listInfo = itemArray[0]
-  const listItems = itemArray.slice(1)
-  renderItems(listItems)
-  activateDeleteListeners(listName)
+
+function setChartItemWidths(listItems) {
   const result = processData(listItems)
   let percentages = []
 
@@ -250,7 +273,7 @@ function loadList(listName) {
       case "Carry On": {
         for (const category of categories) {
           if (result.bagCategoryWeightsPercentage[bagType][category] !== undefined) {
-            percentages.push(result.bagCategoryWeightsPercentage[bagType][category])
+            percentages.push(Math.ceil(result.bagCategoryWeightsPercentage[bagType][category]))
           } else {
             percentages.push(0)
           }
@@ -259,85 +282,271 @@ function loadList(listName) {
         document.querySelector(".bagCarryOn .weightDistribution").style.gridTemplateColumns = gridTemplateColumns
         gridTemplateColumns = []
         break
-
       }
-        case "Personal Item": {
-          for (const category of categories) {
-            if (result.bagCategoryWeightsPercentage[bagType][category] !== undefined) {
-              percentages.push(result.bagCategoryWeightsPercentage[bagType][category])
-            } else {
-              percentages.push(0)
-            }
+      case "Personal Item": {
+        for (const category of categories) {
+          if (result.bagCategoryWeightsPercentage[bagType][category] !== undefined) {
+            percentages.push(Math.ceil(result.bagCategoryWeightsPercentage[bagType][category]))
+          } else {
+            percentages.push(0)
           }
-          let gridTemplateColumns = percentages.map(percentage => `${percentage}fr`).join(' ')
-
-          document.querySelector(".bagPersonalItem .weightDistribution").style.gridTemplateColumns = gridTemplateColumns
-          gridTemplateColumns = []
-          break
+        }
+        let gridTemplateColumns = percentages.map(percentage => `${percentage}fr`).join(' ')
+        document.querySelector(".bagPersonalItem .weightDistribution").style.gridTemplateColumns = gridTemplateColumns
+        gridTemplateColumns = []
+        break
       }
     }
   }
 }
 
 
-function renderItems(listItem) {
+function loadList(listName) {
+  clearItemList()
+  const itemArray = getItemArray(listName)
+  const listInfo = itemArray[0]
+  const listItems = itemArray.slice(1)
+  renderItems(listItems)
+  activateDeleteListeners(listName)
+  setChartItemWidths(listItems)
+}
+
+
+function renderItems(listItems) {
   let totalWeightCarryOn = 0
   let totalWeightPersonalItem = 0
   const carryOnTotalWeight = document.getElementById("carryOnTotalWeight")
   const personalItemTotalWeight = document.getElementById("personalItemTotalWeight")
-  carryOnTotalWeight.innerHTML = 0
-  personalItemTotalWeight.innerHTML = 0
+  carryOnTotalWeight.innerText = 0
+  personalItemTotalWeight.innerText = 0
 
-  listItem.forEach((item, index) => {
+  listItems.forEach((item, index) => {
     let itemTotalWeight = item.itemAmount * item.itemWeight
     const listItem = createItemListItem(item, itemTotalWeight, index + 1)
 
     if (item.itemBagType == "carryOn") {
       targetCarryOn.insertBefore(listItem, itemListSummaryCarryOn)
       totalWeightCarryOn += itemTotalWeight
-      carryOnTotalWeight.innerHTML = totalWeightCarryOn + " g"
+      carryOnTotalWeight.innerText = totalWeightCarryOn + " g"
     } else if (item.itemBagType == "personalItem") {
       targetPersonalItem.insertBefore(listItem, itemListSummaryPersonalItem)
       totalWeightPersonalItem += itemTotalWeight
-      personalItemTotalWeight.innerHTML = totalWeightPersonalItem + " g"
+      personalItemTotalWeight.innerText = totalWeightPersonalItem + " g"
     }
   })
 }
+
 
 function getItemArray(listName) {
   return JSON.parse(localStorage.getItem(listName)) || []
 }
 
+
 function setItemArray(listName, itemArray) {
   localStorage.setItem(listName, JSON.stringify(itemArray))
 }
+
 
 function activateDeleteListeners(listName) {
   let deleteBtn = document.querySelectorAll(".deleteItem")
   deleteBtn.forEach((dB) => {
     dB.addEventListener("click", () => {
-      const index = dB.parentElement.parentElement.getAttribute("data-index")
+      const index = dB.getAttribute("data-index")
       deleteItem(listName, index)
     })
   })
 }
 
-function sendData(listName) {
-  let itemArray = localStorage.getItem(listName)
-  // let itemArray = JSON.stringify(localStorage.getItem(listName))
 
-  fetch("/process", {
-    method: "POST",
-    body: itemArray,
-    // headers: {
-    //   "Content-type": "application/json; charset=UTF-8",
-    // }
-  })
-    .then((response) => response.text())
-    .then((data) => {
-      document.querySelector(".analysisResult").innerHTML = data
-    })
+function sanitizeList(listName) {
+  const itemArray = JSON.parse(localStorage.getItem(listName))
+  for (let item of itemArray) {
+    for (const key in item) {
+      if (typeof item[key] === 'string') {
+        item[key] = sanitizeString(item[key])
+      }
+    }
+  }
+  return itemArray
 }
+
+
+function sanitizeString(inputString) {
+  return inputString.replace(/(<([^>]+)>)/g, '')
+}
+
+
+function downloadList(itemArray, listName) {
+  const data = JSON.stringify(itemArray)
+  const blob = new Blob([data], { type: 'application/json' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = listName
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+  URL.revokeObjectURL(url)
+}
+
+
+function sendData(listName) {
+  // fetch("/process", {
+  //   method: "POST",
+  //   body: sanitizeData(listName),
+  // })
+  //   .then((response) => response.text())
+  //   .then((data) => {
+  //     console.log(data)
+  //   })
+}
+
+
+
+
+//=========
+// ANALYSIS
+//=========
+
+function formatBagType(bagType) {
+  switch (bagType) {
+    case "carryOn":
+      return "Carry On"
+    case "personalItem":
+      return "Personal Item"
+    default:
+      return bagType
+  }
+}
+
+
+function processData(items) {
+  let totalWeight = 0
+  let bagWeights = {}
+  let categoryWeights = {}
+  let priorityWeights = {}
+  let categoryData = {}
+  let bagCategoryWeights = {}
+
+  items.forEach(item => {
+    let itemTotalWeight = item.itemAmount * item.itemWeight
+    totalWeight += itemTotalWeight
+
+    priorityWeights[item.itemPriority] = (priorityWeights[item.itemPriority] || 0) + itemTotalWeight
+    categoryWeights[item.itemCategory] = (categoryWeights[item.itemCategory] || 0) + itemTotalWeight
+
+    const formattedBagType = formatBagType(item.itemBagType)
+    bagWeights[formattedBagType] = (bagWeights[formattedBagType] || 0) + itemTotalWeight
+
+    if (!bagCategoryWeights[formattedBagType]) {
+      bagCategoryWeights[formattedBagType] = {}
+    }
+    bagCategoryWeights[formattedBagType][item.itemCategory] = (bagCategoryWeights[formattedBagType][item.itemCategory] || 0) + itemTotalWeight
+  })
+
+  let averageWeight = items.length > 0 ? totalWeight / items.length : 0
+
+  items.sort((a, b) => b.itemWeight - a.itemWeight)
+  let topHeaviestItems = items.slice(0, 5)
+
+  let categoryWeightPercentage = {}
+  for (let category in categoryWeights) {
+    categoryWeightPercentage[category] = (categoryWeights[category] / totalWeight) * 100
+  }
+
+  for (let category in categoryWeights) {
+    let percentage = (categoryWeights[category] / totalWeight) * 100
+    categoryData[category] = {
+      weight: categoryWeights[category],
+      percentage: percentage
+    }
+  }
+
+  const bagCategoryWeightsPercentage = {}
+  for (let bagType in bagCategoryWeights) {
+    bagCategoryWeightsPercentage[bagType] = {}
+    for (let category in bagCategoryWeights[bagType]) {
+      bagCategoryWeightsPercentage[bagType][category] = (bagCategoryWeights[bagType][category] / bagWeights[bagType]) * 100
+    }
+  }
+
+  return {
+    totalWeight: totalWeight,
+    topHeaviestItems: topHeaviestItems,
+    bagWeights: bagWeights,
+    averageWeight: averageWeight,
+    priorityWeights: priorityWeights,
+    categoryWeights: categoryWeights,
+    categoryWeightPercentage: categoryWeightPercentage,
+    categoryData: categoryData,
+    bagCategoryWeights: bagCategoryWeights,
+    bagCategoryWeightsPercentage: bagCategoryWeightsPercentage
+  }
+}
+
+
+function updateForAddedItem(metrics, newItem) {
+  let itemTotalWeight = newItem.itemAmount * newItem.itemWeight
+  metrics.totalWeight += itemTotalWeight
+  metrics.priorityWeights[newItem.itemPriority] = (metrics.priorityWeights[newItem.itemPriority] || 0) + itemTotalWeight
+  metrics.categoryWeights[newItem.itemCategory] = (metrics.categoryWeights[newItem.itemCategory] || 0) + itemTotalWeight
+
+  const formattedBagType = formatBagType(newItem.itemBagType)
+  metrics.bagWeights[formattedBagType] = (metrics.bagWeights[formattedBagType] || 0) + itemTotalWeight
+
+  if (!metrics.bagCategoryWeights[formattedBagType]) {
+    metrics.bagCategoryWeights[formattedBagType] = {}
+  }
+  metrics.bagCategoryWeights[formattedBagType][newItem.itemCategory] = (metrics.bagCategoryWeights[formattedBagType][newItem.itemCategory] || 0) + itemTotalWeight
+
+
+  if (newItem.itemWeight > metrics.topHeaviestItems[metrics.topHeaviestItems.length - 1].itemWeight) {
+    metrics.topHeaviestItems.pop()
+    metrics.topHeaviestItems.push(newItem)
+    metrics.topHeaviestItems.sort((a, b) => b.itemWeight - a.itemWeight)
+  }
+
+  let percentage = (metrics.categoryWeights[newItem.itemCategory] / metrics.totalWeight) * 100
+  metrics.categoryData[newItem.itemCategory] = {
+    weight: metrics.categoryWeights[newItem.itemCategory],
+    percentage: percentage
+  }
+
+  return metrics
+}
+
+
+function updateForRemovedItem(metrics, removedItem, allItems) {
+
+  let itemTotalWeight = removedItem.itemAmount * removedItem.itemWeight
+  metrics.totalWeight -= itemTotalWeight
+  metrics.priorityWeights[removedItem.itemPriority] -= itemTotalWeight
+  metrics.categoryWeights[removedItem.itemCategory] -= itemTotalWeight
+
+  const formattedBagType = formatBagType(removedItem.itemBagType)
+  metrics.bagWeights[formattedBagType] -= itemTotalWeight
+
+  metrics.bagCategoryWeights[formattedBagType][removedItem.itemCategory] -= itemTotalWeight
+
+  if (metrics.topHeaviestItems.includes(removedItem)) {
+    metrics.topHeaviestItems = metrics.topHeaviestItems.filter(item => item !== removedItem)
+    let remainingItems = allItems.filter(item => !metrics.topHeaviestItems.includes(item))
+    let nextTopItem = remainingItems.sort((a, b) => b.itemWeight - a.itemWeight)[0]
+    if (nextTopItem) {
+      metrics.topHeaviestItems.push(nextTopItem)
+    }
+  }
+
+  let percentage = (metrics.categoryWeights[removedItem.itemCategory] / metrics.totalWeight) * 100
+  metrics.categoryData[removedItem.itemCategory] = {
+    weight: metrics.categoryWeights[removedItem.itemCategory],
+    percentage: percentage
+  }
+
+  return metrics
+}
+
+
 
 
 //==================
@@ -357,33 +566,70 @@ function addListToIndex(listName, uuid) {
   localStorage.setItem("List Index", JSON.stringify(listIndexItems))
 }
 
+
 function clearItemList() {
   const articles = document.querySelectorAll(".listItem")
   articles.forEach((entry) => entry.remove())
 }
 
-function createItemListItem(item, itemTotalWeight, index) {
-  const listItem = document.createElement("article")
-  listItem.classList.add(
-    "listItem",
-    item.itemCategory,
-    item.itemBagType
-  )
-  listItem.setAttribute("data-index", `${index}`)
-  listItem.innerHTML = `
-    <div class="itemName">${item.itemName}</div>
-    <div class="itemAmount">${item.itemAmount}x</div>
-    <div class="itemWeight">${item.itemWeight}<span class="mobileOnlyInfo"> g</span></div>
-    <div class="itemTotalWeight"><span class="mobileOnlyInfo">Total: </span>${itemTotalWeight}<span class="mobileOnlyInfo"> g</span></div>
-    <div class="itemPriority"><span class="mobileOnlyInfo">Prio: </span>${item.itemPriority
-    }</div>
-    <div class="itemCategory">${item.itemCategory.charAt(0).toUpperCase() + item.itemCategory.slice(1)
-    }</div>
-    <div class="itemSubcategory">${item.itemSubcategory}
-    <span class="deleteItem" data-index="${index}">❌</span>`
 
-  return listItem
+function createItemListItem(item, itemTotalWeight, index) {
+  const listItem = document.createElement("article");
+  listItem.classList.add("listItem", item.itemCategory, item.itemBagType);
+  listItem.setAttribute("data-index", index);
+
+  const createSpan = (className, text) => {
+    const span = document.createElement("span");
+    span.classList.add(className);
+    span.textContent = text;
+    return span;
+  };
+
+  const mobileOnlyTotal = createSpan("mobileOnlyInfo", "Total: ");
+  const mobileOnlyGrams = createSpan("mobileOnlyInfo", " g");
+  const mobileOnlyTotalGrams = createSpan("mobileOnlyInfo", " g");
+  const mobileOnlyPrio = createSpan("mobileOnlyInfo", "Prio: ");
+
+  const divItemName = createDivWithClass('itemName', item.itemName);
+  const divItemAmount = createDivWithClass('itemAmount', `${item.itemAmount}x`);
+  const divItemWeight = createDivWithClass('itemWeight', item.itemWeight);
+  divItemWeight.append(mobileOnlyGrams);
+  const divItemTotalWeight = createDivWithClass('itemTotalWeight', itemTotalWeight);
+  divItemTotalWeight.prepend(mobileOnlyTotal);
+  divItemTotalWeight.append(mobileOnlyTotalGrams);
+  const divItemPriority = createDivWithClass('itemPriority', item.itemPriority==="1"?"HI":item.itemPriority==="2"?"MD":"LO");
+  divItemPriority.classList.add("prio-" + item.itemPriority)
+  divItemPriority.prepend(mobileOnlyPrio);
+  const divItemCategory = createDivWithClass('itemCategory', item.itemCategory.charAt(0).toUpperCase() + item.itemCategory.slice(1));
+  const divItemSubcategory = createDivWithClass('itemSubcategory', item.itemSubcategory);
+
+  const deleteItem = document.createElement('span');
+  deleteItem.classList.add('deleteItem');
+  deleteItem.dataset.index = index;
+  deleteItem.innerHTML = '<i class="fa-solid fa-delete-left fa-xl"></i>';
+
+  listItem.append(
+    divItemName,
+    divItemAmount,
+    divItemWeight,
+    divItemTotalWeight,
+    divItemPriority,
+    divItemCategory,
+    divItemSubcategory,
+    deleteItem
+  );
+
+  return listItem;
 }
+
+
+function createDivWithClass(className, text) {
+  const div = document.createElement('div');
+  div.classList.add(className);
+  div.textContent = text;
+  return div;
+}
+
 
 function addListItem() {
 
@@ -419,12 +665,14 @@ function addListItem() {
   }
 }
 
+
 function deleteItem(listName, i) {
   let itemArray = getItemArray(listName)
   itemArray.splice(i, 1)
   setItemArray(listName, itemArray)
   loadList(listName)
 }
+
 
 function deleteList(listName) {
   let i = document.querySelector('[value="' + listName + '"').getAttribute("data-index")
