@@ -9,19 +9,19 @@
 // SAMPLE DATA
 //============
 
-import sampleData from "./sampleData.json" assert { type: 'json' }
-import sampleData2 from "./sampleData2.json" assert { type: 'json' }
+// import sampleData from "./sampleData.json" assert { type: 'json' }
+// import sampleData2 from "./sampleData2.json" assert { type: 'json' }
 
-const sampleListUUID = generateUUID()
-const sampleListUUID2 = generateUUID()
+// const sampleListUUID = generateUUID()
+// const sampleListUUID2 = generateUUID()
 
-addListToIndex("Sample List", sampleListUUID)
-sampleData.unshift({ listName: "Sample List", listUUID: sampleListUUID })
-localStorage.setItem("Sample List", JSON.stringify(sampleData))
+// addListToIndex("Sample List", sampleListUUID)
+// sampleData.unshift({ listName: "Sample List", listUUID: sampleListUUID })
+// localStorage.setItem("Sample List", JSON.stringify(sampleData))
 
-addListToIndex("Sample List 2", sampleListUUID2)
-sampleData2.unshift({ listName: "Sample List 2", listUUID: sampleListUUID2 })
-localStorage.setItem("Sample List 2", JSON.stringify(sampleData2))
+// addListToIndex("Sample List 2", sampleListUUID2)
+// sampleData2.unshift({ listName: "Sample List 2", listUUID: sampleListUUID2 })
+// localStorage.setItem("Sample List 2", JSON.stringify(sampleData2))
 
 
 
@@ -32,6 +32,7 @@ localStorage.setItem("Sample List 2", JSON.stringify(sampleData2))
 
 // Array holding all available categories
 const categories = ["bags", "clothing", "consumables", "electronics", "footwear", "grooming", "hygiene", "meds", "necessities", "toiletries", "other"]
+const bagTypes = ["carryOn", "personalItem"]
 
 const createListButton = document.getElementById("createListButton")
 const listSelectorDropdown = document.getElementById("listSelector")

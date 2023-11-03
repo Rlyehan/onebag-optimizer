@@ -29,7 +29,7 @@
   :root {
     --lightness: 47.5%;
     --chroma: 0.175;
-    /* --chroma: 0.15; */
+    --clr-hover-border: white;
     --clr-hover-background: #333;
     --clr-text-fainted: #bbb;
   }
@@ -39,11 +39,11 @@
   :root {
     --lightness: 65%;
     --chroma: 0.24;
+    --clr-hover-border: black;
     --clr-hover-background: #ddd;
     --clr-text-fainted: #666;
   }
 }
-
 
 /* 
   Hide filters, empty list text and show/hide buttons
@@ -58,8 +58,6 @@
   }
 }
 
-
-
 *,
 *::before,
 *::after {
@@ -72,12 +70,12 @@ a {
   text-decoration: none;
   color: inherit;
   opacity: 0.5;
+}
 
-  &:hover {
-    opacity: 1;
-    transition: all 300ms ease-in-out;
-    color: var(--clr-accent);
-  }
+a:is(:hover, :focus) {
+  opacity: 1;
+  transition: all 300ms ease-in-out;
+  color: var(--clr-accent);
 }
 
 html {
@@ -87,7 +85,6 @@ html {
 body {
   margin-block-start: 2rem;
   margin-inline: 2.5dvw;
-  /* display: grid; */
   display: flex;
   flex-direction: column;
   gap: 3rem;
@@ -137,14 +134,8 @@ select {
   transition: all 300ms ease-in-out;
 }
 
-input:focus,
-select:focus {
-  outline: 2px solid var(--clr-accent);
-}
-
 input[type="submit"],
-input[type="button"],
-button {
+input[type="button"] {
   color: white;
   padding: 0.5rem 0.75rem;
   font-size: 1rem;
@@ -153,25 +144,16 @@ button {
   font-family: "JetBrains Mono", monospace;
 }
 
-input#deleteListButton {
-  background-color: var(--clr-warning);
-
-  &:hover {
-    border: 2px solid var(--clr-complementary);
-  }
-  &:focus {
-    border: 2px solid var(--clr-complementary);
-  }
+:is(input, select):is(:hover, :focus) {
+  border: 2px solid var(--clr-hover-border);
 }
 
-input[type="submit"],
-input[type="button"],
-button,
-select {
-  &:hover {
-    cursor: pointer;
-    border: 2px solid var(--clr-accent);
-  }
+input#deleteListButton {
+  background-color: var(--clr-warning);
+}
+
+input#deleteListButton:is(:hover, :focus) {
+  border: 2px solid var(--clr-complementary);
 }
 
 input::placeholder {
@@ -185,7 +167,7 @@ button {
 
 .highlight {
   animation: pulseOutline 2000ms forwards;
-  animation-iteration-count: 3;
+  animation-iteration-count: 1;
 }
 
 @keyframes pulseOutline {
@@ -229,9 +211,9 @@ label:has(:is(#carryOnList, #personalItemList)) span {
 }
 
 label:has(:is(#carryOnList, #personalItemList)):hover span {
-    opacity: 1;
-    transition: all 300ms ease-in-out;
-    color: var(--clr-accent);
+  opacity: 1;
+  transition: all 300ms ease-in-out;
+  color: var(--clr-accent);
 }
 
 label:has(#carryOnList:not(:checked)) + .itemList.bagCarryOn,
@@ -539,7 +521,7 @@ footer p {
     grid-template-areas: "itemName itemAmount itemWeight itemTotalWeight itemPriority itemCategory itemSubcategory";
     gap: 1rem;
     text-align: start;
-    transition: background-color 250ms ease-in-out;
+    /* transition: background-color 250ms ease-in-out; */
 
     & > * {
       grid-column: span 1;
@@ -664,7 +646,6 @@ footer p {
   left: -1.5rem;
   top: 50%;
   transform: translateY(-50%);
-  /* border-radius: 20%; */
   height: 1rem;
   width: 1rem;
 }

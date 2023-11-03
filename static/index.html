@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,38 +10,35 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <script type="module" src="./static/main.js"></script>
 </head>
+
 <body>
   <h1>OneBag Optimizer</h1>
   <section class="listSelector" aria-label="List Selector">
     <form id="listNameForm">
-      <input type="text" id="listName" placeholder="List Name" />
-      <input type="submit" id="createListButton" value="Create List" />
+      <input type="text" id="listName" placeholder="List Name">
+      <input type="submit" id="createListButton" value="Create List">
     </form>
     <form id="listSelectorForm">
       <select id="listSelector"></select>
-      <input type="submit" id="deleteListButton" value="Delete List" />
+      <input type="submit" id="deleteListButton" value="Delete List">
     </form>
     <div class="backup">
       <input type="file" id="jsonFileInput" accept=".json" style="display: none;">
-      <button id="uploadListButton">Upload List</button>
-      <button id="downloadListButton">Download List</button>
+      <input type="button" id="uploadListButton" value="Upload List">
+      <input type="button" id="downloadListButton" value="Download List">
     </div>
   </section>
   <section class="inputform" aria-label="Item Details Form">
     <form id="itemForm">
-      <input id="itemName" value="" type="text" placeholder="Name" required />
-      <input id="itemAmount" value="" type="number" placeholder="Amount" required min="0" max="99" />
-      <input id="itemWeight" value="" type="number" placeholder="Weight" required min="0" max="9999" />
+      <input id="itemName" value="" type="text" placeholder="Name" required>
+      <input id="itemAmount" value="" type="number" placeholder="Amount" required min="0" max="99">
+      <input id="itemWeight" value="" type="number" placeholder="Weight" required min="0" max="9999">
       <select id="itemCategory" required>
-        <option value="" disabled selected>
-          Category
-        </option>
+        <option value="" disabled selected>Category</option>
       </select>
-      <input id="itemSubcategory" value="" placeholder="Subcategory" autocomplete="on" />
+      <input id="itemSubcategory" value="" placeholder="Subcategory" autocomplete="on">
       <select id="itemPriority" required>
-        <option value="" disabled selected>
-          Priority
-        </option>
+        <option value="" disabled selected>Priority</option>
         <option value="1">High</option>
         <option value="2">Medium</option>
         <option value="3">Low</option>
@@ -49,11 +47,11 @@
         <option value="carryOn">Carry-On</option>
         <option value="personalItem">Personal Item</option>
       </select>
-      <input type="submit" value="+" />
+      <input type="submit" value="+">
     </form>
   </section>
   <label for="carryOnList">
-    <h3>Carry-On</h3><span>Show</span><span>Hide</span><input type="checkbox" id="carryOnList" checked></input>
+    <h3>Carry-On</h3><span>Show</span><span>Hide</span><input type="checkbox" id="carryOnList" checked>
   </label>
   <section class="itemList bagCarryOn">
     <fieldset class="filters">
@@ -79,7 +77,7 @@
     </article>
   </section>
   <label for="personalItemList">
-    <h3>Personal Item</h3><span>Show</span><span>Hide</span><input type="checkbox" id="personalItemList" checked></input>
+    <h3>Personal Item</h3><span>Show</span><span>Hide</span><input type="checkbox" id="personalItemList" checked>
   </label>
   <section class="itemList bagPersonalItem">
     <fieldset class="filters">
@@ -108,8 +106,8 @@
 </body>
 <footer>
   <h3>OneBag Optimizer</h3>
-  <p><a href="https://github.com/lukas-berger" target="_blank" rel="noopener noreferrer"
-      title="Lukas Berger on GitHub" aria-label="Lukas Berger on GitHub">Lukas Berger</a>
+  <p><a href="https://github.com/lukas-berger" target="_blank" rel="noopener noreferrer" title="Lukas Berger on GitHub"
+      aria-label="Lukas Berger on GitHub">Lukas Berger</a>
   </p>
   <p></p><a href="https://github.com/Rlyehan" target="_blank" rel="noopener noreferrer"
     title="Maximilian Huber on GitHub" aria-label="Maximilian Huber on GitHub">Maximilian
@@ -119,4 +117,5 @@
 
   <p><a href="#" id="backToTop" aria-label="Go back to top">Back to Top</a></p>
 </footer>
+
 </html>
