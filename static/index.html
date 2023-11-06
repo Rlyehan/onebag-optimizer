@@ -12,110 +12,184 @@
 </head>
 
 <body>
-  <h1>Pack-It-Easy</h1>
-  <section class="listSelector" aria-label="List Selector">
-    <form id="listNameForm">
-      <input type="text" id="listName" placeholder="List Name">
-      <input type="submit" id="createListButton" value="Create List">
-    </form>
-    <form id="listSelectorForm">
-      <select id="listSelector"></select>
-      <input type="submit" id="deleteListButton" value="Delete List">
-    </form>
-    <div class="backup">
-      <input type="file" id="jsonFileInput" accept=".json" style="display: none;">
-      <input type="button" id="uploadListButton" value="Upload List">
-      <input type="button" id="downloadListButton" value="Download List">
-    </div>
-  </section>
-  <section class="inputform" aria-label="Item Details Form">
-    <form id="itemForm">
-      <input id="itemName" value="" type="text" placeholder="Name" required>
-      <input id="itemAmount" value="" type="number" placeholder="Amount" required min="0" max="99">
-      <input id="itemWeight" value="" type="number" placeholder="Weight" required min="0" max="9999">
-      <select id="itemCategory" required>
-        <option value="" disabled selected>Category</option>
-      </select>
-      <input id="itemSubcategory" value="" placeholder="Subcategory" autocomplete="on">
-      <select id="itemPriority" required>
-        <option value="" disabled selected>Priority</option>
-        <option value="1">High</option>
-        <option value="2">Medium</option>
-        <option value="3">Low</option>
-      </select>
-      <select id="itemBagType" required>
-        <option value="carryOn">Carry-On</option>
-        <option value="personalItem">Personal Item</option>
-      </select>
-      <input type="submit" value="+">
-    </form>
-  </section>
-  <label for="carryOnList">
-    <h3>Carry-On</h3><span>Show</span><span>Hide</span><input type="checkbox" id="carryOnList" checked>
-  </label>
-  <section class="itemList bagCarryOn">
-    <fieldset class="filters">
-      <legend>Filter by category:</legend>
-    </fieldset>
-    <div class="weightDistribution">
-    </div>
-    <article class="itemListHeader">
-      <div class="itemName">Item Name</div>
-      <div class="itemAmount">Amount</div>
-      <div class="itemWeight">Weight (g)</div>
-      <div class="itemTotalWeight">Total (g)</div>
-      <div class="itemPriority">Prio</div>
-      <div class="itemCategory">Category</div>
-      <div class="itemSubcategory">Subcategory</div>
-    </article>
-    <article class="itemListEmpty">
-      <div class="itemName">This list is empty.</div>
-    </article>
-    <article class="itemListSummary">
-      <div class="itemName">Total Weight</div>
-      <div class="totalWeight" id="carryOnTotalWeight"></div>
-    </article>
-  </section>
-  <label for="personalItemList">
-    <h3>Personal Item</h3><span>Show</span><span>Hide</span><input type="checkbox" id="personalItemList" checked>
-  </label>
-  <section class="itemList bagPersonalItem">
-    <fieldset class="filters">
-      <legend>Filter by category:</legend>
-    </fieldset>
-    <div class="weightDistribution">
-    </div>
-    <article class="itemListHeader">
-      <div class="itemName">Item Name</div>
-      <div class="itemAmount">Amount</div>
-      <div class="itemWeight">Weight (g)</div>
-      <div class="itemTotalWeight">Total (g)</div>
-      <div class="itemPriority">Prio</div>
-      <div class="itemCategory">Category</div>
-      <div class="itemSubcategory">Subcategory</div>
-    </article>
-    <article class="itemListEmpty">
-      <div class="itemName">This list is empty.</div>
-    </article>
-    <article class="itemListSummary">
-      <div class="itemName">Total Weight</div>
-      <div class="totalWeight" id="personalItemTotalWeight"></div>
-    </article>
-  </section>
-  <section class="itemList analysisResult"></section>
-</body>
-<footer>
-  <h3>Pack-It-Easy</h3>
-  <p><a href="https://github.com/lukas-berger" target="_blank" rel="noopener noreferrer" title="Lukas Berger on GitHub"
-      aria-label="Lukas Berger on GitHub">Lukas Berger</a>
-  </p>
-  <p></p><a href="https://github.com/Rlyehan" target="_blank" rel="noopener noreferrer"
-    title="Maximilian Huber on GitHub" aria-label="Maximilian Huber on GitHub">Maximilian
-    Huber</a></p>
-  <a href="https://github.com/Rlyehan/onebag-optimizer" target="_blank" rel="noopener noreferrer"
-    title="This project's GitHub" aria-label="This project's GitHub"><i class="fab fa-github fa-2x"></i></a>
+  <header>
+    <h1>Pack-It-Easy</h1>
+  </header>
+  <aside>
+    <section class="userLists">
+      <h3>My Lists</h3>
+      <ul id="userLists"></ul>
+    </section>
+    <a class="createUploadListButton">Create new list</a>
+    <a class="createUploadListButton">Upload list</a>
 
-  <p><a href="#" id="backToTop" aria-label="Go back to top">Back to Top</a></p>
-</footer>
+    <section class="listSelector mobileOnlyInfo" aria-label="List Selector">
+      <form id="listNameForm">
+        <input type="text" id="listName" placeholder="List Name">
+        <input type="submit" id="createListButton" value="Create List">
+      </form>
+      <form id="listSelectorForm">
+        <select id="listSelector"></select>
+        <input type="submit" id="deleteListButton" value="Delete List">
+      </form>
+      <div class="backup">
+        <input type="file" id="jsonFileInput" accept=".json" style="display: none;">
+        <input type="button" id="uploadListButton" value="Upload List">
+        <input type="button" id="downloadListButton" value="Download List">
+      </div>
+    </section>
+    <section class="inputForm mobileOnlyInfo" aria-label="Item Details Form">
+      <form id="itemForm">
+        <input id="itemName" value="" type="text" placeholder="Name" required>
+        <input id="itemAmount" value="" type="number" placeholder="Amount" required min="0" max="99">
+        <input id="itemWeight" value="" type="number" placeholder="Weight" required min="0" max="9999">
+        <select id="itemCategory" required>
+          <option value="" disabled selected>Category</option>
+        </select>
+        <input id="itemSubcategory" value="" placeholder="Subcategory" autocomplete="on">
+        <select id="itemPriority" required>
+          <option value="" disabled selected>Priority</option>
+          <option value="1">High</option>
+          <option value="2">Medium</option>
+          <option value="3">Low</option>
+        </select>
+        <select id="itemBagType" required>
+          <option value="carryOn">Carry-On</option>
+          <option value="personalItem">Personal Item</option>
+        </select>
+        <input type="submit" value="+">
+      </form>
+    </section>
+  </aside>
+  <main>
+    <h2 id="activeListName"></h2>
+    <label for="carryOnList">
+      <h3>Carry-On</h3><span>Show</span><span>Hide</span><input type="checkbox" id="carryOnList" checked>
+    </label>
+    <section class="itemList bagCarryOn">
+      <fieldset class="filters">
+        <legend>Filter by category:</legend>
+      </fieldset>
+      <article class="itemListSummary">
+        <div class="itemName">Total Weight</div>
+        <div class="totalWeight" id="carryOnTotalWeight"></div>
+      </article>
+      <div class="weightDistribution">
+      </div>
+      <table>
+        <thead>
+          <tr class="itemListHeader">
+            <th class="itemName">Item Name</th>
+            <th class="itemAmount">Amount</th>
+            <th class="itemWeight">Weight (g)</th>
+            <th class="itemTotalWeight">Total (g)</th>
+            <th class="itemPriority">Prio</th>
+            <th class="itemCategory">Category</th>
+            <th class="itemSubcategory">Subcategory</th>
+          </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+      </table>
+    </section>
+
+    <label for="personalItemList">
+      <h3>Personal Item</h3><span>Show</span><span>Hide</span><input type="checkbox" id="personalItemList" checked>
+    </label>
+    <section class="itemList bagPersonalItem">
+      <fieldset class="filters">
+        <legend>Filter by category:</legend>
+      </fieldset>
+      <div class="itemListSummary">
+        <div class="itemName">Total Weight</div>
+        <div class="totalWeight" id="personalItemTotalWeight"></div>
+      </div>
+      <div class="weightDistribution">
+      </div>
+      <table>
+        <thead>
+          <tr class="itemListHeader">
+            <th class="itemName">Item Name</th>
+            <th class="itemAmount">Amount</th>
+            <th class="itemWeight">Weight (g)</th>
+            <th class="itemTotalWeight">Total (g)</th>
+            <th class="itemPriority">Prio</th>
+            <th class="itemCategory">Category</th>
+            <th class="itemSubcategory">Subcategory</th>
+          </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+      </table>
+    </section>
+    <section class="itemList analysisResult"></section>
+  </main>
+  <footer>
+    <h3>Pack-It-Easy</h3>
+    <p><a href="https://github.com/lukas-berger" target="_blank" rel="noopener noreferrer"
+        title="Lukas Berger on GitHub" aria-label="Lukas Berger on GitHub">Lukas Berger</a>
+    </p>
+    <p></p><a href="https://github.com/Rlyehan" target="_blank" rel="noopener noreferrer"
+      title="Maximilian Huber on GitHub" aria-label="Maximilian Huber on GitHub">Maximilian
+      Huber</a></p>
+    <a href="https://github.com/Rlyehan/onebag-optimizer" target="_blank" rel="noopener noreferrer"
+      title="This project's GitHub" aria-label="This project's GitHub"><i class="fab fa-github fa-2x"></i></a>
+
+    <p><a href="#" id="backToTop" aria-label="Go back to top">Back to Top</a></p>
+  </footer>
+</body>
+
+
+<template id="listItemTemplate">
+  <tr class="listItem">
+    <td class="itemName">
+      <span class="data">ITEM NAME</span>
+    </td>
+    <td class="itemAmount">
+      <span class="data">ITEM AMOUNT</span>x
+    </td>
+    <td class="itemWeight">
+      <span class="data">ITEM WEIGHT</span>
+      <span class="mobileOnlyInfo"> g</span>
+    </td>
+    <td class="itemTotalWeight">
+      <span class="mobileOnlyInfo">Total: </span>
+      <span class="data">ITEM TOTAL WEIGHT</span>
+      <span class="mobileOnlyInfo"> g</span>
+    </td>
+    <td class="itemPriority">
+      <span class="mobileOnlyInfo">Prio: </span>
+      <span class="data">ITEM PRIORITY</span>
+    </td>
+    <td class="itemCategory">
+      <span class="data">ITEM CATEGORY</span>
+    </td>
+    <td class="itemSubcategory">
+      <span class="data">ITEM SUBCATEGORY</span>
+      <span class="deleteItem" data-index="">
+        <i class="fa-solid fa-delete-left fa-xl"></i>
+      </span>
+    </td>
+  </tr>
+</template>
+
+<template id="userListItemTemplate">
+  <li>
+    <a>
+      <span class="data">LIST NAME</span>
+      <span class="editListNameButton">
+        <i class="fa-solid fa-pen-to-square" alt="Edit List Name"></i>
+      </span>
+      <span class="downloadListButton" alt="Download List">
+        <i class="fa-solid fa-download"></i>
+      </span>
+      <span class="deleteListButton" alt="Delete List">
+        <i class="fa-solid fa-trash-can"></i>
+      </span>
+    </a>
+  </li>
+</template>
 
 </html>
