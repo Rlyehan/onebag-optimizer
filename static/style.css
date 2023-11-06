@@ -83,16 +83,30 @@ html {
 }
 
 body {
-  margin-block-start: 2rem;
+  margin-block-start: 3rem;
   margin-inline: 2.5dvw;
   display: flex;
   flex-direction: column;
+  row-gap: 3rem;
+  column-gap: 6rem;
+}
+
+main {
+  display: grid;
   gap: 3rem;
 }
 
 h1 {
+  font-size: 3rem;
+}
+
+h2 {
+  display: none;
   text-align: center;
-  margin-block-start: 2rem;
+}
+
+.userLists, .createUploadListButton {
+  display: none;
 }
 
 form {
@@ -269,61 +283,61 @@ label + .itemList {
   color: var(--clr-accent);
 }
 
-.filters:has(:not(:checked)) ~ .listItem {
+.filters:has(:not(:checked)) ~ table tbody .listItem {
   display: grid;
 }
 
-.filters:has(:checked) ~ .listItem {
+.filters:has(:checked) ~ table tbody .listItem {
   display: none;
 }
 
-.filters:has(#bags:checked) ~ article.carryOn.bags,
-.filters:has(#clothing:checked) ~ article.carryOn.clothing,
-.filters:has(#consumables:checked) ~ article.carryOn.consumables,
-.filters:has(#electronics:checked) ~ article.carryOn.electronics,
-.filters:has(#footwear:checked) ~ article.carryOn.footwear,
-.filters:has(#grooming:checked) ~ article.carryOn.grooming,
-.filters:has(#hygiene:checked) ~ article.carryOn.hygiene,
-.filters:has(#meds:checked) ~ article.carryOn.meds,
-.filters:has(#necessities:checked) ~ article.carryOn.necessities,
-.filters:has(#toiletries:checked) ~ article.carryOn.toiletries,
-.filters:has(#other:checked) ~ article.carryOn.other,
-.filters:has(#bags2:checked) ~ article.personalItem.bags,
-.filters:has(#clothing2:checked) ~ article.personalItem.clothing,
-.filters:has(#consumables2:checked) ~ article.personalItem.consumables,
-.filters:has(#electronics2:checked) ~ article.personalItem.electronics,
-.filters:has(#footwear2:checked) ~ article.personalItem.footwear,
-.filters:has(#grooming2:checked) ~ article.personalItem.grooming,
-.filters:has(#hygiene2:checked) ~ article.personalItem.hygiene,
-.filters:has(#meds2:checked) ~ article.personalItem.meds,
-.filters:has(#necessities2:checked) ~ article.personalItem.necessities,
-.filters:has(#toiletries2:checked) ~ article.personalItem.toiletries,
-.filters:has(#other2:checked) ~ article.personalItem.other {
+.filters:has(#bags:checked) ~ table > tbody > tr.carryOn.bags,
+.filters:has(#clothing:checked) ~ table tbody tr.carryOn.clothing,
+.filters:has(#consumables:checked) ~ table tbody tr.carryOn.consumables,
+.filters:has(#electronics:checked) ~ table tbody tr.carryOn.electronics,
+.filters:has(#footwear:checked) ~ table tbody tr.carryOn.footwear,
+.filters:has(#grooming:checked) ~ table tbody tr.carryOn.grooming,
+.filters:has(#hygiene:checked) ~ table tbody tr.carryOn.hygiene,
+.filters:has(#meds:checked) ~ table tbody tr.carryOn.meds,
+.filters:has(#necessities:checked) ~ table tbody tr.carryOn.necessities,
+.filters:has(#toiletries:checked) ~ table tbody tr.carryOn.toiletries,
+.filters:has(#other:checked) ~ table tbody tr.carryOn.other,
+.filters:has(#bags2:checked) ~ table tbody tr.personalItem.bags,
+.filters:has(#clothing2:checked) ~ table tbody tr.personalItem.clothing,
+.filters:has(#consumables2:checked) ~ table tbody tr.personalItem.consumables,
+.filters:has(#electronics2:checked) ~ table tbody tr.personalItem.electronics,
+.filters:has(#footwear2:checked) ~ table tbody tr.personalItem.footwear,
+.filters:has(#grooming2:checked) ~ table tbody tr.personalItem.grooming,
+.filters:has(#hygiene2:checked) ~ table tbody tr.personalItem.hygiene,
+.filters:has(#meds2:checked) ~ table tbody tr.personalItem.meds,
+.filters:has(#necessities2:checked) ~ table tbody tr.personalItem.necessities,
+.filters:has(#toiletries2:checked) ~ table tbody tr.personalItem.toiletries,
+.filters:has(#other2:checked) ~ table tbody tr.personalItem.other {
   display: grid;
 }
 
-.itemList.bagCarryOn:not(:has(article.bags)) [for="bags"],
-.itemList.bagCarryOn:not(:has(article.clothing)) [for="clothing"],
-.itemList.bagCarryOn:not(:has(article.consumables)) [for="consumables"],
-.itemList.bagCarryOn:not(:has(article.electronics)) [for="electronics"],
-.itemList.bagCarryOn:not(:has(article.footwear)) [for="footwear"],
-.itemList.bagCarryOn:not(:has(article.grooming)) [for="grooming"],
-.itemList.bagCarryOn:not(:has(article.hygiene)) [for="hygiene"],
-.itemList.bagCarryOn:not(:has(article.meds)) [for="meds"],
-.itemList.bagCarryOn:not(:has(article.necessities)) [for="necessities"],
-.itemList.bagCarryOn:not(:has(article.toiletries)) [for="toiletries"],
-.itemList.bagCarryOn:not(:has(article.other)) [for="other"],
-.itemList.bagPersonalItem:not(:has(article.bags)) [for="bags2"],
-.itemList.bagPersonalItem:not(:has(article.clothing)) [for="clothing2"],
-.itemList.bagPersonalItem:not(:has(article.consumables)) [for="consumables2"],
-.itemList.bagPersonalItem:not(:has(article.electronics)) [for="electronics2"],
-.itemList.bagPersonalItem:not(:has(article.footwear)) [for="footwear2"],
-.itemList.bagPersonalItem:not(:has(article.grooming)) [for="grooming2"],
-.itemList.bagPersonalItem:not(:has(article.hygiene)) [for="hygiene2"],
-.itemList.bagPersonalItem:not(:has(article.meds)) [for="meds2"],
-.itemList.bagPersonalItem:not(:has(article.necessities)) [for="necessities2"],
-.itemList.bagPersonalItem:not(:has(article.toiletries)) [for="toiletries2"],
-.itemList.bagPersonalItem:not(:has(article.other)) [for="other2"] {
+.itemList.bagCarryOn:not(:has(tr.bags)) [for="bags"],
+.itemList.bagCarryOn:not(:has(tr.clothing)) [for="clothing"],
+.itemList.bagCarryOn:not(:has(tr.consumables)) [for="consumables"],
+.itemList.bagCarryOn:not(:has(tr.electronics)) [for="electronics"],
+.itemList.bagCarryOn:not(:has(tr.footwear)) [for="footwear"],
+.itemList.bagCarryOn:not(:has(tr.grooming)) [for="grooming"],
+.itemList.bagCarryOn:not(:has(tr.hygiene)) [for="hygiene"],
+.itemList.bagCarryOn:not(:has(tr.meds)) [for="meds"],
+.itemList.bagCarryOn:not(:has(tr.necessities)) [for="necessities"],
+.itemList.bagCarryOn:not(:has(tr.toiletries)) [for="toiletries"],
+.itemList.bagCarryOn:not(:has(tr.other)) [for="other"],
+.itemList.bagPersonalItem:not(:has(tr.bags)) [for="bags2"],
+.itemList.bagPersonalItem:not(:has(tr.clothing)) [for="clothing2"],
+.itemList.bagPersonalItem:not(:has(tr.consumables)) [for="consumables2"],
+.itemList.bagPersonalItem:not(:has(tr.electronics)) [for="electronics2"],
+.itemList.bagPersonalItem:not(:has(tr.footwear)) [for="footwear2"],
+.itemList.bagPersonalItem:not(:has(tr.grooming)) [for="grooming2"],
+.itemList.bagPersonalItem:not(:has(tr.hygiene)) [for="hygiene2"],
+.itemList.bagPersonalItem:not(:has(tr.meds)) [for="meds2"],
+.itemList.bagPersonalItem:not(:has(tr.necessities)) [for="necessities2"],
+.itemList.bagPersonalItem:not(:has(tr.toiletries)) [for="toiletries2"],
+.itemList.bagPersonalItem:not(:has(tr.other)) [for="other2"] {
   display: none;
 }
 
@@ -375,6 +389,10 @@ label + .itemList {
   grid-template-columns: 8ch 8ch 1fr;
 }
 
+.listItem {
+  border-bottom: 1px solid grey;
+}
+
 .listItem,
 .itemListSummary {
   display: grid;
@@ -383,7 +401,6 @@ label + .itemList {
   max-width: 95dvw;
   padding-block: 0.5rem;
   column-gap: 1rem;
-  border-bottom: 1px solid grey;
 }
 
 .listItem .deleteItem {
@@ -409,6 +426,10 @@ label + .itemList {
   grid-column: span 1;
 }
 
+.itemCategory {
+  text-transform: capitalize;
+}
+
 .itemCategory,
 .itemSubcategory {
   grid-column: span 2;
@@ -431,15 +452,15 @@ label + .itemList {
   color: var(--clr-accent);
 }
 
-.itemPriority.prio-1 {
+.prio-1 {
   color: var(--clr-prio-1);
 }
 
-.itemPriority.prio-2 {
+.prio-2 {
   color: var(--clr-prio-2);
 }
 
-.itemPriority.prio-3 {
+.prio-3 {
   color: var(--clr-prio-3);
 }
 
@@ -452,27 +473,105 @@ footer p {
   padding-block-start: 1rem;
 }
 
-@media (min-width: 64rem) {
+@media (min-width: 80rem) {
   body {
     max-width: 100rem;
     margin-inline: auto;
+    display: grid;
+    grid-template-columns: 35ch 1fr;
+    grid-template-rows: auto;
+    grid-template-areas:
+      "header header"
+      "sidebar main"
+      "footer footer";
+    /* grid-template-rows: auto; */
   }
+
+  header {
+    grid-area: header;
+  }
+
+  aside {
+    display: flex;
+    grid-area: sidebar;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  aside a {
+    opacity: 1;
+    width: 100%;
+    font-size: 1.25rem;
+    text-align: end;
+    cursor: pointer;
+  
+    &:hover {
+      text-decoration: underline;
+      color: inherit;
+    }
+  }
+
+  .createUploadListButton {
+    display: block;
+    font-style: italic;
+    color: var(--clr-complementary);
+  
+    &:hover {
+      color: var(--clr-complementary);
+    }
+  }
+
+  .userLists {
+    display: grid;
+  }
+
+  aside h3 {
+    text-align: end;
+    color: var(--clr-accent);
+    font-size: 1.75rem;
+  }
+
+  #userLists {
+    list-style-type: none;
+    text-align: end;
+    margin-inline-end: -5.75rem;
+    margin-block-start: 2rem;
+    display: grid;
+    row-gap: .5rem;
+  }
+
+  #userLists a:hover span {
+      visibility: inherit;
+  }
+
+  #userLists span:not(.data) {
+    visibility: hidden;
+  }
+
+  main {
+    grid-area: main;
+  }
+
+  h2 {
+    display: block;
+  }
+
+  footer {
+    grid-area: footer;
+  }
+
   form {
     grid-template-columns: repeat(6, 1fr);
   }
-
+  /* 
   body > label,
   section {
     margin-inline: 2.5rem;
-  }
-
-  .listSelector {
-    gap: 1rem;
-  }
+  } */
 
   #listNameForm,
   #listSelectorForm {
-    grid-template-columns: 1fr 15ch;
+    grid-template-columns: 1fr;
   }
 
   input,
@@ -489,11 +588,9 @@ footer p {
   }
 
   .listSelector {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-  }
-  #itemSelectorForm {
-    justify-self: end;
+    display: block;
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
 
   .itemListHeader {
@@ -501,7 +598,7 @@ footer p {
     border-bottom: 2px solid grey;
     padding-block-end: 0.5rem;
 
-    & div {
+    & th {
       font-size: 0.8rem;
     }
 
@@ -582,6 +679,12 @@ footer p {
     text-align: center;
   }
 
+  .itemName,
+  .itemCategory,
+  .itemSubcategory {
+    text-align: start;
+  }
+
   .itemAmount,
   .itemName {
     grid-column: span 1;
@@ -607,14 +710,14 @@ footer p {
   display: grid;
   grid-template-columns: repeat(10, 0fr);
   width: 100%;
-  height: 3rem;
+  height: 2rem;
   transition: all 500ms cubic-bezier(0.9, 0, 0.5, 1);
   margin-block: 0rem 1rem;
 }
 
 .categoryBox {
   margin-block: auto;
-  height: 2rem;
+  height: 100%;
   position: relative;
   cursor: pointer;
 }
@@ -715,36 +818,40 @@ footer p {
   background-color: var(--clr-category-15);
 }
 
-section:has(.categoryBox.bags:hover) article.bags {
+section:has(.categoryBox.bags:hover) tr.bags {
   background-color: var(--clr-category-1);
 }
-section:has(.categoryBox.clothing:hover) article.clothing {
+section:has(.categoryBox.clothing:hover) tr.clothing {
   background-color: var(--clr-category-2);
 }
-section:has(.categoryBox.consumables:hover) article.consumables {
+section:has(.categoryBox.consumables:hover) tr.consumables {
   background-color: var(--clr-category-3);
 }
-section:has(.categoryBox.electronics:hover) article.electronics {
+section:has(.categoryBox.electronics:hover) tr.electronics {
   background-color: var(--clr-category-4);
 }
-section:has(.categoryBox.footwear:hover) article.footwear {
+section:has(.categoryBox.footwear:hover) tr.footwear {
   background-color: var(--clr-category-5);
 }
-section:has(.categoryBox.grooming:hover) article.grooming {
+section:has(.categoryBox.grooming:hover) tr.grooming {
   background-color: var(--clr-category-6);
 }
-section:has(.categoryBox.hygiene:hover) article.hygiene {
+section:has(.categoryBox.hygiene:hover) tr.hygiene {
   background-color: var(--clr-category-7);
 }
-section:has(.categoryBox.meds:hover) article.meds {
+section:has(.categoryBox.meds:hover) tr.meds {
   background-color: var(--clr-category-8);
 }
-section:has(.categoryBox.necessities:hover) article.necessities {
+section:has(.categoryBox.necessities:hover) tr.necessities {
   background-color: var(--clr-category-9);
 }
-section:has(.categoryBox.toiletries:hover) article.toiletries {
+section:has(.categoryBox.toiletries:hover) tr.toiletries {
   background-color: var(--clr-category-10);
 }
-section:has(.categoryBox.other:hover) article.other {
+section:has(.categoryBox.other:hover) tr.other {
   background-color: var(--clr-category-11);
+}
+
+thead th {
+  font-weight: 100;
 }
