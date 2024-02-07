@@ -1,43 +1,75 @@
 package handlers
 
 import (
+	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"github.com/Rlyehan/onebag-optimizer/utils"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"html"
+	"io"
 	"log"
 	"net/http"
 	"regexp"
 	"unicode/utf8"
 )
 
-func saveList(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		utils.HandleError(w, http.StatusMethodNotAllowed, errors.New("method not allowed"), "Method Not Allowed")
-		return
-	}
+type S3Uploader struct {
+	Uploader *manager.Uploader
+}
 
-	var list []map[string]interface{}
-	if err := json.NewDecoder(r.Body).Decode(&list); err != nil {
-		utils.HandleError(w, http.StatusBadRequest, err, "JSON parsing failed")
-		return
-	}
-
-	sanitizedList, err := sanitizeList(list)
+func (basics S3Uploader) UploadData(bucketName, objectKey string, stream io.Reader) error {
+	_, err := basics.Uploader.Upload(context.TODO(), &s3.PutObjectInput{
+		Bucket: aws.String(bucketName),
+		Key:    aws.String(objectKey),
+		Body:   stream,
+	})
 	if err != nil {
-		utils.HandleError(w, http.StatusBadRequest, err, "Invalid input")
-		return
+		log.Printf("Couldn't upload: %v", err)
 	}
+	return err
+}
 
-	// Log the sanitized list for now
-	log.Printf("Sanitized List: %+v", sanitizedList)
+func UploadHandler(basics S3Uploader, bucketName string) http.HandlerFunc {
+	return func(res http.ResponseWriter, req *http.Request) {
+		if req.Method != "POST" {
+			utils.HandleError(res, http.StatusMethodNotAllowed, errors.New("Only POST method allowed"), "Method Not Allowed")
+			return
+		}
+		objectKey := req.Header.Get("X-Object-Key")
+		if objectKey == "" {
+			utils.HandleError(res, http.StatusBadRequest, errors.New("Object Key Header missing"), "Object Key Header Missing")
+			return
+		}
 
-	// TODO: Send list to DB
+		var list []map[string]interface{}
+		if err := json.NewDecoder(req.Body).Decode(&list); err != nil {
+			utils.HandleError(res, http.StatusBadRequest, err, "JSON parsing failed")
+			return
+		}
 
-	response := map[string]string{"message": "List received and processed"}
-	if err := json.NewEncoder(w).Encode(response); err != nil {
-		utils.HandleError(w, http.StatusInternalServerError, err, "Failed to write response")
-		return
+		sanitizedList, err := sanitizeList(list)
+		if err != nil {
+			utils.HandleError(res, http.StatusBadRequest, err, "Invalid input")
+			return
+		}
+
+		jsonData, err := json.Marshal(sanitizedList)
+		if err != nil {
+			utils.HandleError(res, http.StatusInternalServerError, err, "Error preparing upload data")
+			return
+		}
+
+		err = basics.UploadData(bucketName, objectKey, bytes.NewReader(jsonData))
+		if err != nil {
+			utils.HandleError(res, http.StatusInternalServerError, err, "Failed data upload")
+			return
+		}
+		fmt.Fprintf(res, "Upload successful for: %v", objectKey)
 	}
 }
 
