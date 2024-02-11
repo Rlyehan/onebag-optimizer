@@ -6,16 +6,17 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"html"
+	"io"
+	"net/http"
+	"regexp"
+	"unicode/utf8"
+
 	"github.com/Rlyehan/onebag-optimizer/utils"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
-	"html"
-	"io"
-	"log"
-	"net/http"
-	"regexp"
-	"unicode/utf8"
+	"go.uber.org/zap"
 )
 
 type S3Uploader struct {
@@ -29,7 +30,11 @@ func (basics S3Uploader) UploadData(bucketName, objectKey string, stream io.Read
 		Body:   stream,
 	})
 	if err != nil {
-		log.Printf("Couldn't upload: %v", err)
+		utils.Logger.Error("Couldn't upload",
+			zap.String("bucket", bucketName),
+			zap.String("Object", objectKey),
+			zap.Error(err),
+		)
 	}
 	return err
 }
@@ -37,36 +42,36 @@ func (basics S3Uploader) UploadData(bucketName, objectKey string, stream io.Read
 func UploadHandler(basics S3Uploader, bucketName string) http.HandlerFunc {
 	return func(res http.ResponseWriter, req *http.Request) {
 		if req.Method != "POST" {
-			utils.HandleError(res, http.StatusMethodNotAllowed, errors.New("Only POST method allowed"), "Method Not Allowed")
+			utils.HandleError(res, http.StatusMethodNotAllowed, errors.New("Only POST method allowed"), "Method Not Allowed", "UploadHandler")
 			return
 		}
 		objectKey := req.Header.Get("X-Object-Key")
 		if objectKey == "" {
-			utils.HandleError(res, http.StatusBadRequest, errors.New("Object Key Header missing"), "Object Key Header Missing")
+			utils.HandleError(res, http.StatusBadRequest, errors.New("Object Key Header missing"), "Object Key Header Missing", "UploadHandler")
 			return
 		}
 
 		var list []map[string]interface{}
 		if err := json.NewDecoder(req.Body).Decode(&list); err != nil {
-			utils.HandleError(res, http.StatusBadRequest, err, "JSON parsing failed")
+			utils.HandleError(res, http.StatusBadRequest, err, "JSON parsing failed", "UploadHandler")
 			return
 		}
 
 		sanitizedList, err := sanitizeList(list)
 		if err != nil {
-			utils.HandleError(res, http.StatusBadRequest, err, "Invalid input")
+			utils.HandleError(res, http.StatusBadRequest, err, "Invalid input", "UploadHandler")
 			return
 		}
 
 		jsonData, err := json.Marshal(sanitizedList)
 		if err != nil {
-			utils.HandleError(res, http.StatusInternalServerError, err, "Error preparing upload data")
+			utils.HandleError(res, http.StatusInternalServerError, err, "Error preparing upload data", "UploadHandler")
 			return
 		}
 
 		err = basics.UploadData(bucketName, objectKey, bytes.NewReader(jsonData))
 		if err != nil {
-			utils.HandleError(res, http.StatusInternalServerError, err, "Failed data upload")
+			utils.HandleError(res, http.StatusInternalServerError, err, "Failed data upload", "UploadHandler")
 			return
 		}
 		fmt.Fprintf(res, "Upload successful for: %v", objectKey)

@@ -3,6 +3,7 @@ package utils
 import (
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
+	"gopkg.in/natefinch/lumberjack.v2"
 	"net/http"
 	"os"
 )
@@ -14,14 +15,20 @@ func SetupLogger(filePath string) error {
 	config.TimeKey = "time"
 	config.EncodeTime = zapcore.ISO8601TimeEncoder
 
-	file, err := os.OpenFile(filePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-	if err != nil {
-		return err
+	logRotationConfig := lumberjack.Logger{
+		Filename:   filePath,
+		MaxSize:    10,
+		MaxBackups: 3,
+		MaxAge:     30,
+		Compress:   true,
 	}
+
+	fileSyncer := zapcore.AddSync(&logRotationConfig)
+	consoleSyncer := zapcore.AddSync(os.Stdout)
 
 	core := zapcore.NewCore(
 		zapcore.NewJSONEncoder(config),
-		zapcore.AddSync(file),
+		zapcore.NewMultiWriteSyncer(fileSyncer, consoleSyncer),
 		zap.InfoLevel,
 	)
 
@@ -29,7 +36,11 @@ func SetupLogger(filePath string) error {
 	return nil
 }
 
-func HandleError(w http.ResponseWriter, statusCode int, err error, message string) {
-	Logger.Error(message, zap.Int("status", statusCode), zap.String("error", err.Error()))
+func HandleError(w http.ResponseWriter, statusCode int, err error, message string, source string) {
+	Logger.Error(message,
+		zap.Int("status", statusCode),
+		zap.String("error", err.Error()),
+		zap.String("source", source),
+	)
 	http.Error(w, http.StatusText(statusCode), statusCode)
 }

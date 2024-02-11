@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"github.com/Rlyehan/onebag-optimizer/session"
-	"log"
+	"github.com/Rlyehan/onebag-optimizer/utils"
 	"net/http"
 	"time"
 )
@@ -20,8 +20,7 @@ func SessionMiddleware(next http.HandlerFunc, sm *session.SessionManager) http.H
 		if err != nil || sessionCookie.Value == "" {
 			currentSession, err := sm.CreateSession()
 			if err != nil {
-				log.Printf("Failed to create session: %v", err)
-				http.Error(w, "Internal server error", http.StatusInternalServerError)
+				utils.HandleError(w, http.StatusInternalServerError, err, "Failed to create session", "SessionMiddleware")
 				return
 			}
 			http.SetCookie(w, &http.Cookie{
@@ -37,8 +36,7 @@ func SessionMiddleware(next http.HandlerFunc, sm *session.SessionManager) http.H
 			if !exists {
 				currentSession, err := sm.CreateSession()
 				if err != nil {
-					log.Printf("Failed to create session: %v", err)
-					http.Error(w, "Internal server error", http.StatusInternalServerError)
+					utils.HandleError(w, http.StatusInternalServerError, err, "Failed to create session", "SessionMiddleware")
 					return
 				}
 				http.SetCookie(w, &http.Cookie{
@@ -52,7 +50,7 @@ func SessionMiddleware(next http.HandlerFunc, sm *session.SessionManager) http.H
 		}
 
 		if csrfToken != "" && !sm.ValidateCSRFToken(sessionCookie.Value, csrfToken) {
-			http.Error(w, "Invalid CSRF token", http.StatusForbidden)
+			utils.HandleError(w, http.StatusInternalServerError, err, "Failed to create session", "SessionMiddleware")
 			return
 		}
 
@@ -66,4 +64,3 @@ func SessionMiddleware(next http.HandlerFunc, sm *session.SessionManager) http.H
 		next.ServeHTTP(w, r)
 	}
 }
-

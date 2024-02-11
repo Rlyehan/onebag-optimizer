@@ -7,7 +7,6 @@ import (
 	"github.com/Rlyehan/onebag-optimizer/session"
 	"github.com/Rlyehan/onebag-optimizer/utils"
 	"go.uber.org/zap"
-	"log"
 	"net/http"
 	"os"
 	"time"
@@ -15,20 +14,20 @@ import (
 
 func main() {
 
-	if err := utils.SetupLogger("app.log"); err != nil {
+	if err := utils.SetupLogger("logs/app.log"); err != nil {
 		panic(err)
 	}
 
 	ctx := context.TODO()
 	cfg, err := utils.LoadConfig(ctx)
 	if err != nil {
-		log.Fatalf("Couldn't load AWS config: %v", err)
+		utils.Logger.Fatal("Couldn't load AWS config: %v", zap.Error(err))
 	}
 
 	_, uploader := utils.SetupS3Client(cfg)
 	bucketName := os.Getenv("S3_BUCKET_NAME")
 	if bucketName == "" {
-		log.Fatal("S3_BUCKET_NAME environment variable is not set.")
+		utils.Logger.Fatal("S3_BUCKET_NAME environment variable is not set.")
 	}
 
 	basics := handlers.S3Uploader{Uploader: uploader}
@@ -60,13 +59,6 @@ func main() {
 		for {
 			time.Sleep(cleanupInterval)
 			sessionManager.Cleanup()
-		}
-	}()
-
-	// Attempt to catch panics and log before crashing
-	defer func() {
-		if r := recover(); r != nil {
-			utils.Logger.Fatal("Server crashed", zap.Any("error", r))
 		}
 	}()
 
