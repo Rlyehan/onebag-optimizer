@@ -88,7 +88,7 @@ body {
   display: flex;
   flex-direction: column;
   row-gap: 3rem;
-  column-gap: 6rem;
+  column-gap: 4rem;
 }
 
 main {
@@ -96,8 +96,12 @@ main {
   gap: 3rem;
 }
 
+header {
+  text-align: center;
+}
+
 h1 {
-  font-size: 3rem;
+  font-size: 2.75rem;
 }
 
 h2 {
@@ -230,7 +234,7 @@ label:has(:is(#carryOnList, #personalItemList)):hover span {
   color: var(--clr-accent);
 }
 
-label:has(#carryOnList:not(:checked)) + .itemList.bagCarryOn,
+label:has(#carryOnList:not(:checked)) ~ *,
 label:has(#carryOnList:not(:checked)) span:last-of-type {
   display: none;
 }
@@ -239,7 +243,7 @@ label:has(#carryOnList:checked) span:first-of-type {
   display: none;
 }
 
-label:has(#personalItemList:not(:checked)) + .itemList.bagPersonalItem,
+label:has(#personalItemList:not(:checked)) ~ *,
 label:has(#personalItemList:not(:checked)) span:last-of-type {
   display: none;
 }
@@ -481,7 +485,7 @@ footer p {
     grid-template-columns: 35ch 1fr;
     grid-template-rows: auto;
     grid-template-areas:
-      "header header"
+      "header ."
       "sidebar main"
       "footer footer";
     /* grid-template-rows: auto; */
@@ -523,6 +527,7 @@ footer p {
 
   .userLists {
     display: grid;
+    row-gap: 0.5rem;
   }
 
   aside h3 {
@@ -534,10 +539,8 @@ footer p {
   #userLists {
     list-style-type: none;
     text-align: end;
-    margin-inline-end: -5.75rem;
-    margin-block-start: 2rem;
     display: grid;
-    row-gap: .5rem;
+    row-gap: 0.5rem;
   }
 
   #userLists a:hover span {
@@ -546,6 +549,10 @@ footer p {
 
   #userLists span:not(.data) {
     visibility: hidden;
+  }
+
+  header {
+    text-align: end;
   }
 
   main {
@@ -854,4 +861,25 @@ section:has(.categoryBox.other:hover) tr.other {
 
 thead th {
   font-weight: 100;
+}
+
+.activeListName {
+  text-align: center;
+}
+
+.activeListName a {
+  cursor: pointer;
+}
+
+.activeListName h2 {
+  margin-block-end: 1rem;
+}
+
+
+.itemList:has(:not(.listItem)) {
+  display: none;
+}
+
+.itemList:has(.listItem) {
+  display: grid;
 }

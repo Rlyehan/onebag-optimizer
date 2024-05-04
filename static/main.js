@@ -34,13 +34,19 @@
 const categories = ["bags", "clothing", "consumables", "electronics", "footwear", "grooming", "hygiene", "meds", "necessities", "toiletries", "other"]
 const bagTypes = ["carryOn", "personalItem", "checkIn"]
 
-
 const createListButton = document.getElementById("createListButton")
-const listSelectorDropdown = document.getElementById("listSelector")
-const deleteListButton = document.getElementById("deleteListButton")
-const fileInput = document.getElementById("jsonFileInput")
 const uploadListButton = document.getElementById("uploadListButton")
+const deleteListButton = document.getElementById("deleteListButton")
 const downloadListButton = document.getElementById("downloadListButton")
+
+const createListButtonMobile = document.getElementById("createListButtonMobile")
+const uploadListButtonMobile = document.getElementById("uploadListButtonMobile")
+const deleteListButtonMobile = document.getElementById("deleteListButtonMobile")
+const downloadListButtonMobile = document.getElementById("downloadListButtonMobile")
+
+const fileInput = document.getElementById("jsonFileInput")
+
+const listSelectorDropdown = document.getElementById("listSelector")
 const itemForm = document.getElementById("itemForm")
 const categoryDropdown = document.querySelectorAll("#itemCategory")
 const listFilters = document.querySelectorAll(".filters")
@@ -65,6 +71,24 @@ activeListName.innerText = "No list selected."
 
 createListButton.addEventListener("click", function (event) {
   event.preventDefault()
+  const listName = prompt("Please enter a name for your list")
+  if (listName != "") {
+    const listUUID = generateUUID()
+    addListToIndex(listName, listUUID)
+    setItemArray(listName, [{ "listName": listName, "listUUID": listUUID }])
+    populateListSelector()
+    const listSelector = document.getElementById("listSelector")
+    listSelector.value = listName
+    loadList(listName)
+  } else {
+    alert("List Name cannot be empty!")
+    const listNameInput = document.getElementById("listName")
+    listNameInput.focus()
+    listNameInput.classList.add("highlight")
+  }
+})
+createListButtonMobile.addEventListener("click", function (event) {
+  event.preventDefault()
   const listName = document.getElementById("listName").value
   if (listName != "") {
     const listUUID = generateUUID()
@@ -88,6 +112,7 @@ listSelectorDropdown.addEventListener("change", function (event) {
   loadList(selectedList)
 })
 
+
 deleteListButton.addEventListener("click", function (event) {
   event.preventDefault()
   const selectedList = document.getElementById("listSelector").value
@@ -107,10 +132,34 @@ deleteListButton.addEventListener("click", function (event) {
     listSelectorDropdown.classList.add("highlight")
   }
 })
+deleteListButtonMobile.addEventListener("click", function (event) {
+  event.preventDefault()
+  const selectedList = document.getElementById("listSelector").value
+  if (selectedList != "") {
+    let confirmed = confirm(
+      "Are you sure you want to remove the following list:\n" + selectedList + "\n\nThis step cannot be undone!"
+    )
+    if (confirmed) {
+      deleteList(selectedList)
+      populateListSelector()
+      loadList("")
+    }
+  } else {
+    // alert("Please select a list first!")
+    const listSelectorDropdown = document.getElementById("listSelector")
+    listSelectorDropdown.focus()
+    listSelectorDropdown.classList.add("highlight")
+  }
+})
+
 
 uploadListButton.addEventListener("click", () => {
   fileInput.click()
 })
+uploadListButtonMobile.addEventListener("click", () => {
+  fileInput.click()
+})
+
 
 fileInput.addEventListener("change", () => {
   const file = fileInput.files[0]
@@ -142,6 +191,7 @@ fileInput.addEventListener("change", () => {
   }
 })
 
+
 downloadListButton.addEventListener('click', function () {
   let selectedList = document.getElementById("listSelector").value
 
@@ -157,6 +207,22 @@ downloadListButton.addEventListener('click', function () {
     alert('You need to select a list first.')
   }
 })
+downloadListButtonMobile.addEventListener('click', function () {
+  let selectedList = document.getElementById("listSelector").value
+
+  if (selectedList != "") {
+    const itemArray = getItemArray(selectedList)
+
+    if (itemArray) {
+      downloadList(itemArray, `${selectedList}.json`)
+    } else {
+      alert('No data found in localStorage.')
+    }
+  } else {
+    alert('You need to select a list first.')
+  }
+})
+
 
 itemForm.addEventListener("submit", function (event) {
   event.preventDefault()
@@ -384,6 +450,10 @@ function sanitizeList(listName) {
 
 function sanitizeString(inputString) {
   return inputString.replace(/(<([^>]+)>)/g, '')
+}
+
+function replaceDoubleQuotes(inputString) {
+  return inputString.replace(/(")/g, '&quot;')
 }
 
 
@@ -653,7 +723,10 @@ function deleteItem(listName, i) {
 
 
 function deleteList(listName) {
-  let i = document.querySelector('[value="' + listName + '"').getAttribute("data-index")
+  console.log(replaceDoubleQuotes(listName))
+  const safeListName = replaceDoubleQuotes(listName)
+  console.log('[value="' + safeListName + '"')
+  let i = document.querySelector('[value="' + safeListName + '"').getAttribute("data-index")
   localStorage.removeItem(listName)
 
   let listIndex = getItemArray("List Index")

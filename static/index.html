@@ -12,30 +12,32 @@
 </head>
 
 <body>
+
   <header>
     <h1>Pack-It-Easy</h1>
   </header>
+
   <aside>
     <section class="userLists">
       <h3>My Lists</h3>
       <ul id="userLists"></ul>
+      <a id="createListButton" class="createUploadListButton">Create new list</a>
+      <a id="uploadListButton" class="createUploadListButton">Upload list</a>
     </section>
-    <a class="createUploadListButton">Create new list</a>
-    <a class="createUploadListButton">Upload list</a>
 
     <section class="listSelector mobileOnlyInfo" aria-label="List Selector">
       <form id="listNameForm">
         <input type="text" id="listName" placeholder="List Name">
-        <input type="submit" id="createListButton" value="Create List">
+        <input type="submit" id="createListButtonMobile" value="Create List">
       </form>
       <form id="listSelectorForm">
         <select id="listSelector"></select>
-        <input type="submit" id="deleteListButton" value="Delete List">
+        <input type="submit" id="deleteListButtonMobile" value="Delete List">
       </form>
       <div class="backup">
         <input type="file" id="jsonFileInput" accept=".json" style="display: none;">
-        <input type="button" id="uploadListButton" value="Upload List">
-        <input type="button" id="downloadListButton" value="Download List">
+        <input type="button" id="uploadListButtonMobile" value="Upload List">
+        <input type="button" id="downloadListButtonMobile" value="Download List">
       </div>
     </section>
     <section class="inputForm mobileOnlyInfo" aria-label="Item Details Form">
@@ -61,12 +63,18 @@
       </form>
     </section>
   </aside>
+
   <main>
-    <h2 id="activeListName"></h2>
-    <label for="carryOnList">
-      <h3>Carry-On</h3><span>Show</span><span>Hide</span><input type="checkbox" id="carryOnList" checked>
-    </label>
+    <section class="activeListName">
+      <h2 id="activeListName"></h2>
+      <a id="editListButton">Edit Name</a>
+      <a id="downloadListButton">Download List</a>
+      <a id="deleteListButton">Delete List</a>
+    </section>
     <section class="itemList bagCarryOn">
+      <label for="carryOnList">
+        <h3>Carry-On</h3><span>Show</span><span>Hide</span><input type="checkbox" id="carryOnList" checked>
+      </label>
       <fieldset class="filters">
         <legend>Filter by category:</legend>
       </fieldset>
@@ -94,10 +102,10 @@
       </table>
     </section>
 
-    <label for="personalItemList">
-      <h3>Personal Item</h3><span>Show</span><span>Hide</span><input type="checkbox" id="personalItemList" checked>
-    </label>
     <section class="itemList bagPersonalItem">
+      <label for="personalItemList">
+        <h3>Personal Item</h3><span>Show</span><span>Hide</span><input type="checkbox" id="personalItemList" checked>
+      </label>
       <fieldset class="filters">
         <legend>Filter by category:</legend>
       </fieldset>
@@ -126,6 +134,7 @@
     </section>
     <section class="itemList analysisResult"></section>
   </main>
+
   <footer>
     <h3>Pack-It-Easy</h3>
     <p><a href="https://github.com/lukas-berger" target="_blank" rel="noopener noreferrer"
@@ -139,6 +148,7 @@
 
     <p><a href="#" id="backToTop" aria-label="Go back to top">Back to Top</a></p>
   </footer>
+
 </body>
 
 
@@ -169,7 +179,7 @@
     <td class="itemSubcategory">
       <span class="data">ITEM SUBCATEGORY</span>
       <span class="deleteItem" data-index="">
-        <i class="fa-solid fa-delete-left fa-xl"></i>
+        <i class="fa-solid fa-delete-left fa-xl">X</i>
       </span>
     </td>
   </tr>
@@ -179,7 +189,7 @@
   <li>
     <a>
       <span class="data">LIST NAME</span>
-      <span class="editListNameButton">
+<!--       <span class="editListNameButton">
         <i class="fa-solid fa-pen-to-square" alt="Edit List Name"></i>
       </span>
       <span class="downloadListButton" alt="Download List">
@@ -187,7 +197,7 @@
       </span>
       <span class="deleteListButton" alt="Delete List">
         <i class="fa-solid fa-trash-can"></i>
-      </span>
+      </span> -->
     </a>
   </li>
 </template>
