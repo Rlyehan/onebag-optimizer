@@ -551,8 +551,14 @@ footer p {
     visibility: hidden;
   }
 
+<<<<<<< Updated upstream
   header {
     text-align: end;
+=======
+  #userLists span:hover i,
+  #userLists i:hover {
+    color: var(--clr-accent);
+>>>>>>> Stashed changes
   }
 
   main {
