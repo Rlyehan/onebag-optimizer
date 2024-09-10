@@ -1,205 +1,106 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="./static/style.css" />
-  <title>Pack-It-Easy</title>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300&amp;display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <script type="module" src="./static/main.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Trip Manager 3</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="a256e5c374.js" crossorigin="anonymous"></script>
+    <!-- <script src="https://kit.fontawesome.com/a256e5c374.js" crossorigin="anonymous"></script> -->
 </head>
-
 <body>
+    <div class="container">
+        <aside class="sidebar">
+            <section class="sectionTrips">
+                <div class="tripsListTitle">
+                    <h2>Trips</h2>
+                    <div class="exportImportTrips">
+                        <input type="file" id="importTripsFile" accept=".json" style="display:none;">
+                        <label for="importTripsFile" title="Import Trips" class="import-label"><i class="fa-solid fa-file-import"></i></label>
+                        <button id="exportTripsBtn" title="Export Trips"><i class="fa-solid fa-file-export"></i></button>
+                    </div>
+                </div>
+                <ul id="tripsList"></ul>
+                <button id="createTripBtn">New Trip</button>
+                <div id="createTripForm" class="hidden">
+                <!-- <div id="createTripForm"> -->
+                    <div class="tripNameInput">
+                        <label for="tripName">Trip Name:</label>
+                        <input type="text" id="tripName" placeholder="e.g. Japan 2024">
+                    </div>
+                    <div class="tripStartDateInput">
+                        <label for="tripStartDate">Start:</label>
+                        <input type="date" id="tripStartDate">
+                    </div>
+                    <div class="tripEndDateInput">
+                        <label for="tripEndDate">End:</label>
+                        <input type="date" id="tripEndDate">
+                    </div>
+                    <button id="addTripBtn">Add Trip</button>
+                </div>
+            </section>
 
-  <header>
-    <h1>Pack-It-Easy</h1>
-  </header>
+            <section class="sectionLibraries">
+                <div class="librariesTitle">
+                    <h3>User Library</h3>
+                    <!-- Add export and import buttons -->
+                    <div class="exportImportLibraries">
+                        <input type="file" id="importFile" accept=".json" style="display:none;">
+                        <label for="importFile" class="import-label" title="Import Libraries"><i class="fa-solid fa-file-import"></i></label>
+                        <button id="exportBtn" title="Export Libraries"><i class="fa-solid fa-file-export"></i></button>
+                    </div>
+                </div>
+                <h4>Bags</h4>
+                <div id="bagsLibrary" class="library"></div>
+                <h4>Items</h4>
+                <div id="itemsLibrary" class="library"></div>
+            </section>
 
-  <aside>
-    <section class="userLists">
-      <h3>My Lists</h3>
-      <ul id="userLists"></ul>
-      <a id="createListButton" class="createUploadListButton">Create new list</a>
-      <a id="uploadListButton" class="createUploadListButton">Upload list</a>
-    </section>
 
-    <section class="listSelector mobileOnlyInfo" aria-label="List Selector">
-      <form id="listNameForm">
-        <input type="text" id="listName" placeholder="List Name">
-        <input type="submit" id="createListButtonMobile" value="Create List">
-      </form>
-      <form id="listSelectorForm">
-        <select id="listSelector"></select>
-        <input type="submit" id="deleteListButtonMobile" value="Delete List">
-      </form>
-      <div class="backup">
-        <input type="file" id="jsonFileInput" accept=".json" style="display: none;">
-        <input type="button" id="uploadListButtonMobile" value="Upload List">
-        <input type="button" id="downloadListButtonMobile" value="Download List">
-      </div>
-    </section>
-    <section class="inputForm mobileOnlyInfo" aria-label="Item Details Form">
-      <form id="itemForm">
-        <input id="itemName" value="" type="text" placeholder="Name" required>
-        <input id="itemAmount" value="" type="number" placeholder="Amount" required min="0" max="99">
-        <input id="itemWeight" value="" type="number" placeholder="Weight" required min="0" max="9999">
-        <select id="itemCategory" required>
-          <option value="" disabled selected>Category</option>
-        </select>
-        <input id="itemSubcategory" value="" placeholder="Subcategory" autocomplete="on">
-        <select id="itemPriority" required>
-          <option value="" disabled selected>Priority</option>
-          <option value="1">High</option>
-          <option value="2">Medium</option>
-          <option value="3">Low</option>
-        </select>
-        <select id="itemBagType" required>
-          <option value="carryOn">Carry-On</option>
-          <option value="personalItem">Personal Item</option>
-        </select>
-        <input type="submit" value="+">
-      </form>
-    </section>
-  </aside>
-
-  <main>
-    <section class="activeListName">
-      <h2 id="activeListName"></h2>
-      <a id="editListButton">Edit Name</a>
-      <a id="downloadListButton">Download List</a>
-      <a id="deleteListButton">Delete List</a>
-    </section>
-    <section class="itemList bagCarryOn">
-      <label for="carryOnList">
-        <h3>Carry-On</h3><span>Show</span><span>Hide</span><input type="checkbox" id="carryOnList" checked>
-      </label>
-      <fieldset class="filters">
-        <legend>Filter by category:</legend>
-      </fieldset>
-      <article class="itemListSummary">
-        <div class="itemName">Total Weight</div>
-        <div class="totalWeight" id="carryOnTotalWeight"></div>
-      </article>
-      <div class="weightDistribution">
-      </div>
-      <table>
-        <thead>
-          <tr class="itemListHeader">
-            <th class="itemName">Item Name</th>
-            <th class="itemAmount">Amount</th>
-            <th class="itemWeight">Weight (g)</th>
-            <th class="itemTotalWeight">Total (g)</th>
-            <th class="itemPriority">Prio</th>
-            <th class="itemCategory">Category</th>
-            <th class="itemSubcategory">Subcategory</th>
-          </tr>
-        </thead>
-        <tbody>
-
-        </tbody>
-      </table>
-    </section>
-
-    <section class="itemList bagPersonalItem">
-      <label for="personalItemList">
-        <h3>Personal Item</h3><span>Show</span><span>Hide</span><input type="checkbox" id="personalItemList" checked>
-      </label>
-      <fieldset class="filters">
-        <legend>Filter by category:</legend>
-      </fieldset>
-      <div class="itemListSummary">
-        <div class="itemName">Total Weight</div>
-        <div class="totalWeight" id="personalItemTotalWeight"></div>
-      </div>
-      <div class="weightDistribution">
-      </div>
-      <table>
-        <thead>
-          <tr class="itemListHeader">
-            <th class="itemName">Item Name</th>
-            <th class="itemAmount">Amount</th>
-            <th class="itemWeight">Weight (g)</th>
-            <th class="itemTotalWeight">Total (g)</th>
-            <th class="itemPriority">Prio</th>
-            <th class="itemCategory">Category</th>
-            <th class="itemSubcategory">Subcategory</th>
-          </tr>
-        </thead>
-        <tbody>
-
-        </tbody>
-      </table>
-    </section>
-    <section class="itemList analysisResult"></section>
-  </main>
-
-  <footer>
-    <h3>Pack-It-Easy</h3>
-    <p><a href="https://github.com/lukas-berger" target="_blank" rel="noopener noreferrer"
-        title="Lukas Berger on GitHub" aria-label="Lukas Berger on GitHub">Lukas Berger</a>
-    </p>
-    <p></p><a href="https://github.com/Rlyehan" target="_blank" rel="noopener noreferrer"
-      title="Maximilian Huber on GitHub" aria-label="Maximilian Huber on GitHub">Maximilian
-      Huber</a></p>
-    <a href="https://github.com/Rlyehan/onebag-optimizer" target="_blank" rel="noopener noreferrer"
-      title="This project's GitHub" aria-label="This project's GitHub"><i class="fab fa-github fa-2x"></i></a>
-
-    <p><a href="#" id="backToTop" aria-label="Go back to top">Back to Top</a></p>
-  </footer>
-
+        </aside>
+        <main>
+            <h2 id="tripInfoNoSelection">Please select a trip from your list or create a new one.</h2>
+            <div id="tripInfo" class="hidden">
+                <h2 id="selectedTripName"></h2>
+                <p id="tripDates"></p>
+                <section id="addBagSection">
+                    <h3>Add Bag</h3>
+                    <input type="text" id="bagName" placeholder="Bag Name">
+                    <input type="text" id="bagDescription" placeholder="Description (optional)">
+                    <input type="number" id="bagWeight" placeholder="Weight (g)">
+                    <input type="number" id="bagWeightLimit" placeholder="Weight Limit (optional)">
+                </section>
+                <button id="addBagBtn">Add Bag</button>
+                <section id="addItemSection">
+                    <h3>Add Item</h3>
+                    <input type="text" id="itemName" placeholder="Item Name">
+                    <input type="number" id="itemAmount" value="1" placeholder="Amount">
+                    <input type="number" id="itemWeight" placeholder="Weight (g)">
+                    <select id="itemCategory">
+                        <option value="Clothing">Clothing</option>
+                        <option value="Electronics">Electronics</option>
+                        <option value="Toiletries">Toiletries</option>
+                        <option value="Documents">Documents</option>
+                        <option value="Food">Food</option>
+                        <option value="Medication">Medication</option>
+                        <option value="Miscellaneous">Miscellaneous</option>
+                    </select>
+                    <input type="text" id="itemSubcategory" placeholder="Subcategory"/>
+                    <select id="itemPriority">
+                        <option value="" disabled selected required>Priority</option>
+                        <option value="LO">Low</option>
+                        <option value="MD">Medium</option>
+                        <option value="HI">High</option>
+                    </select>
+                    <select id="itemBag"></select>
+                    <button id="addItemBtn">Add Item</button>
+                </section>
+                <h3>Bags</h3>
+                <div id="tripBags">
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="scripts.js"></script>
 </body>
-
-
-<template id="listItemTemplate">
-  <tr class="listItem">
-    <td class="itemName">
-      <span class="data">ITEM NAME</span>
-    </td>
-    <td class="itemAmount">
-      <span class="data">ITEM AMOUNT</span>x
-    </td>
-    <td class="itemWeight">
-      <span class="data">ITEM WEIGHT</span>
-      <span class="mobileOnlyInfo"> g</span>
-    </td>
-    <td class="itemTotalWeight">
-      <span class="mobileOnlyInfo">Total: </span>
-      <span class="data">ITEM TOTAL WEIGHT</span>
-      <span class="mobileOnlyInfo"> g</span>
-    </td>
-    <td class="itemPriority">
-      <span class="mobileOnlyInfo">Prio: </span>
-      <span class="data">ITEM PRIORITY</span>
-    </td>
-    <td class="itemCategory">
-      <span class="data">ITEM CATEGORY</span>
-    </td>
-    <td class="itemSubcategory">
-      <span class="data">ITEM SUBCATEGORY</span>
-      <span class="deleteItem" data-index="">
-        <i class="fa-solid fa-delete-left fa-xl">X</i>
-      </span>
-    </td>
-  </tr>
-</template>
-
-<template id="userListItemTemplate">
-  <li>
-    <a>
-      <span class="data">LIST NAME</span>
-<!--       <span class="editListNameButton">
-        <i class="fa-solid fa-pen-to-square" alt="Edit List Name"></i>
-      </span>
-      <span class="downloadListButton" alt="Download List">
-        <i class="fa-solid fa-download"></i>
-      </span>
-      <span class="deleteListButton" alt="Delete List">
-        <i class="fa-solid fa-trash-can"></i>
-      </span> -->
-    </a>
-  </li>
-</template>
-
 </html>
