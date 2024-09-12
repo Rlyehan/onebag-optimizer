@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Travel Trip Manager 3</title>
+    <title>Pack It Easy</title>
+    <!-- <link rel="stylesheet" href="styles.css">
+    <script src="a256e5c374.js" crossorigin="anonymous"></script> -->
     <link rel="stylesheet" href="./static/styles.css">
     <script src="./static/a256e5c374.js" crossorigin="anonymous"></script>
     <!-- <script src="https://kit.fontawesome.com/a256e5c374.js" crossorigin="anonymous"></script> -->
@@ -65,18 +67,18 @@
                 <p id="tripDates"></p>
                 <section id="addBagSection">
                     <h3>Add Bag</h3>
-                    <input type="text" id="bagName" placeholder="Bag Name">
+                    <input type="text" id="bagName" placeholder="Bag Name" required>
                     <input type="text" id="bagDescription" placeholder="Description (optional)">
-                    <input type="number" id="bagWeight" placeholder="Weight (g)">
+                    <input type="number" id="bagWeight" placeholder="Weight (g)" required>
                     <input type="number" id="bagWeightLimit" placeholder="Weight Limit (optional)">
                 </section>
                 <button id="addBagBtn">Add Bag</button>
                 <section id="addItemSection">
                     <h3>Add Item</h3>
-                    <input type="text" id="itemName" placeholder="Item Name">
-                    <input type="number" id="itemAmount" value="1" placeholder="Amount">
-                    <input type="number" id="itemWeight" placeholder="Weight (g)">
-                    <select id="itemCategory">
+                    <input type="text" id="itemName" placeholder="Item Name" required>
+                    <input type="number" id="itemAmount" value="1" placeholder="Amount" required>
+                    <input type="number" id="itemWeight" placeholder="Weight (g)" required>
+                    <select id="itemCategory" required>
                         <option value="Clothing">Clothing</option>
                         <option value="Electronics">Electronics</option>
                         <option value="Toiletries">Toiletries</option>
@@ -86,13 +88,13 @@
                         <option value="Miscellaneous">Miscellaneous</option>
                     </select>
                     <input type="text" id="itemSubcategory" placeholder="Subcategory"/>
-                    <select id="itemPriority">
-                        <option value="" disabled selected required>Priority</option>
+                    <select id="itemPriority" required>
+                        <option value="" disabled selected>Priority</option>
                         <option value="LO">Low</option>
                         <option value="MD">Medium</option>
                         <option value="HI">High</option>
                     </select>
-                    <select id="itemBag"></select>
+                    <select id="itemBag" required></select>
                     <button id="addItemBtn">Add Item</button>
                 </section>
                 <h3>Bags</h3>
@@ -101,6 +103,7 @@
             </div>
         </main>
     </div>
+    <!-- <script src="scripts.js"></script> -->
     <script src="./static/scripts.js"></script>
 </body>
 </html>
