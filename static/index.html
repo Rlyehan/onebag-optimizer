@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="background-color: black;">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pack It Easy</title>
+    <title>Pack-It-Easy</title>
     <!-- <link rel="stylesheet" href="styles.css">
     <script src="a256e5c374.js" crossorigin="anonymous"></script> -->
     <link rel="stylesheet" href="./static/styles.css">
@@ -13,6 +13,7 @@
 <body>
     <div class="container">
         <aside class="sidebar">
+            <h1>Pack-It-Easy</h1>
             <section class="sectionTrips">
                 <div class="tripsListTitle">
                     <h2>Trips</h2>
@@ -24,28 +25,32 @@
                 </div>
                 <ul id="tripsList"></ul>
                 <button id="createTripBtn">New Trip</button>
-                <div id="createTripForm" class="hidden">
-                <!-- <div id="createTripForm"> -->
-                    <div class="tripNameInput">
-                        <label for="tripName">Trip Name:</label>
-                        <input type="text" id="tripName" placeholder="e.g. Japan 2024">
+            
+                <dialog id="createTripForm">
+                    <div class="wrapper">
+                        <h2 class="noTrips">Hey there!</h2>
+                        <h3 class="noTrips">Looks like you don't have any trips yet, start by creating one here:</h3>
+                        <div class="tripNameInput">
+                            <label for="tripName">Trip Name:</label>
+                            <input type="text" id="tripName" placeholder="e.g. Japan 2024">
+                        </div>
+                        <div class="tripStartDateInput">
+                            <label for="tripStartDate">Start:</label>
+                            <input type="date" id="tripStartDate">
+                        </div>
+                        <div class="tripEndDateInput">
+                            <label for="tripEndDate">End:</label>
+                            <input type="date" id="tripEndDate">
+                        </div>
+                        <button id="addTripBtn">Add Trip</button>
+                        <button id="closeDialogBtn">Cancel</button>
                     </div>
-                    <div class="tripStartDateInput">
-                        <label for="tripStartDate">Start:</label>
-                        <input type="date" id="tripStartDate">
-                    </div>
-                    <div class="tripEndDateInput">
-                        <label for="tripEndDate">End:</label>
-                        <input type="date" id="tripEndDate">
-                    </div>
-                    <button id="addTripBtn">Add Trip</button>
-                </div>
+                </dialog>
             </section>
 
-            <section class="sectionLibraries">
+            <section id="sectionLibraries">
                 <div class="librariesTitle">
                     <h3>User Library</h3>
-                    <!-- Add export and import buttons -->
                     <div class="exportImportLibraries">
                         <input type="file" id="importFile" accept=".json" style="display:none;">
                         <label for="importFile" class="import-label" title="Import Libraries"><i class="fa-solid fa-file-import"></i></label>
@@ -61,7 +66,7 @@
 
         </aside>
         <main>
-            <h2 id="tripInfoNoSelection">Please select a trip from your list or create a new one.</h2>
+            <h2 id="tripInfoNoSelection" class="hidden">Please select a trip from your list or create a new one.</h2>
             <div id="tripInfo" class="hidden">
                 <h2 id="selectedTripName"></h2>
                 <p id="tripDates"></p>

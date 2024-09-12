@@ -1,25 +1,46 @@
+:root {
+  --bg-clr-sidebar: #111;
+  --bg-clr-main: #111;
+  --clr-accent: teal;
+  --clr-warning: orange;
+  --clr-alert: red;
+  --clr-text: white;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg-clr-sidebar: #EEE;
+    --bg-clr-main: #EEE;
+    --clr-accent: teal;
+    --clr-warning: orange;
+    --clr-alert: red;
+    --clr-text: black;
+  }
+}
+
 body {
   font-family: "JetBrains Mono", monospace;
-  /* background-color: #333;
-  color: #fff; */
   color-scheme: dark light;
+  color: var(--clr-text);
+  background-color: var(--bg-clr-main);
   margin: 0;
   padding: 0;
 }
 
-.highlightYellow {
-  color: orange;
+body:has(dialog(open)) {
+  overflow: hidden;
 }
 
-.highlightRed {
-  color: red;
+h1 {
+  margin-block-end: 0;
 }
 
-@media (prefers-color-scheme: dark) {
-  body {
-    background-color: #111;
-    color: #ccc;
-  }
+.highlightWarning {
+  color: var(--clr-warning);
+}
+
+.highlightAlert {
+  color: var(--clr-alert);
 }
 
 .container {
@@ -29,10 +50,9 @@ body {
 
 .sidebar {
   width: 25ch;
-  /* background-color: #444; */
-  padding: 10px;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
-  min-height: 100dvh;
+  padding-inline: 10px;
+  /* box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5); */
+  height: 100dvh;
   display: flex;
   flex-direction: column;
   gap: 2rem;
@@ -40,9 +60,7 @@ body {
 
 button {
   font-family: "JetBrains Mono", monospace;
-  /* background-color: #555; */
   border: none;
-  /* color: #fff; */
   cursor: pointer;
   font-size: 1rem;
 }
@@ -74,6 +92,8 @@ input, select {
 
 .library {
   font-size: .75rem;
+  max-height: 25rem;
+  overflow-y: scroll;
 }
 
 section h4 {
@@ -144,9 +164,12 @@ caption {
 }
 
 #addItemSection {
+  margin-inline: auto;
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: 0.25rem;
+  max-width: 65rem;
+  text-align: center;
   & > h3 {
     grid-column: span 6;
     margin-block-end: 0;
@@ -200,14 +223,14 @@ input, select {
 
 /* Default table style without border */
 .drop-zone {
-  padding: 10px;
-  margin: 5px 0;
+  /* padding: 10px;
+  margin: 5px 0; */
   border: none; /* No border by default */
 }
 
 /* Highlight the drop zone when an item is dragged over it */
 .drag-over {
-  border: 2px dashed #aaa;
+  outline: 2px dashed #aaa;
   /* background-color: #f9f9f9; */
 }
 
@@ -225,6 +248,21 @@ aside ul {
   margin-block-start: .25rem;
   color: #45a049;
 }
+
+#createTripForm {
+  padding: 0;
+
+  & .wrapper {
+    padding: 2.5rem;
+  }
+}
+
+#createTripForm h2,
+#createTripForm h3 {
+  text-align: center;
+  max-width: 35ch;
+}
+
 
 
 aside li {
@@ -294,7 +332,7 @@ caption:hover > button {
   margin-block-end: 1rem;
 }
 
-#addTripBtn {
+#addTripBtn, #closeDialogBtn {
   margin-block-start: 0.5rem;
   width: 100%;
 }
@@ -345,7 +383,7 @@ article {
   /* grid-template-rows: 1fr; */
   gap: 1rem;
   padding-block: 0.25rem;
-  margin-inline-start: -2.5rem;
+  /* margin-inline-start: -2.5rem; */
 
   &.headerRow {
     border-block-end: 2px solid white;

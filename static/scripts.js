@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const createTripBtn = document.getElementById('createTripBtn')
     const createTripForm = document.getElementById('createTripForm')
     const addTripBtn = document.getElementById('addTripBtn')
+    const closeDialogBtn = document.getElementById('closeDialogBtn')
     const tripInfo = document.getElementById('tripInfo')
     const tripInfoNoSelection = document.getElementById('tripInfoNoSelection')
     const tripNameInput = document.getElementById('tripName')
@@ -33,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentTrip = null
 
 
-    // Sort by name (case-insensitive)
+    /* UTILITY FUNCTIONS */
     function sortByName(array) {
         return array.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
     }
@@ -43,15 +44,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-
+    /* RENDER FUNCTIONS */
     function renderTrips() {
-        tripsList.innerHTML = "No trips yet."
         if (trips.length !== 0) {
+            if (!currentTrip) {
+                tripInfoNoSelection.classList.remove('hidden')
+            }
             tripsList.innerHTML = ''
             trips.forEach(trip => {
                 const li = document.createElement('li')
                 li.textContent = trip.name
-                li.setAttribute('data-uuid', trip.uuid)  // Store UUID in a data attribute
+                li.setAttribute('data-uuid', trip.uuid)
 
                 // Create a "Remove Trip" button
                 const removeTripButton = document.createElement('button')
@@ -59,38 +62,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 trashCan.classList.add("fa-solid", "fa-trash-can")
                 removeTripButton.appendChild(trashCan)
                 removeTripButton.classList.add('remove-trip')
-                removeTripButton.addEventListener('click', () => removeTrip(trip.uuid)) // Use UUID here
+                removeTripButton.addEventListener('click', (e) => {
+                    e.stopPropagation() // Prevent click from bubbling to the li
+                    removeTrip(trip.uuid, trip.name)
+                })
 
                 li.appendChild(removeTripButton)
-                li.addEventListener('click', () => loadTrip(trip)) // Pass the full trip object
+                li.addEventListener('click', () => loadTrip(trip))
                 tripsList.appendChild(li)
             })
+        } else {
+            tripsList.innerHTML = "No trips yet."
+            tripInfoNoSelection.classList.add('hidden')
+            createTripForm.showModal()
         }
     }
-
-    function removeTrip(tripUUID) {
-        // Confirm removal with the user
-        const confirmRemoval = confirm(`Are you sure you want to remove the trip "${tripName}"?`)
-        if (confirmRemoval) {
-            // Remove the trip by UUID
-            trips = trips.filter(trip => trip.uuid !== tripUUID)
-
-            // Save the updated trips list to local storage
-            saveToLocalStorage()
-
-            // Re-render the trips list
-            renderTrips()
-
-            // Clear the current trip if it was removed
-            if (currentTrip && currentTrip.uuid === tripUUID) {
-                currentTrip = null
-                tripInfo.classList.add('hidden')
-                document.getElementById('bagsTable').innerHTML = '' // Clear bags table
-            }
-        }
-    }
-
-
 
     function renderBagsLibrary() {
         bagsLibrary.innerHTML = 'No bags in your library yet.'
@@ -128,14 +114,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
     }
-
-    function removeBagFromLibrary(index) {
-        bagsLibraryData.splice(index, 1) // Remove the bag from the array
-        saveToLocalStorage() // Save the updated list to local storage
-        renderBagsLibrary() // Re-render the updated list
-    }
-
-
 
     function renderItemsLibrary() {
         itemsLibrary.innerHTML = 'No items in your library yet.'
@@ -176,12 +154,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function removeItemFromLibrary(index) {
-        itemsLibraryData.splice(index, 1) // Remove the item from the array
-        saveToLocalStorage() // Save the updated list to local storage
-        renderItemsLibrary() // Re-render the updated list
-    }
-
 
 
     function renderBagsTable() {
@@ -199,17 +171,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Create table with the bag name and its total weight
                 const bagTable = document.createElement('section')
+                // bagTable.classList.add('drag-over')
                 const caption = document.createElement('caption')
                 // caption.textContent = `${bag.name} (Total weight: ${totalBagWeight}g)`;
                 var totalBagWeightHighlight = ""
                 if (bag.weightLimit !== null) {
 
-                    // Yellow highlight if the total weight is between 90% and 100% of the user specified bag weight limit
+                    // Warning highlight color if the total weight is between 90% and 100% of the user specified bag weight limit
                     if (bag.weightLimit * 0.9 <= totalBagWeight && totalBagWeight <= bag.weightLimit) {
-                        totalBagWeightHighlight = "highlightYellow"
-                        // Red highlight if total weight is above user specified bag weight limit
+                        totalBagWeightHighlight = "highlightWarning"
+                        // Alert highlight color if total weight is above user specified bag weight limit
                     } else if (totalBagWeight > bag.weightLimit) {
-                        totalBagWeightHighlight = "highlightRed"
+                        totalBagWeightHighlight = "highlightAlert"
                     }
                     caption.innerHTML = `${bag.name.replace(/(#[0-9]+)$/, '')} <span class="bag-index">${bag.name.match(/(#[0-9]+)$/)?.[0] || ''}</span> (${bag.weight} g) | Total Weight: <span class="${totalBagWeightHighlight}">${totalBagWeight}</span>/${bag.weightLimit} g`
                 } else {
@@ -275,11 +248,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Add items to the table
                 bag.items.forEach(item => {
                     const itemRow = document.createElement('article')
-
-                    // Set the item as draggable
-                    // itemRow.setAttribute('draggable', 'true');
                     itemRow.setAttribute('data-bag', bag.id) // Track which bag the item is in
-                    itemRow.setAttribute('data-item', item.name) // Track the item name
+                    itemRow.setAttribute('data-item', item.id) // Track the item name
                     itemRow.addEventListener('dragstart', handleDragStart)
 
                     // Calculate total item weight (amount * weight)
@@ -299,7 +269,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     // Add event listener for removing the item
                     itemRow.querySelector('.remove-item').addEventListener('click', () => {
-                        bag.items = bag.items.filter(b => b.name !== item.name)
+                        bag.items = bag.items.filter(i => i.id !== item.id)
                         saveToLocalStorage()
                         renderBagsTable()
                     })
@@ -311,45 +281,105 @@ document.addEventListener('DOMContentLoaded', () => {
                 bagsTableContainer.appendChild(bagTable)
             })
         }
+        attachDragEvents()
+    }
+
+
+    /* ################ */
+    /* REMOVE FUNCTIONS */
+    /* ################ */
+    function removeTrip(tripUUID, tripName) {
+        const confirmRemoval = confirm(`Are you sure you want to remove the trip "${tripName}"?`)
+        if (confirmRemoval) {
+            // Remove the trip by UUID
+            trips = trips.filter(trip => trip.uuid !== tripUUID)
+
+            saveToLocalStorage()
+            renderTrips()
+
+            // Clear the current trip if it was removed
+            if (currentTrip && currentTrip.uuid === tripUUID) {
+                currentTrip = null
+                tripInfo.classList.toggle('hidden')
+                tripInfoNoSelection.classList.remove('hidden')
+                document.getElementById('tripBags').innerHTML = ''
+            }
+        }
+    }
+
+    function removeBagFromLibrary(index) {
+        bagsLibraryData.splice(index, 1)
+        saveToLocalStorage()
+        renderBagsLibrary()
+    }
+
+    function removeItemFromLibrary(index) {
+        itemsLibraryData.splice(index, 1)
+        saveToLocalStorage()
+        renderItemsLibrary()
     }
 
     function removeBagFromTrip(bagId, bagName) {
-        // Confirm removal with the user
         const confirmRemoval = confirm(`Are you sure you want to remove the bag "${bagName}"?`)
         if (confirmRemoval) {
-            // Remove the bag from the current trip
-            currentTrip.bags = currentTrip.bags.filter(bag => bag.name !== bagName)
+            currentTrip.bags = currentTrip.bags.filter(bag => bag.id !== bagId)
 
-            // Save the updated trip to local storage
             saveToLocalStorage()
-
-            // Re-populate the bag dropdown and select the default value
             updateBagDropdown()
-
-            // Re-render the bags table to reflect changes
             renderBagsTable()
         }
     }
 
 
-
-
-    // DRAG AND DROP FUNCTIONALITY
-
+    /* ########################### */
+    /* DRAG AND DROP FUNCTIONALITY */
+    /* ########################### */
     let draggedItem = null
+    let dragImage = null
 
     // Function to handle drag start
     function handleDragStart(event) {
         draggedItem = {
-            itemName: event.target.parentNode.getAttribute('data-item'),
+            itemId: event.target.parentNode.getAttribute('data-item'),
             fromBag: event.target.parentNode.getAttribute('data-bag')
         }
-        event.target.style.opacity = '0.5' // Visual feedback during drag
+
+        // Create a custom drag image element
+        if (!dragImage) {
+            dragImage = document.createElement('div')
+            dragImage.style.position = 'absolute'
+            dragImage.style.pointerEvents = 'none' // Prevent the drag image from interfering with other events
+            dragImage.style.background = 'rgba(0, 0, 0, 0.2)' // Optional: background color
+            dragImage.style.border = '1px solid #000' // Optional: border
+            dragImage.style.padding = '5px' // Optional: padding
+            document.body.appendChild(dragImage)
+        }
+
+        // Set the content of the custom drag image
+        dragImage.textContent = event.target.parentNode.querySelector('.itemName').textContent
+
+        // Set the drag image
+        event.dataTransfer.setDragImage(dragImage, 0, 0)
+
+        // Apply opacity to the parent node
+        event.target.parentNode.style.opacity = '0.5'
+    }
+
+    // Function to handle drag end
+    function handleDragEnd(event) {
+        // Reset opacity of the parent node
+        event.target.parentNode.style.opacity = '1'
+
+        // Remove the custom drag image
+        if (dragImage) {
+            document.body.removeChild(dragImage)
+            dragImage = null
+        }
     }
 
     // Function to handle drag over (allows dropping)
     function handleDragOver(event) {
-        event.preventDefault() // Prevent default to allow drop
+        event.preventDefault()
         event.currentTarget.classList.add('drag-over') // Add a class to highlight drop zone
     }
 
@@ -365,13 +395,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const targetBag = event.currentTarget.getAttribute('data-bag')
         if (draggedItem && draggedItem.fromBag !== targetBag) {
             // Move the item to the target bag
-            const fromBag = currentTrip.bags.find(bag => bag.name === draggedItem.fromBag)
-            const toBag = currentTrip.bags.find(bag => bag.name === targetBag)
+            const fromBag = currentTrip.bags.find(bag => bag.id === draggedItem.fromBag)
+            const toBag = currentTrip.bags.find(bag => bag.id === targetBag)
 
-            const itemToMove = fromBag.items.find(item => item.name === draggedItem.itemName)
+            const itemToMove = fromBag.items.find(item => item.id === draggedItem.itemId)
             if (itemToMove) {
                 // Remove item from the original bag
-                fromBag.items = fromBag.items.filter(item => item.name !== draggedItem.itemName)
+                fromBag.items = fromBag.items.filter(item => item.id !== draggedItem.itemId)
 
                 // Add the item to the target bag
                 toBag.items.push(itemToMove)
@@ -387,8 +417,17 @@ document.addEventListener('DOMContentLoaded', () => {
         event.currentTarget.classList.remove('drag-over')
     }
 
+    // Attach the drag events to items
+    function attachDragEvents() {
+        document.querySelectorAll('[data-item]').forEach(item => {
+            item.addEventListener('dragstart', handleDragStart)
+            item.addEventListener('dragend', handleDragEnd) // Attach dragend event
+        })
+    }
 
-    // IMPORTING/EXPORTING TRIPS
+    /* ############################# */
+    /* IMPORTING/EXPORTING FUNCTIONS */
+    /* ############################# */
 
     const exportTripsBtn = document.getElementById('exportTripsBtn')
     const importTripsFileInput = document.getElementById('importTripsFile')
@@ -432,10 +471,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     })
 
-
-
-
-    // IMPORTING/EXPORTING LIBRARIES
 
     const exportBtn = document.getElementById('exportBtn')
     const importFileInput = document.getElementById('importFile')
@@ -487,8 +522,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-
-
     function saveToLocalStorage() {
         localStorage.setItem('tripList', JSON.stringify(trips))
         localStorage.setItem('bagsLibrary', JSON.stringify(bagsLibraryData))
@@ -533,10 +566,26 @@ document.addEventListener('DOMContentLoaded', () => {
         selectedTripDates.innerText = `${trip.startDate} - ${trip.endDate}`
     }
 
+    // createTripBtn.addEventListener('click', () => {
+    //     createTripForm.classList.toggle('hidden')
+    // })
+
     createTripBtn.addEventListener('click', () => {
-        createTripForm.classList.toggle('hidden')
+        createTripForm.showModal()  // Show the dialog as a modal
+    })
+    // Add event listener to the "Cancel" button to close the dialog
+    closeDialogBtn.addEventListener('click', () => {
+        createTripForm.close()  // Close the dialog
+    })
+    // Close the dialog when clicking outside of it
+    createTripForm.addEventListener('click', (event) => {
+        if (event.target === createTripForm) {  // Check if the click is outside the dialog content
+            createTripForm.close()  // Close the dialog
+        }
     })
 
+
+    // FUNCTION TO DISALLOW SETTING END DATE BEFORE START DATE
     document.getElementById('tripStartDate').addEventListener('change', function () {
         const startDate = this.value
         const endDateInput = document.getElementById('tripEndDate')
@@ -569,7 +618,8 @@ document.addEventListener('DOMContentLoaded', () => {
             tripNameInput.value = ''
             tripStartDateInput.value = ''
             tripEndDateInput.value = ''
-            createTripForm.classList.add('hidden')
+            // createTripForm.classList.add('hidden')
+            createTripForm.close()  // Close the dialog after adding the trip
             loadTrip(newTrip) // Pass the whole trip object, not just the name
         }
     })
@@ -614,7 +664,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Assign the new bag name with the next index
                 bagNameWithIndex = `${bagName} #${index}`
-                console.log(index)
             }
 
             // Create the new bag object
@@ -665,12 +714,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const priority = itemPriorityInput.value
         const category = itemCategoryInput.value
         const subcategory = itemSubcategoryInput.value
-        // const bagName = itemBagInput.value;
         const bagId = itemBagInput.value
 
         if (itemName) {
             // Create item object
-            const item = { name: itemName, amount, weight, priority, category, subcategory }
+            const item = {
+                id: generateUUID(),
+                name: itemName,
+                amount,
+                weight,
+                priority,
+                category,
+                subcategory
+            }
 
             // Add to itemsLibrary only if it doesn't already exist
             if (!itemsLibraryData.some(existingItem => existingItem.name === itemName)) {
@@ -699,17 +755,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         }
     })
-
-    window.removeItem = (itemName, bagId) => {
-        if (!currentTrip) return
-
-        const bag = currentTrip.bags.find(bag => bag.id === bagId)
-        if (bag) {
-            bag.items = bag.items.filter(item => item.name !== itemName)
-            saveToLocalStorage()
-            renderBagsTable()
-        }
-    }
 
     function populateBagDropdown() {
         const itemBagInput = document.getElementById('itemBag')
