@@ -1,0 +1,14 @@
+[
+  {
+    "name": "Heimplanet Transit Line Sling Pocket XL",
+    "weight": 300,
+    "weightLimit": null,
+    "description": "Personal Item"
+  },
+  {
+    "name": "Peak Design Travel Backpack 30L",
+    "weight": 1385,
+    "weightLimit": 8000,
+    "description": "Carry-On Backpack"
+  }
+]

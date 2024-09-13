@@ -1,0 +1,57 @@
+[
+  {
+    "name": "Amazon Kindle Paperwhite Signature Edition",
+    "weight": 320,
+    "category": "Electronics",
+    "subcategory": "E-Reader"
+  },
+  {
+    "name": "Apple AirPods Pro 2",
+    "weight": 61,
+    "category": "Electronics",
+    "subcategory": "Earphones"
+  },
+  {
+    "name": "Apple MacBook Pro 16\"",
+    "weight": 2147,
+    "priority": "LO",
+    "category": "Electronics",
+    "subcategory": "Laptop"
+  },
+  {
+    "name": "BASEUS 65W Charger Slim",
+    "weight": 95,
+    "category": "Electronics",
+    "subcategory": "Charger"
+  },
+  {
+    "name": "Fujifilm X-T5",
+    "weight": 570,
+    "category": "Electronics",
+    "subcategory": "Cameras"
+  },
+  {
+    "name": "Fujifilm XF16-80MM f/4 R OIS WR",
+    "weight": 501,
+    "category": "Electronics",
+    "subcategory": "Camera Lens"
+  },
+  {
+    "name": "Laowa Argus 33mm f/0.95 CF APO",
+    "weight": 636,
+    "category": "Electronics",
+    "subcategory": "Camera Lens"
+  },
+  {
+    "name": "Nitecore NB10000 GEN2",
+    "weight": 150,
+    "category": "Electronics",
+    "subcategory": "Powerbank"
+  },
+  {
+    "name": "Samsung T7 2TB",
+    "weight": 63,
+    "category": "Electronics",
+    "subcategory": "Storage"
+  }
+]
