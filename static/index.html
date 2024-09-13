@@ -68,11 +68,14 @@
         <main>
             <h2 id="tripInfoNoSelection" class="hidden">Please select a trip from your list or create a new one.</h2>
             <div id="tripInfo" class="hidden">
-                <h2 id="selectedTripName"></h2>
-                <p id="tripDates"></p>
+                <div class="tripData">
+                    <h2 id="selectedTripName"></h2>
+                    <p id="tripDates"></p>
+                </div>
                 <section id="addBagSection">
                     <h3>Add Bag</h3>
-                    <input type="text" id="bagName" placeholder="Bag Name" required>
+                    <datalist id="bagNameSuggestions"></datalist>
+                    <input type="text" id="bagName" placeholder="Bag Name" list="bagNameSuggestions" required>                    
                     <input type="text" id="bagDescription" placeholder="Description (optional)">
                     <input type="number" id="bagWeight" placeholder="Weight (g)" required>
                     <input type="number" id="bagWeightLimit" placeholder="Weight Limit (optional)">
@@ -80,7 +83,8 @@
                 <button id="addBagBtn">Add Bag</button>
                 <section id="addItemSection">
                     <h3>Add Item</h3>
-                    <input type="text" id="itemName" placeholder="Item Name" required>
+                    <datalist id="itemNameSuggestions"></datalist>
+                    <input type="text" id="itemName" placeholder="Item Name" list="itemNameSuggestions" required>
                     <input type="number" id="itemAmount" value="1" placeholder="Amount" required>
                     <input type="number" id="itemWeight" placeholder="Weight (g)" required>
                     <select id="itemCategory" required>

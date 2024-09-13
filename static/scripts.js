@@ -39,9 +39,150 @@ document.addEventListener('DOMContentLoaded', () => {
         return array.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
     }
 
+    function formatDate(dateString) {
+        const date = new Date(dateString)
+
+        // Options for the day of the week and month
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
+
+        // Format date parts
+        const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'long' })
+        const month = date.toLocaleDateString('en-US', { month: 'long' })
+        const day = date.getDate()
+        const year = date.getFullYear()
+
+        // Function to add ordinal suffix (st, nd, rd, th)
+        function getOrdinalSuffix(day) {
+            if (day > 3 && day < 21) return 'th' // For 11th to 19th
+            switch (day % 10) {
+                case 1: return 'st'
+                case 2: return 'nd'
+                case 3: return 'rd'
+                default: return 'th'
+            }
+        }
+
+        const ordinalSuffix = getOrdinalSuffix(day)
+
+        // Return formatted string
+        return `${dayOfWeek}, ${month} ${day} ${year}`
+        // return `${dayOfWeek}, ${month} ${day}${ordinalSuffix} ${year}`
+    }
+
     function generateUUID() {
         return self.crypto.randomUUID()
     }
+
+
+
+    /* ####################### */
+    /* AUTO COMPLETE FUNCTIONS */
+    /* ####################### */
+
+    // Fetch the JSON data for autocomplete
+    let itemsDatabase = []
+    let bagsDatabase = []
+
+    const LOCAL_STORAGE_KEY_ITEMS = 'itemsDatabase';
+    const LOCAL_STORAGE_KEY_BAGS = 'bagsDatabase';
+    const LOCAL_STORAGE_KEY_ITEMS_TIMESTAMP = 'itemsDatabaseTimestamp';
+    const LOCAL_STORAGE_KEY_BAGS_TIMESTAMP = 'bagsDatabaseTimestamp';
+    const CACHE_DURATION_MS = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
+    
+    function fetchAndCache(url, storageKey, timestampKey) {
+        return fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                localStorage.setItem(storageKey, JSON.stringify(data));
+                localStorage.setItem(timestampKey, Date.now());
+                return data;
+            });
+    }
+    
+    function loadData(url, storageKey, timestampKey) {
+        const cachedData = localStorage.getItem(storageKey);
+        const cachedTimestamp = localStorage.getItem(timestampKey);
+        const currentTime = Date.now();
+    
+        if (cachedData && cachedTimestamp && (currentTime - cachedTimestamp < CACHE_DURATION_MS)) {
+            // Use cached data
+            console.log("Using cached data.")
+            return Promise.resolve(JSON.parse(cachedData));
+        } else {
+            // Fetch new data and cache it
+            console.log("Using new data.")
+            return fetchAndCache(url, storageKey, timestampKey);
+        }
+    }
+    
+    function populateItemDatalist(itemsDatabase) {
+        const itemDatalist = document.getElementById('itemNameSuggestions');
+        itemsDatabase.forEach(item => {
+            const option = document.createElement('option');
+            option.value = item.name;
+            itemDatalist.appendChild(option);
+        });
+    }
+    
+    function populateBagDatalist(bagsDatabase) {
+        const bagDatalist = document.getElementById('bagNameSuggestions');
+        bagsDatabase.forEach(bag => {
+            const option = document.createElement('option');
+            option.value = bag.name;
+            bagDatalist.appendChild(option);
+        });
+    }
+    
+    // Load and populate data
+    loadData('itemdb.json', LOCAL_STORAGE_KEY_ITEMS, LOCAL_STORAGE_KEY_ITEMS_TIMESTAMP)
+        .then(itemsDatabase => {
+            populateItemDatalist(itemsDatabase);
+            // Set up autocomplete selection for items
+            itemNameInput.addEventListener('input', () => {
+                const selectedItem = itemsDatabase.find(item => item.name === itemNameInput.value);
+                if (selectedItem) {
+                    itemWeightInput.value = selectedItem.weight;
+                    itemCategoryInput.value = selectedItem.category;
+                    itemSubcategoryInput.value = selectedItem.subcategory;
+                }
+            });
+        });
+    
+    loadData('bagdb.json', LOCAL_STORAGE_KEY_BAGS, LOCAL_STORAGE_KEY_BAGS_TIMESTAMP)
+        .then(bagsDatabase => {
+            populateBagDatalist(bagsDatabase);
+            // Set up autocomplete selection for bags
+            bagNameInput.addEventListener('input', () => {
+                const selectedBag = bagsDatabase.find(bag => bag.name === bagNameInput.value);
+                if (selectedBag) {
+                    bagWeightInput.value = selectedBag.weight;
+                    // bagDescriptionInput.value = selectedBag.description
+                    // bagWeightLimitInput.value = selectedBag.weightLimit
+                }
+            });
+        });
+
+    // Autocomplete selection for items
+    itemNameInput.addEventListener('input', () => {
+        const selectedItem = itemsDatabase.find(item => item.name === itemNameInput.value)
+        if (selectedItem) {
+            itemWeightInput.value = selectedItem.weight
+            itemCategoryInput.value = selectedItem.category
+            itemSubcategoryInput.value = selectedItem.subcategory
+        }
+    })
+
+    // Autocomplete selection for bags
+    bagNameInput.addEventListener('input', () => {
+        const selectedBag = bagsDatabase.find(bag => bag.name === bagNameInput.value)
+        if (selectedBag) {
+            bagWeightInput.value = selectedBag.weight
+            // bagDescriptionInput.value = selectedBag.description
+            // bagWeightLimitInput.value = selectedBag.weightLimit
+        }
+    })
+
+
 
 
     /* RENDER FUNCTIONS */
@@ -153,8 +294,6 @@ document.addEventListener('DOMContentLoaded', () => {
             })
         }
     }
-
-
 
     function renderBagsTable() {
         const bagsTableContainer = document.getElementById('tripBags')
@@ -547,23 +686,32 @@ document.addEventListener('DOMContentLoaded', () => {
         renderBagsTable()
         renderBagsLibrary()
         renderItemsLibrary()
-        updateBagDropdown() // Populate the bag dropdown
+        updateBagDropdown()
         tripInfo.classList.remove('hidden')
         tripInfoNoSelection.classList.add('hidden')
-        const tripStartDate = new Date(trip.startDate)
-        const currentDate = new Date()
-        const timeDiff = tripStartDate - currentDate
-        const daysRemaining = Math.ceil(timeDiff / (1000 * 60 * 60 * 24))
-        const dayOrDays = Math.abs(daysRemaining) === 1 ? 'day' : 'days'
 
-        if (daysRemaining > 0) {
-            selectedTripName.innerText = `${trip.name} (in ${daysRemaining} ${dayOrDays})`
-        } else if (daysRemaining === 0) {
-            selectedTripName.textContent = `${currentTrip.name} (Today!)`
+
+        if (trip.startDate) {
+            const tripStartDate = new Date(trip.startDate)
+            const tripEndDate = new Date(trip.endDate)
+            const currentDate = new Date()
+            const timeDiff = tripStartDate - currentDate
+            const daysRemaining = Math.ceil(timeDiff / (1000 * 60 * 60 * 24))
+            const dayOrDays = Math.abs(daysRemaining) === 1 ? 'day' : 'days'
+
+            if (daysRemaining > 0) {
+                selectedTripName.innerText = `${trip.name}\n(in ${daysRemaining} ${dayOrDays})`
+            } else if (daysRemaining === 0) {
+                selectedTripName.textContent = `${currentTrip.name} (Today!)`
+            } else {
+                selectedTripName.textContent = `${currentTrip.name} (${Math.abs(daysRemaining)} ${dayOrDays} ago)`
+            }
+            selectedTripDates.innerHTML = `<span class="tripStartEnd">from</span><br>${formatDate(tripStartDate)}<br><span class="tripStartEnd">to</span><br>${formatDate(tripEndDate)}`
+            // selectedTripDates.innerText = `${formatDate(tripStartDate)} - ${formatDate(tripEndDate)}`
+            // selectedTripDates.innerText = `${trip.startDate} - ${trip.endDate}`
         } else {
-            selectedTripName.textContent = `${currentTrip.name} (${Math.abs(daysRemaining)} ${dayOrDays} ago)`
+            selectedTripName.innerText = `${trip.name}`
         }
-        selectedTripDates.innerText = `${trip.startDate} - ${trip.endDate}`
     }
 
     // createTripBtn.addEventListener('click', () => {
@@ -762,7 +910,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const emptyOption = document.createElement('option')
         emptyOption.value = ''
-        emptyOption.textContent = 'Please select a bag.'
+        emptyOption.textContent = 'Select a bag...'
         emptyOption.disabled = true
         itemBagInput.appendChild(emptyOption)
 

@@ -348,6 +348,10 @@ caption:hover > button {
   text-wrap: pretty;
 }
 
+.tripData {
+  text-align: center;
+}
+
 .libraryEntry {
   /* position: relative; */
   display: flex;
@@ -390,11 +394,5 @@ article {
     & div{
       font-size: 0.75rem;
     }
-  }
-  
-
-  & .dragHandle {
-    /* place-self: center; */
-    /* text-align: center; */
   }
 }
