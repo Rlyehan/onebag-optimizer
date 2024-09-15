@@ -1,22 +1,36 @@
 :root {
   --bg-clr-sidebar: #111;
   --bg-clr-main: #111;
+  --bg-clr-focus: #333;
   --clr-accent: teal;
+  --clr-focus: white;
   --clr-warning: orange;
   --clr-alert: red;
   --clr-text: white;
 }
-
 @media (prefers-color-scheme: light) {
   :root {
-    --bg-clr-sidebar: #EEE;
-    --bg-clr-main: #EEE;
+    --bg-clr-sidebar: #eee;
+    --bg-clr-main: #eee;
     --clr-accent: teal;
     --clr-warning: orange;
     --clr-alert: red;
     --clr-text: black;
   }
 }
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:is(input, button, select):focus {
+  border: none;
+  outline: none;
+  box-shadow: 0 0 0 1px var(--clr-focus);
+}
+
 
 body {
   font-family: "JetBrains Mono", monospace;
@@ -77,51 +91,66 @@ section {
   margin-bottom: 20px;
 }
 
-label {
-  display: block;
-  margin-top: 10px;
+input,
+select {
+  width: 100%;
+  padding: 0.5rem;
+  font-family: "JetBrains Mono", monospace;
+  border: none;
+  background-color: #333;
 }
 
-input, select {
-  width: 100%;
-  padding: 8px;
-  margin-top: 5px;
-  font-family: "JetBrains Mono", monospace;
 
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
 }
 
 .library {
-  font-size: .75rem;
+  font-size: 0.75rem;
   max-height: 25rem;
-  overflow-y: scroll;
 }
 
-section h4 {
-  margin-block: 1rem 0;
+.libraryHeader {
+  margin-block: 1.5rem 0.5rem;
   border-block-end: 2px solid white;
+  display: grid;
+  grid-template-columns: 6ch 1fr;
+  align-items: center;
+  & h4 {
+    margin: 0;
+  }
+  & input {
+    padding-block: 0.25rem;
+    padding-inline: 0.5rem;
+    margin: 0;
+    border: none;
+  }
 }
 
 .library div {
-  /* background-color: #555; */
-  padding-block: .125rem;
+  padding-block: 0.125rem;
   cursor: pointer;
 }
 
-
 .dragHandle {
-  /* width: 5ch; */
   visibility: hidden;
-  /* margin-inline-start: -1rem; */
   aspect-ratio: 1;
   width: 100%;
 }
 
-caption {
+.bagCaption {
   font-weight: bold;
   margin-block: 2.5rem 1rem;
   font-size: 1.25rem;
   white-space: pre-line;
-  /* background-color: #222; */
   position: relative;
   width: 100%;
   text-align: start;
@@ -131,65 +160,10 @@ caption {
   }
 }
 
-#addBagSection {
-  margin-inline: auto;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.25rem;
-  max-width: 65rem;
-  text-align: center;
-  & > h3 {
-    grid-column: span 2;
-    margin-block-end: 0;
-  }
-}
-
-#addBagBtn,
-#addItemBtn {
-  padding: 1rem 0.5rem;
-  width: 10rem;
-  position: relative;
-
-  &::after {
-    content: attr(data-after);
-    position: absolute;
-    right: 0;
-    translate: 120% -25%;
-    color: red;
-    font-style: italic;
-    text-align: start;
-    width: 19ch;
-    pointer-events: none;
-  }
-}
-
-#addItemSection {
-  margin-inline: auto;
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 0.25rem;
-  max-width: 65rem;
-  text-align: center;
-  & > h3 {
-    grid-column: span 6;
-    margin-block-end: 0;
-  }
-  &.hidden {
-    display: none;
-  }
-}
-
-#itemName {
-  grid-column: span 4;
-}
-
-/* #bagName, #bagDescription,  */
-#itemCategory, #itemSubcategory {
-  grid-column: span 2;
-}
-
-.exportImportTrips, .exportImportLibraries {
-  & button, label {
+.exportImportTrips,
+.exportImportLibraries {
+  & button,
+  label {
     background-color: transparent;
     margin: 0;
     padding: 0;
@@ -208,62 +182,30 @@ caption {
   text-align: center;
 }
 
-
-input, select {
+input,
+select {
   -webkit-box-sizing: border-box;
-     -moz-box-sizing: border-box;
-          box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
 
-
-/* When dragging, make the item semi-transparent */
 [draggable="true"] {
   cursor: move;
 }
 
-/* Default table style without border */
 .drop-zone {
-  /* padding: 10px;
-  margin: 5px 0; */
-  border: none; /* No border by default */
+  border: none;
 }
 
 /* Highlight the drop zone when an item is dragged over it */
 .drag-over {
   outline: 2px dashed #aaa;
-  /* background-color: #f9f9f9; */
 }
 
 aside ul {
   margin: 0;
   padding: 0;
 }
-
-#createTripBtn {
-  /* width: 100%; */
-  text-align: left;
-  background-color: transparent;
-  font-style: italic;
-  padding: 0;
-  margin-block-start: .25rem;
-  color: #45a049;
-}
-
-#createTripForm {
-  padding: 0;
-
-  & .wrapper {
-    padding: 2.5rem;
-  }
-}
-
-#createTripForm h2,
-#createTripForm h3 {
-  text-align: center;
-  max-width: 35ch;
-}
-
-
 
 aside li {
   list-style: none;
@@ -275,33 +217,74 @@ aside li {
 
   &:hover {
     text-decoration: underline;
-    /* background-color: indianred; */
   }
 }
 
-.remove-trip, .remove-bag, .remove-item {
+.modalButton {
+  font-style: italic;
+  font-size: inherit;
+  margin-block-start: 0.25rem;
+  color: #45a049;
+}
+
+#createTripForm, #addBagForm, #addItemForm {
+  padding: 0;
+}
+
+.wrapper {
+  min-width: 10rem;
+  padding: 2.5rem;
+  display: grid;
+  gap: 0.25rem;
+
+  & h3 {
+    margin: 0;
+  }
+
+  & label {
+    font-size: 0.75rem;
+  }
+
+  & .gridWrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+}
+
+#createTripForm h2,
+#createTripForm h3 {
+  text-align: center;
+  max-width: 35ch;
+  margin: 0;
+}
+
+
+.remove-trip,
+.remove-bag,
+.remove-item {
   visibility: hidden;
   color: rgb(255, 62, 62);
   background-color: transparent;
-  /* margin-inline-start: 1rem; */
 }
 
 .libraryEntry:hover > button,
 li:hover > button,
 article:hover button,
 article:hover .dragHandle,
-caption:hover > button {
+.bagCaption:hover > button {
   visibility: visible;
 }
 
 .bag-index {
   font-weight: bold;
-  color: #777; /* Example color */
+  color: #777;
   font-size: 0.9em;
   font-style: italic;
 }
 
-.tripsListTitle, .librariesTitle {
+.tripsListTitle,
+.librariesTitle {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
@@ -317,7 +300,8 @@ caption:hover > button {
   margin: 0;
 }
 
-.tripStartDateInput, .tripEndDateInput {
+.tripStartDateInput,
+.tripEndDateInput {
   display: flex;
   align-items: center;
 
@@ -328,13 +312,8 @@ caption:hover > button {
 
 #tripsList {
   display: grid;
-  gap: .25rem;
+  gap: 0.25rem;
   margin-block-end: 1rem;
-}
-
-#addTripBtn, #closeDialogBtn {
-  margin-block-start: 0.5rem;
-  width: 100%;
 }
 
 .selectedTrip {
@@ -343,9 +322,27 @@ caption:hover > button {
   text-decoration: underline;
 }
 
+
+body:has(#tripsList li.selectedTrip) #tripInfoNoSelection,
+body:has(#createTripForm[open]) #tripInfoNoSelection {
+  display: none;
+}
+body:not(:has(#tripsList li.selectedTrip)) #tripInfo {
+  display: none;
+}
+
+
 #tripInfoNoSelection {
   max-width: 30ch;
-  text-wrap: pretty;
+  margin-block-start: 5rem;
+  & button {
+    font-size: inherit;
+  }
+}
+
+.tripStartEnd {
+  font-style: italic;
+  font-size: x-small;
 }
 
 .tripData {
@@ -353,13 +350,8 @@ caption:hover > button {
 }
 
 .libraryEntry {
-  /* position: relative; */
   display: flex;
   justify-content: space-between;
-  /* grid-template-columns: 30ch 1fr; */
-  /* place-items: center; */
-  /* text-align: end; */
-  /* text-wrap: balance; */
 
   & div {
     max-width: 30ch;
@@ -371,11 +363,6 @@ caption:hover > button {
   }
 
   & button {
-    /* visibility: visible; */
-    /* position: absolute;
-    top: 0;
-    right: 0;
-    translate: 0% 50%; */
     padding: 0;
   }
 }
@@ -383,16 +370,82 @@ caption:hover > button {
 article {
   display: grid;
   grid-template-columns: 25px 1fr 6ch 8ch 8ch 3ch 15ch 1fr 25px;
-  /* grid-template-columns: repeat(8, 3ch) 1fr; */
-  /* grid-template-rows: 1fr; */
   gap: 1rem;
   padding-block: 0.25rem;
-  /* margin-inline-start: -2.5rem; */
 
   &.headerRow {
     border-block-end: 2px solid white;
-    & div{
+    & div {
       font-size: 0.75rem;
     }
   }
+}
+
+.sectionTrips:has(li) .noTrips,
+main:has(#tripBags section) .noBags {
+  display: none;
+}
+
+body:not(:has(.selectedTrip)) .libraryEntry,
+body:has(#tripBags:empty) #itemsLibrary .libraryEntry {
+  pointer-events: none;
+  color: gray;
+  font-style: italic;
+}
+
+#addBagForm,
+#addItemForm {
+  width: 50ch;
+}
+
+.dialogButtons {
+  margin-block-start: 0.5rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+
+  & button {
+    padding-block: 0.5rem;
+  }
+}
+
+.confirmBtn {
+  background-color: #45a049;
+}
+
+
+
+
+
+.tooltip {
+  position: relative;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  display: grid;
+  min-width: 45ch;
+  grid-template-columns: 13ch 1fr;
+  gap: 0.5rem;
+  background-color: #444;
+  padding: 1rem;
+  border: 1px solid white;
+  position: absolute;
+  top: -5px;
+  left: 105%;
+  z-index: 100;
+
+  & h3 {
+    margin: 0;
+    text-wrap: balance;
+    max-width: 60ch;
+  }
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
+.tooltipEntry {
+  text-align: end;
 }
