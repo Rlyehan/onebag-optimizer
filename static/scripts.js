@@ -1,11 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const tripsList = document.getElementById('tripsList')
-    const createTripBtn = document.getElementById('createTripBtn')
     const createTripForm = document.getElementById('createTripForm')
     const addTripBtn = document.getElementById('addTripBtn')
-    const closeDialogBtn = document.getElementById('closeDialogBtn')
-    const tripInfo = document.getElementById('tripInfo')
-    const tripInfoNoSelection = document.getElementById('tripInfoNoSelection')
     const tripNameInput = document.getElementById('tripName')
     const tripStartDateInput = document.getElementById('tripStartDate')
     const tripEndDateInput = document.getElementById('tripEndDate')
@@ -26,8 +22,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const itemBagInput = document.getElementById('itemBag')
     const selectedTripName = document.getElementById('selectedTripName')
     const selectedTripDates = document.getElementById('tripDates')
-    const addItemSection = document.getElementById('addItemSection')
-
+    const bagsTableContainer = document.getElementById('tripBags')
+    const addBagForm = document.getElementById('addBagForm')
+    const addItemForm = document.getElementById('addItemForm')
     let trips = JSON.parse(localStorage.getItem('tripList')) || []
     let bagsLibraryData = JSON.parse(localStorage.getItem('bagsLibrary')) || []
     let itemsLibraryData = JSON.parse(localStorage.getItem('itemsLibrary')) || []
@@ -73,6 +70,28 @@ document.addEventListener('DOMContentLoaded', () => {
         return self.crypto.randomUUID()
     }
 
+    function filterLibrary(inputId, libraryId) {
+        const input = document.getElementById(inputId)
+        const library = document.getElementById(libraryId)
+        const entries = library.getElementsByClassName('libraryEntry')
+
+        input.addEventListener('input', function () {
+            const filter = input.value.toLowerCase()
+
+            Array.from(entries).forEach(entry => {
+                const text = entry.textContent.toLowerCase()
+                const entryCategory = entry.getAttribute('data-category').toLowerCase()
+                if (text.includes(filter) || entryCategory.includes(filter) ) {
+                    entry.style.display = ''
+                } else {
+                    entry.style.display = 'none'
+                }
+            })
+        })
+    }
+
+    filterLibrary('searchBags', 'bagsLibrary')
+    filterLibrary('searchItems', 'itemsLibrary')
 
 
     /* ####################### */
@@ -83,88 +102,116 @@ document.addEventListener('DOMContentLoaded', () => {
     let itemsDatabase = []
     let bagsDatabase = []
 
-    const LOCAL_STORAGE_KEY_ITEMS = 'itemsDatabase';
-    const LOCAL_STORAGE_KEY_BAGS = 'bagsDatabase';
-    const LOCAL_STORAGE_KEY_ITEMS_TIMESTAMP = 'itemsDatabaseTimestamp';
-    const LOCAL_STORAGE_KEY_BAGS_TIMESTAMP = 'bagsDatabaseTimestamp';
-    const CACHE_DURATION_MS = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
-    
+    const LOCAL_STORAGE_KEY_ITEMS = 'itemsDatabase'
+    const LOCAL_STORAGE_KEY_BAGS = 'bagsDatabase'
+    const LOCAL_STORAGE_KEY_ITEMS_TIMESTAMP = 'itemsDatabaseTimestamp'
+    const LOCAL_STORAGE_KEY_BAGS_TIMESTAMP = 'bagsDatabaseTimestamp'
+    const CACHE_DURATION_MS = 7 * 24 * 60 * 60 * 1000 // 7 days in milliseconds
+
     function fetchAndCache(url, storageKey, timestampKey) {
         return fetch(url)
             .then(response => response.json())
             .then(data => {
-                localStorage.setItem(storageKey, JSON.stringify(data));
-                localStorage.setItem(timestampKey, Date.now());
-                return data;
-            });
+                localStorage.setItem(storageKey, JSON.stringify(data))
+                localStorage.setItem(timestampKey, Date.now())
+                return data
+            })
     }
-    
+
     function loadData(url, storageKey, timestampKey) {
-        const cachedData = localStorage.getItem(storageKey);
-        const cachedTimestamp = localStorage.getItem(timestampKey);
-        const currentTime = Date.now();
-    
+        const cachedData = localStorage.getItem(storageKey)
+        const cachedTimestamp = localStorage.getItem(timestampKey)
+        const currentTime = Date.now()
+
         if (cachedData && cachedTimestamp && (currentTime - cachedTimestamp < CACHE_DURATION_MS)) {
             // Use cached data
             console.log("Using cached data.")
-            return Promise.resolve(JSON.parse(cachedData));
+            return Promise.resolve(JSON.parse(cachedData))
         } else {
             // Fetch new data and cache it
             console.log("Using new data.")
-            return fetchAndCache(url, storageKey, timestampKey);
+            return fetchAndCache(url, storageKey, timestampKey)
         }
     }
-    
-    function populateItemDatalist(itemsDatabase) {
-        const itemDatalist = document.getElementById('itemNameSuggestions');
+
+    function populateItemDatalist(itemsDatabase, itemsLibraryData) {
+        const itemDatalist = document.getElementById('itemNameSuggestions')
+        itemDatalist.innerHTML = '' // Clear previous options
+
+        // Populate user's library first
+        itemsLibraryData.forEach(item => {
+            const option = document.createElement('option')
+            option.value = item.name
+            itemDatalist.appendChild(option)
+        })
+
+        // Populate database items next
         itemsDatabase.forEach(item => {
-            const option = document.createElement('option');
-            option.value = item.name;
-            itemDatalist.appendChild(option);
-        });
+            if (!itemsLibraryData.some(userItem => userItem.name === item.name)) {
+                const option = document.createElement('option')
+                option.value = item.name
+                itemDatalist.appendChild(option)
+            }
+        })
     }
-    
-    function populateBagDatalist(bagsDatabase) {
-        const bagDatalist = document.getElementById('bagNameSuggestions');
+
+    function populateBagDatalist(bagsDatabase, bagsLibraryData) {
+        const bagDatalist = document.getElementById('bagNameSuggestions')
+        bagDatalist.innerHTML = '' // Clear previous options
+
+        // Populate user's library first
+        bagsLibraryData.forEach(bag => {
+            const option = document.createElement('option')
+            option.value = bag.name
+            bagDatalist.appendChild(option)
+        })
+
+        // Populate database bags next
         bagsDatabase.forEach(bag => {
-            const option = document.createElement('option');
-            option.value = bag.name;
-            bagDatalist.appendChild(option);
-        });
+            if (!bagsLibraryData.some(userBag => userBag.name === bag.name)) {
+                const option = document.createElement('option')
+                option.value = bag.name
+                bagDatalist.appendChild(option)
+            }
+        })
     }
-    
-    // Load and populate data
+
+    // Load and populate data for items
     loadData('itemdb.json', LOCAL_STORAGE_KEY_ITEMS, LOCAL_STORAGE_KEY_ITEMS_TIMESTAMP)
         .then(itemsDatabase => {
-            populateItemDatalist(itemsDatabase);
+            populateItemDatalist(itemsDatabase, itemsLibraryData)
             // Set up autocomplete selection for items
             itemNameInput.addEventListener('input', () => {
-                const selectedItem = itemsDatabase.find(item => item.name === itemNameInput.value);
+                const selectedItem = itemsLibraryData.find(item => item.name === itemNameInput.value)
+                    || itemsDatabase.find(item => item.name === itemNameInput.value)
                 if (selectedItem) {
-                    itemWeightInput.value = selectedItem.weight;
-                    itemCategoryInput.value = selectedItem.category;
-                    itemSubcategoryInput.value = selectedItem.subcategory;
+                    itemWeightInput.value = selectedItem.weight
+                    itemCategoryInput.value = selectedItem.category
+                    itemSubcategoryInput.value = selectedItem.subcategory
                 }
-            });
-        });
-    
+            })
+        })
+
+    // Load and populate data for bags
     loadData('bagdb.json', LOCAL_STORAGE_KEY_BAGS, LOCAL_STORAGE_KEY_BAGS_TIMESTAMP)
         .then(bagsDatabase => {
-            populateBagDatalist(bagsDatabase);
+            populateBagDatalist(bagsDatabase, bagsLibraryData)
             // Set up autocomplete selection for bags
             bagNameInput.addEventListener('input', () => {
-                const selectedBag = bagsDatabase.find(bag => bag.name === bagNameInput.value);
+                const selectedBag = bagsLibraryData.find(bag => bag.name === bagNameInput.value)
+                    || bagsDatabase.find(bag => bag.name === bagNameInput.value)
                 if (selectedBag) {
-                    bagWeightInput.value = selectedBag.weight;
-                    // bagDescriptionInput.value = selectedBag.description
-                    // bagWeightLimitInput.value = selectedBag.weightLimit
+                    bagWeightInput.value = selectedBag.weight
+                    bagDescriptionInput.value = selectedBag.description
+                    // bagWeightLimitInput.value = selectedBag.weightLimit;
                 }
-            });
-        });
+            })
+        })
 
     // Autocomplete selection for items
     itemNameInput.addEventListener('input', () => {
-        const selectedItem = itemsDatabase.find(item => item.name === itemNameInput.value)
+        const selectedItem = itemsLibraryData.find(item => item.name === itemNameInput.value)
+            || itemsDatabase.find(item => item.name === itemNameInput.value)
         if (selectedItem) {
             itemWeightInput.value = selectedItem.weight
             itemCategoryInput.value = selectedItem.category
@@ -174,23 +221,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Autocomplete selection for bags
     bagNameInput.addEventListener('input', () => {
-        const selectedBag = bagsDatabase.find(bag => bag.name === bagNameInput.value)
+        const selectedBag = bagsLibraryData.find(bag => bag.name === bagNameInput.value)
+            || bagsDatabase.find(bag => bag.name === bagNameInput.value)
         if (selectedBag) {
             bagWeightInput.value = selectedBag.weight
-            // bagDescriptionInput.value = selectedBag.description
-            // bagWeightLimitInput.value = selectedBag.weightLimit
+            // bagDescriptionInput.value = selectedBag.description;
+            // bagWeightLimitInput.value = selectedBag.weightLimit;
         }
     })
-
 
 
 
     /* RENDER FUNCTIONS */
     function renderTrips() {
         if (trips.length !== 0) {
-            if (!currentTrip) {
-                tripInfoNoSelection.classList.remove('hidden')
-            }
             tripsList.innerHTML = ''
             trips.forEach(trip => {
                 const li = document.createElement('li')
@@ -214,8 +258,8 @@ document.addEventListener('DOMContentLoaded', () => {
             })
         } else {
             tripsList.innerHTML = "No trips yet."
-            tripInfoNoSelection.classList.add('hidden')
             createTripForm.showModal()
+            tripNameInput.focus()
         }
     }
 
@@ -227,7 +271,16 @@ document.addEventListener('DOMContentLoaded', () => {
             bagsLibrary.innerHTML = ''
             sortedBags.forEach((bag, index) => {
                 const div = document.createElement('div')
-                div.classList.add('libraryEntry')
+                div.classList.add('libraryEntry', 'tooltip')
+                const tooltip = document.createElement('span')
+                tooltip.classList.add('tooltiptext')
+                tooltip.innerHTML = `
+                    <h3 style='grid-column:span 2'>${bag.name}</h3>
+                    <span class='tooltipEntry'>Description:</span><span>${bag.description || 'No description added.'}</span>
+                    <span class='tooltipEntry'>Weight:</span><span>${bag.weight} g</span>
+                    <span class='tooltipEntry'>Weight Limit:</span><span>${bag.weightLimit || 'No limit specified'} ${bag.weightLimit ? ' g' : ''}</span>
+                `
+                div.appendChild(tooltip)
                 const divName = document.createElement('div')
                 divName.textContent = `${bag.name}`
                 div.appendChild(divName)
@@ -245,6 +298,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 div.appendChild(removeBtn)
                 div.addEventListener('click', () => {
+                    addBagForm.showModal()
+                    addBagBtn.focus()
                     bagNameInput.value = bag.name
                     bagWeightInput.value = bag.weight
                     bagWeightLimitInput.value = bag.weightLimit || ''
@@ -264,7 +319,17 @@ document.addEventListener('DOMContentLoaded', () => {
             itemsLibrary.innerHTML = ''
             sortedItems.forEach((item, index) => {
                 const div = document.createElement('div')
-                div.classList.add('libraryEntry')
+                div.classList.add('libraryEntry', 'tooltip')
+                const tooltip = document.createElement('span')
+                tooltip.classList.add('tooltiptext')
+                tooltip.innerHTML = `
+                    <h3 style='grid-column:span 2'>${item.name}</h3>
+                    <span class='tooltipEntry'>Weight:</span><span>${item.weight} g</span>
+                    <span class='tooltipEntry'>Category:</span><span>${item.category || 'No category specified.'}</span>
+                    <span class='tooltipEntry'>Subcategory:</span><span>${item.subcategory || 'No subcategory specified'}</span>
+                `
+                div.appendChild(tooltip)
+                div.setAttribute('data-category', item.category)
                 const divName = document.createElement('div')
                 divName.textContent = `${item.name}`
                 div.appendChild(divName)
@@ -283,6 +348,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 div.appendChild(removeBtn)
                 div.addEventListener('click', () => {
+                    addItemForm.showModal()
+                    addItemBtn.focus()
                     itemNameInput.value = item.name
                     itemAmountInput.value = item.amount
                     itemWeightInput.value = item.weight
@@ -296,23 +363,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderBagsTable() {
-        const bagsTableContainer = document.getElementById('tripBags')
-        bagsTableContainer.innerHTML = 'No bags added to this trip yet!'
-        addItemSection.classList.add('hidden')
-
-
+        bagsTableContainer.innerHTML = ''
         if (currentTrip.bags.length != 0) {
-            bagsTableContainer.innerHTML = '' // Clear the table
-            addItemSection.classList.remove('hidden')
-
             currentTrip.bags.forEach(bag => {
                 const totalBagWeight = bag.weight + bag.items.reduce((acc, item) => acc + (item.weight * item.amount), 0)
 
-                // Create table with the bag name and its total weight
                 const bagTable = document.createElement('section')
-                // bagTable.classList.add('drag-over')
-                const caption = document.createElement('caption')
-                // caption.textContent = `${bag.name} (Total weight: ${totalBagWeight}g)`;
+                const caption = document.createElement('div')
+                caption.classList.add("bagCaption")
                 var totalBagWeightHighlight = ""
                 if (bag.weightLimit !== null) {
 
@@ -328,11 +386,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     caption.innerHTML = `${bag.name.replace(/(#[0-9]+)$/, '')} <span class="bag-index">${bag.name.match(/(#[0-9]+)$/)?.[0] || ''}</span> (${bag.weight} g) | Total Weight: ${totalBagWeight} g`
 
                 }
-
-                // caption.innerHTML = `${bag.name.replace(/(#[0-9]+)$/, '')} <span class="bag-index">${bag.name.match(/(#[0-9]+)$/)?.[0] || ''}</span>\n${totalBagWeight} g`;
-
-
-                // Create a "Remove Bag" button
                 const removeBagButton = document.createElement('button')
                 var trashCan = document.createElement("i")
                 trashCan.classList.add("fa-solid")
@@ -340,7 +393,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 removeBagButton.appendChild(trashCan)
                 removeBagButton.classList.add('remove-bag')
-                removeBagButton.addEventListener('click', () => removeBagFromTrip(bag.id, bag.name)) // Add event listener
+                removeBagButton.addEventListener('click', () => removeBagFromTrip(bag.id, bag.name))
 
                 bagTable.appendChild(caption)
 
@@ -357,14 +410,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 //     caption.appendChild(meterWeight)
                 // }
 
-                caption.appendChild(removeBagButton) // Append the button to the caption
+                caption.appendChild(removeBagButton)
 
                 // Enable the table (bag) as a drop zone
                 bagTable.setAttribute('data-bag', bag.id)
                 bagTable.classList.add('drop-zone')
                 bagTable.addEventListener('dragover', handleDragOver)
                 bagTable.addEventListener('drop', handleDrop)
-                bagTable.addEventListener('dragleave', handleDragLeave) // Add dragleave event listener
+                bagTable.addEventListener('dragleave', handleDragLeave)
 
                 // Create table header
                 // if (bag.items.length !== 0) {    
@@ -439,8 +492,6 @@ document.addEventListener('DOMContentLoaded', () => {
             // Clear the current trip if it was removed
             if (currentTrip && currentTrip.uuid === tripUUID) {
                 currentTrip = null
-                tripInfo.classList.toggle('hidden')
-                tripInfoNoSelection.classList.remove('hidden')
                 document.getElementById('tripBags').innerHTML = ''
             }
         }
@@ -687,9 +738,8 @@ document.addEventListener('DOMContentLoaded', () => {
         renderBagsLibrary()
         renderItemsLibrary()
         updateBagDropdown()
-        tripInfo.classList.remove('hidden')
-        tripInfoNoSelection.classList.add('hidden')
 
+        selectedTripDates.innerHTML = ''
 
         if (trip.startDate) {
             const tripStartDate = new Date(trip.startDate)
@@ -714,23 +764,34 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // createTripBtn.addEventListener('click', () => {
-    //     createTripForm.classList.toggle('hidden')
-    // })
-
-    createTripBtn.addEventListener('click', () => {
-        createTripForm.showModal()  // Show the dialog as a modal
-    })
-    // Add event listener to the "Cancel" button to close the dialog
-    closeDialogBtn.addEventListener('click', () => {
-        createTripForm.close()  // Close the dialog
-    })
     // Close the dialog when clicking outside of it
     createTripForm.addEventListener('click', (event) => {
-        if (event.target === createTripForm) {  // Check if the click is outside the dialog content
-            createTripForm.close()  // Close the dialog
+        if (event.target === createTripForm) {
+            createTripForm.close()
         }
     })
+
+    // // Add event listener to the "Cancel" button to close the dialog
+    // closeDialogBtn.addEventListener('click', () => {
+    //     createTripForm.close()
+    // })
+    // // Close the dialog when clicking outside of it
+    // addBagSection.addEventListener('click', (event) => {
+    //     if (event.target === addBagSection) {  // Check if the click is outside the dialog content
+    //         addBagSection.close()
+    //     }
+    // })
+
+    // // Add event listener to the "Cancel" button to close the dialog
+    // closeDialogBtn.addEventListener('click', () => {
+    //     createTripForm.close()
+    // })
+    // // Close the dialog when clicking outside of it
+    // addItemSection.addEventListener('click', (event) => {
+    //     if (event.target === addItemSection) {  // Check if the click is outside the dialog content
+    //         addItemSection.close()
+    //     }
+    // })
 
 
     // FUNCTION TO DISALLOW SETTING END DATE BEFORE START DATE
@@ -766,9 +827,8 @@ document.addEventListener('DOMContentLoaded', () => {
             tripNameInput.value = ''
             tripStartDateInput.value = ''
             tripEndDateInput.value = ''
-            // createTripForm.classList.add('hidden')
-            createTripForm.close()  // Close the dialog after adding the trip
-            loadTrip(newTrip) // Pass the whole trip object, not just the name
+            createTripForm.close()
+            loadTrip(newTrip)
         }
     })
 
@@ -844,6 +904,7 @@ document.addEventListener('DOMContentLoaded', () => {
             saveToLocalStorage()
             renderBagsTable()
             updateBagDropdown(bag.id)
+            addBagForm.close()
 
             // Clear inputs
             bagNameInput.value = ''
@@ -891,7 +952,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 saveToLocalStorage()
                 renderBagsTable()
             }
-
+            addItemForm.close()
             // Clear item inputs
             itemNameInput.value = ''
             itemAmountInput.value = '1'
