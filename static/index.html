@@ -1,22 +1,26 @@
 <!DOCTYPE html>
 <html lang="en" style="background-color: black;">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pack-It-Easy</title>
-    <!-- <link rel="stylesheet" href="styles.css">
-    <script src="a256e5c374.js" crossorigin="anonymous"></script> -->
-    <link rel="stylesheet" href="./static/styles.css">
-    <script src="./static/a256e5c374.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="styles.css">
+    <script src="a256e5c374.js" crossorigin="anonymous"></script>
+    <!-- <link rel="stylesheet" href="./static/styles.css">
+    <script src="./static/a256e5c374.js" crossorigin="anonymous"></script> -->
     <!-- <script src="https://kit.fontawesome.com/a256e5c374.js" crossorigin="anonymous"></script> -->
+    <script src="scripts.js" defer></script>
+    <!-- <script src="./static/scripts.js"></script> -->
 </head>
+
 <body>
     <div class="container">
         <aside class="sidebar">
             <h1>Pack-It-Easy</h1>
             <section class="sectionTrips">
                 <div class="tripsListTitle">
-                    <h2>Trips</h2>
+                    <h2>Trips <button class="modalButton" onclick="createTripForm.showModal();">+</button></h2>
                     <div class="exportImportTrips">
                         <input type="file" id="importTripsFile" accept=".json" style="display:none;">
                         <label for="importTripsFile" title="Import Trips" class="import-label"><i class="fa-solid fa-file-import"></i></label>
@@ -24,8 +28,8 @@
                     </div>
                 </div>
                 <ul id="tripsList"></ul>
-                <button id="createTripBtn">New Trip</button>
-            
+                <!-- <button class="modalButton" onclick="createTripForm.showModal();">+</button> -->
+
                 <dialog id="createTripForm">
                     <div class="wrapper">
                         <h2 class="noTrips">Hey there!</h2>
@@ -42,8 +46,10 @@
                             <label for="tripEndDate">End:</label>
                             <input type="date" id="tripEndDate">
                         </div>
-                        <button id="addTripBtn">Add Trip</button>
-                        <button id="closeDialogBtn">Cancel</button>
+                        <div class="dialogButtons">
+                            <button id="addTripBtn" class="confirmBtn">Add Trip</button>
+                            <button onclick="createTripForm.close();">Cancel</button>
+                        </div>
                     </div>
                 </dialog>
             </section>
@@ -57,62 +63,116 @@
                         <button id="exportBtn" title="Export Libraries"><i class="fa-solid fa-file-export"></i></button>
                     </div>
                 </div>
-                <h4>Bags</h4>
+                <div class="libraryHeader">
+                    <h4>Bags</h4>
+                    <input type="text" id="searchBags" placeholder="Search">
+                </div>
                 <div id="bagsLibrary" class="library"></div>
-                <h4>Items</h4>
+                <div class="libraryHeader">
+                    <h4>Items</h4>
+                    <input type="text" id="searchItems" placeholder="Search">
+                </div>
                 <div id="itemsLibrary" class="library"></div>
             </section>
 
-
         </aside>
         <main>
-            <h2 id="tripInfoNoSelection" class="hidden">Please select a trip from your list or create a new one.</h2>
-            <div id="tripInfo" class="hidden">
+            <h2 id="tripInfoNoSelection">Please select a trip from your list or <button class="modalButton" onclick="createTripForm.showModal();"">create a new one.</button></h2>
+            <div id="tripInfo">
                 <div class="tripData">
                     <h2 id="selectedTripName"></h2>
                     <p id="tripDates"></p>
                 </div>
-                <section id="addBagSection">
-                    <h3>Add Bag</h3>
-                    <datalist id="bagNameSuggestions"></datalist>
-                    <input type="text" id="bagName" placeholder="Bag Name" list="bagNameSuggestions" required>                    
-                    <input type="text" id="bagDescription" placeholder="Description (optional)">
-                    <input type="number" id="bagWeight" placeholder="Weight (g)" required>
-                    <input type="number" id="bagWeightLimit" placeholder="Weight Limit (optional)">
-                </section>
-                <button id="addBagBtn">Add Bag</button>
-                <section id="addItemSection">
-                    <h3>Add Item</h3>
-                    <datalist id="itemNameSuggestions"></datalist>
-                    <input type="text" id="itemName" placeholder="Item Name" list="itemNameSuggestions" required>
-                    <input type="number" id="itemAmount" value="1" placeholder="Amount" required>
-                    <input type="number" id="itemWeight" placeholder="Weight (g)" required>
-                    <select id="itemCategory" required>
-                        <option value="Clothing">Clothing</option>
-                        <option value="Electronics">Electronics</option>
-                        <option value="Toiletries">Toiletries</option>
-                        <option value="Documents">Documents</option>
-                        <option value="Food">Food</option>
-                        <option value="Medication">Medication</option>
-                        <option value="Miscellaneous">Miscellaneous</option>
-                    </select>
-                    <input type="text" id="itemSubcategory" placeholder="Subcategory"/>
-                    <select id="itemPriority" required>
-                        <option value="" disabled selected>Priority</option>
-                        <option value="LO">Low</option>
-                        <option value="MD">Medium</option>
-                        <option value="HI">High</option>
-                    </select>
-                    <select id="itemBag" required></select>
-                    <button id="addItemBtn">Add Item</button>
-                </section>
+
+                <button class="modalButton" onclick="addBagForm.showModal();">Add Bag</button>
+                <dialog id="addBagForm">
+                    <div class="wrapper">
+                        <h3>Add Bag</h3>
+                        <div>
+                            <datalist id="bagNameSuggestions"></datalist>
+                            <label for="bagName">Bag Name</label>
+                            <input type="text" id="bagName" placeholder="Bag Name" list="bagNameSuggestions" required>
+                        </div>
+                        <div>
+                            <label for="bagDescription">Description (optional)</label>
+                            <input type="text" id="bagDescription" placeholder="Description (optional)">
+                        </div>
+                        <div>
+                            <label for="bagWeight">Weight (g)</label>
+                            <input type="number" id="bagWeight" placeholder="Weight (g)" required>
+                        </div>
+                        <div>
+                            <label for="bagWeightLimit">Weight Limit (optional)</label>
+                            <input type="number" id="bagWeightLimit" placeholder="Weight Limit (optional)">
+                        </div>
+                        <div class="dialogButtons">
+                            <button id="addBagBtn" class="confirmBtn">Add Bag</button>
+                            <button onclick="addBagForm.close();">Cancel</button>
+                        </div>
+                    </div>
+                </dialog>
+
+                <button class="modalButton" onclick="addItemForm.showModal();">Add Item</button>
+                <dialog id="addItemForm">
+                    <div class="wrapper">
+                        <h3>Add Item</h3>
+                        <div>
+                            <datalist id="itemNameSuggestions"></datalist>
+                            <label for="itemName">Item Name</label>
+                            <input type="text" id="itemName" placeholder="Item Name" list="itemNameSuggestions" required>
+                        </div>
+                        <div class="gridWrapper">
+                            <div>
+                                <label for="itemAmount">Amount</label>
+                                <input type="number" id="itemAmount" value="1" placeholder="Amount" required>
+                            </div>
+                            <div>
+                                <label for="itemWeight">Weight (g)</label>
+                                <input type="number" id="itemWeight" placeholder="Weight (g)" required>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="itemCategory">Category</label>
+                            <select id="itemCategory" required>
+                                <option value="Clothing">Clothing</option>
+                                <option value="Electronics">Electronics</option>
+                                <option value="Toiletries">Toiletries</option>
+                                <option value="Documents">Documents</option>
+                                <option value="Food">Food</option>
+                                <option value="Medication">Medication</option>
+                                <option value="Miscellaneous">Miscellaneous</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="itemSubcategory">Subcategory</label>
+                            <input type="text" id="itemSubcategory" placeholder="Subcategory" />
+                        </div>
+                        <div>
+                            <label for="itemPriority">Priority</label>
+                            <select id="itemPriority" required>
+                                <option value="" disabled selected>Priority</option>
+                                <option value="LO">Low</option>
+                                <option value="MD">Medium</option>
+                                <option value="HI">High</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="itemBag">Target Bag</label>
+                            <select id="itemBag" required></select>
+                        </div>
+                        <div class="dialogButtons">
+                            <button id="addItemBtn" class="confirmBtn">Add Item</button>
+                            <button onclick="addItemForm.close();">Cancel</button>
+                        </div>
+                    </div>
+                </dialog>
                 <h3>Bags</h3>
-                <div id="tripBags">
-                </div>
+                <p class="noBags">You have not added any bags to this trip yet. <button class="modalButton" onclick="addBagForm.showModal()">Add your first bag</button></p>
+                <div id="tripBags"></div>
             </div>
         </main>
     </div>
-    <!-- <script src="scripts.js"></script> -->
-    <script src="./static/scripts.js"></script>
+
 </body>
+
 </html>
