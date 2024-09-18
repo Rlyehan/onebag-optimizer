@@ -1,46 +1,581 @@
 [
   {
     "name": "Amazon Kindle Paperwhite Signature Edition",
+    "amount": 1,
     "weight": 320,
     "category": "Electronics",
-    "subcategory": "E-Reader"
+    "subcategory": "E-reader"
   },
   {
     "name": "Apple AirPods Pro 2",
+    "amount": 1,
     "weight": 61,
     "category": "Electronics",
-    "subcategory": "Earphones"
+    "subcategory": "Headphones"
+  },
+  {
+    "name": "Apple iPad (1st Gen)",
+    "amount": 1,
+    "weight": 680,
+    "priority": "HI",
+    "category": "Electronics",
+    "subcategory": "Tablet"
+  },
+  {
+    "name": "Apple iPad 2",
+    "amount": 1,
+    "weight": 601,
+    "priority": "HI",
+    "category": "Electronics",
+    "subcategory": "Tablet"
+  },
+  {
+    "name": "Apple iPad (3rd Gen)",
+    "amount": 1,
+    "weight": 652,
+    "priority": "HI",
+    "category": "Electronics",
+    "subcategory": "Tablet"
+  },
+  {
+    "name": "Apple iPad (4th Gen)",
+    "amount": 1,
+    "weight": 652,
+    "priority": "HI",
+    "category": "Electronics",
+    "subcategory": "Tablet"
+  },
+  {
+    "name": "Apple iPad (5th Gen)",
+    "amount": 1,
+    "weight": 469,
+    "priority": "HI",
+    "category": "Electronics",
+    "subcategory": "Tablet"
+  },
+  {
+    "name": "Apple iPad (6th Gen)",
+    "amount": 1,
+    "weight": 469,
+    "priority": "HI",
+    "category": "Electronics",
+    "subcategory": "Tablet"
+  },
+  {
+    "name": "Apple iPad (7th Gen)",
+    "amount": 1,
+    "weight": 483,
+    "priority": "HI",
+    "category": "Electronics",
+    "subcategory": "Tablet"
+  },
+  {
+    "name": "Apple iPad (8th Gen)",
+    "amount": 1,
+    "weight": 490,
+    "priority": "HI",
+    "category": "Electronics",
+    "subcategory": "Tablet"
+  },
+  {
+    "name": "Apple iPad (9th Gen)",
+    "amount": 1,
+    "weight": 487,
+    "priority": "HI",
+    "category": "Electronics",
+    "subcategory": "Tablet"
+  },
+  {
+    "name": "Apple iPad (10th Gen)",
+    "amount": 1,
+    "weight": 477,
+    "priority": "HI",
+    "category": "Electronics",
+    "subcategory": "Tablet"
+  },
+  {
+    "name": "Apple iPad Air (1st Gen)",
+    "amount": 1,
+    "weight": 469,
+    "priority": "HI",
+    "category": "Electronics",
+    "subcategory": "Tablet"
+  },
+  {
+    "name": "Apple iPad Air 2",
+    "amount": 1,
+    "weight": 437,
+    "priority": "HI",
+    "category": "Electronics",
+    "subcategory": "Tablet"
+  },
+  {
+    "name": "Apple iPad Air (3rd Gen)",
+    "amount": 1,
+    "weight": 456,
+    "priority": "HI",
+    "category": "Electronics",
+    "subcategory": "Tablet"
+  },
+  {
+    "name": "Apple iPad Air (4th Gen)",
+    "amount": 1,
+    "weight": 458,
+    "priority": "HI",
+    "category": "Electronics",
+    "subcategory": "Tablet"
+  },
+  {
+    "name": "Apple iPad Air (5th Gen)",
+    "amount": 1,
+    "weight": 461,
+    "priority": "HI",
+    "category": "Electronics",
+    "subcategory": "Tablet"
+  },
+  {
+    "name": "Apple iPad mini (1st Gen)",
+    "amount": 1,
+    "weight": 308,
+    "priority": "HI",
+    "category": "Electronics",
+    "subcategory": "Tablet"
+  },
+  {
+    "name": "Apple iPad mini 2",
+    "amount": 1,
+    "weight": 331,
+    "priority": "HI",
+    "category": "Electronics",
+    "subcategory": "Tablet"
+  },
+  {
+    "name": "Apple iPad mini 3",
+    "amount": 1,
+    "weight": 331,
+    "priority": "HI",
+    "category": "Electronics",
+    "subcategory": "Tablet"
+  },
+  {
+    "name": "Apple iPad mini 4",
+    "amount": 1,
+    "weight": 298,
+    "priority": "HI",
+    "category": "Electronics",
+    "subcategory": "Tablet"
+  },
+  {
+    "name": "Apple iPad mini (5th Gen)",
+    "amount": 1,
+    "weight": 300,
+    "priority": "HI",
+    "category": "Electronics",
+    "subcategory": "Tablet"
+  },
+  {
+    "name": "Apple iPad mini (6th Gen)",
+    "amount": 1,
+    "weight": 293,
+    "priority": "HI",
+    "category": "Electronics",
+    "subcategory": "Tablet"
+  },
+  {
+    "name": "Apple iPad Pro (9.7-inch)",
+    "amount": 1,
+    "weight": 437,
+    "priority": "HI",
+    "category": "Electronics",
+    "subcategory": "Tablet"
+  },
+  {
+    "name": "Apple iPad Pro (10.5-inch)",
+    "amount": 1,
+    "weight": 469,
+    "priority": "HI",
+    "category": "Electronics",
+    "subcategory": "Tablet"
+  },
+  {
+    "name": "Apple iPad Pro (11-inch, 1st Gen)",
+    "amount": 1,
+    "weight": 468,
+    "priority": "HI",
+    "category": "Electronics",
+    "subcategory": "Tablet"
+  },
+  {
+    "name": "Apple iPad Pro (11-inch, 2nd Gen)",
+    "amount": 1,
+    "weight": 471,
+    "priority": "HI",
+    "category": "Electronics",
+    "subcategory": "Tablet"
+  },
+  {
+    "name": "Apple iPad Pro (11-inch, 3rd Gen)",
+    "amount": 1,
+    "weight": 466,
+    "priority": "HI",
+    "category": "Electronics",
+    "subcategory": "Tablet"
+  },
+  {
+    "name": "Apple iPad Pro (12.9-inch, 1st Gen)",
+    "amount": 1,
+    "weight": 713,
+    "priority": "HI",
+    "category": "Electronics",
+    "subcategory": "Tablet"
+  },
+  {
+    "name": "Apple iPad Pro (12.9-inch, 2nd Gen)",
+    "amount": 1,
+    "weight": 692,
+    "priority": "HI",
+    "category": "Electronics",
+    "subcategory": "Tablet"
+  },
+  {
+    "name": "Apple iPad Pro (12.9-inch, 3rd Gen)",
+    "amount": 1,
+    "weight": 631,
+    "priority": "HI",
+    "category": "Electronics",
+    "subcategory": "Tablet"
+  },
+  {
+    "name": "Apple iPad Pro (12.9-inch, 4th Gen)",
+    "amount": 1,
+    "weight": 641,
+    "priority": "HI",
+    "category": "Electronics",
+    "subcategory": "Tablet"
+  },
+  {
+    "name": "Apple iPad Pro (12.9-inch, 5th Gen)",
+    "amount": 1,
+    "weight": 682,
+    "priority": "HI",
+    "category": "Electronics",
+    "subcategory": "Tablet"
+  },
+  {
+    "name": "Apple iPad Pro (12.9-inch, 6th Gen)",
+    "amount": 1,
+    "weight": 684,
+    "priority": "HI",
+    "category": "Electronics",
+    "subcategory": "Tablet"
+  },
+  {
+    "name": "Apple iPhone 6",
+    "amount": 1,
+    "weight": 129,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Apple iPhone 6 Plus",
+    "amount": 1,
+    "weight": 172,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Apple iPhone 6s",
+    "amount": 1,
+    "weight": 143,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Apple iPhone 6s Plus",
+    "amount": 1,
+    "weight": 192,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Apple iPhone 7",
+    "amount": 1,
+    "weight": 138,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Apple iPhone 7 Plus",
+    "amount": 1,
+    "weight": 188,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Apple iPhone 8",
+    "amount": 1,
+    "weight": 148,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Apple iPhone 8 Plus",
+    "amount": 1,
+    "weight": 202,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Apple iPhone 11",
+    "amount": 1,
+    "weight": 194,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Apple iPhone 11 Pro",
+    "amount": 1,
+    "weight": 188,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Apple iPhone 11 Pro Max",
+    "amount": 1,
+    "weight": 226,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Apple iPhone 12",
+    "amount": 1,
+    "weight": 164,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Apple iPhone 12 mini",
+    "amount": 1,
+    "weight": 135,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Apple iPhone 12 Pro",
+    "amount": 1,
+    "weight": 189,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Apple iPhone 12 Pro Max",
+    "amount": 1,
+    "weight": 228,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Apple iPhone 13",
+    "amount": 1,
+    "weight": 174,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Apple iPhone 13 mini",
+    "amount": 1,
+    "weight": 141,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Apple iPhone 13 Pro",
+    "amount": 1,
+    "weight": 204,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Apple iPhone 13 Pro Max",
+    "amount": 1,
+    "weight": 240,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Apple iPhone 14",
+    "amount": 1,
+    "weight": 172,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Apple iPhone 14 Plus",
+    "amount": 1,
+    "weight": 203,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Apple iPhone 14 Pro",
+    "amount": 1,
+    "weight": 206,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Apple iPhone 14 Pro Max",
+    "amount": 1,
+    "weight": 240,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Apple iPhone 15",
+    "amount": 1,
+    "weight": 171,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Apple iPhone 15 Plus",
+    "amount": 1,
+    "weight": 201,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Apple iPhone 15 Pro",
+    "amount": 1,
+    "weight": 187,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Apple iPhone 15 Pro Max",
+    "amount": 1,
+    "weight": 221,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Apple iPhone 16",
+    "amount": 1,
+    "weight": 170,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Apple iPhone 16 Plus",
+    "amount": 1,
+    "weight": 199,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Apple iPhone 16 Pro",
+    "amount": 1,
+    "weight": 199,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Apple iPhone 16 Pro Max",
+    "amount": 1,
+    "weight": 227,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Apple iPhone SE (1st Gen)",
+    "amount": 1,
+    "weight": 113,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Apple iPhone SE (2nd Gen)",
+    "amount": 1,
+    "weight": 148,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Apple iPhone SE (3rd Gen)",
+    "amount": 1,
+    "weight": 144,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Apple iPhone X",
+    "amount": 1,
+    "weight": 174,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Apple iPhone XR",
+    "amount": 1,
+    "weight": 194,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Apple iPhone XS",
+    "amount": 1,
+    "weight": 177,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Apple iPhone XS Max",
+    "amount": 1,
+    "weight": 208,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
   },
   {
     "name": "Apple MacBook Pro 16\"",
+    "amount": 1,
     "weight": 2147,
-    "priority": "LO",
     "category": "Electronics",
     "subcategory": "Laptop"
   },
   {
     "name": "BASEUS 65W Charger Slim",
+    "amount": 1,
     "weight": 95,
     "category": "Electronics",
     "subcategory": "Charger"
   },
   {
     "name": "Fujifilm X-T5",
+    "amount": 1,
     "weight": 570,
     "category": "Electronics",
-    "subcategory": "Cameras"
+    "subcategory": "Camera"
   },
   {
     "name": "Fujifilm XF16-80MM f/4 R OIS WR",
+    "amount": 1,
     "weight": 501,
     "category": "Electronics",
     "subcategory": "Camera Lens"
   },
   {
     "name": "Laowa Argus 33mm f/0.95 CF APO",
+    "amount": 1,
     "weight": 636,
     "category": "Electronics",
     "subcategory": "Camera Lens"
+  },
+  {
+    "name": "Matador Freerain22",
+    "amount": 1,
+    "weight": 278,
+    "category": "Miscellaneous",
+    "subcategory": "Backpack"
   },
   {
     "name": "Nitecore NB10000 GEN2",
@@ -50,6 +585,7 @@
   },
   {
     "name": "Samsung T7 2TB",
+    "amount": 1,
     "weight": 63,
     "category": "Electronics",
     "subcategory": "Storage"
