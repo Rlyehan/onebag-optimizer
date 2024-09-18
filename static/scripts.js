@@ -2,17 +2,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const tripsList = document.getElementById('tripsList')
     const createTripForm = document.getElementById('createTripForm')
     const addTripBtn = document.getElementById('addTripBtn')
+    const editTripBtn = document.getElementById('editTripBtn')
     const tripNameInput = document.getElementById('tripName')
     const tripStartDateInput = document.getElementById('tripStartDate')
     const tripEndDateInput = document.getElementById('tripEndDate')
     const bagsLibrary = document.getElementById('bagsLibrary')
     const addBagBtn = document.getElementById('addBagBtn')
+    const editBagBtn = document.getElementById('editBagBtn')
     const bagNameInput = document.getElementById('bagName')
     const bagWeightInput = document.getElementById('bagWeight')
     const bagWeightLimitInput = document.getElementById('bagWeightLimit')
     const bagDescriptionInput = document.getElementById('bagDescription')
     const itemsLibrary = document.getElementById('itemsLibrary')
     const addItemBtn = document.getElementById('addItemBtn')
+    const editItemBtn = document.getElementById('editItemBtn')
     const itemNameInput = document.getElementById('itemName')
     const itemAmountInput = document.getElementById('itemAmount')
     const itemWeightInput = document.getElementById('itemWeight')
@@ -25,15 +28,41 @@ document.addEventListener('DOMContentLoaded', () => {
     const bagsTableContainer = document.getElementById('tripBags')
     const addBagForm = document.getElementById('addBagForm')
     const addItemForm = document.getElementById('addItemForm')
+    const editEntries = document.getElementById('editEntries')
     let trips = JSON.parse(localStorage.getItem('tripList')) || []
     let bagsLibraryData = JSON.parse(localStorage.getItem('bagsLibrary')) || []
     let itemsLibraryData = JSON.parse(localStorage.getItem('itemsLibrary')) || []
     let currentTrip = null
+    let currentTripIdForEditing = null
+    let currentBagNameForEditing = null
+    let currentItemNameForEditing = null
+
 
 
     /* UTILITY FUNCTIONS */
+
     function sortByName(array) {
-        return array.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
+        return array.sort((a, b) => {
+            // Extract the text, number, and suffix for each item
+            const regex = /^(\D+)(\d+)?(.*)?$/ // Match text, optional number, and optional remaining text
+            const [, aText, aNum, aSuffix] = a.name.match(regex) || []
+            const [, bText, bNum, bSuffix] = b.name.match(regex) || []
+
+            // First, compare the main text part (e.g., "iPhone", "Samsung T7", "USB-C Cable")
+            const textCompare = aText.trim().toLowerCase().localeCompare(bText.trim().toLowerCase())
+            if (textCompare !== 0) {
+                return textCompare
+            }
+
+            // If the text part is the same, compare the numeric part (e.g., "6", "12", "13")
+            const numCompare = (aNum || 0) - (bNum || 0)
+            if (numCompare !== 0) {
+                return numCompare
+            }
+
+            // If the number is the same, compare the remaining suffix (e.g., "Pro", "Plus", "Max")
+            return (aSuffix || "").trim().toLowerCase().localeCompare((bSuffix || "").trim().toLowerCase())
+        })
     }
 
     function formatDate(dateString) {
@@ -81,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
             Array.from(entries).forEach(entry => {
                 const text = entry.textContent.toLowerCase()
                 const entryCategory = entry.getAttribute('data-category').toLowerCase()
-                if (text.includes(filter) || entryCategory.includes(filter) ) {
+                if (text.includes(filter) || entryCategory.includes(filter)) {
                     entry.style.display = ''
                 } else {
                     entry.style.display = 'none'
@@ -125,11 +154,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (cachedData && cachedTimestamp && (currentTime - cachedTimestamp < CACHE_DURATION_MS)) {
             // Use cached data
-            console.log("Using cached data.")
+            // console.log("Using cached data.")
             return Promise.resolve(JSON.parse(cachedData))
         } else {
             // Fetch new data and cache it
-            console.log("Using new data.")
+            // console.log("Using new data.")
             return fetchAndCache(url, storageKey, timestampKey)
         }
     }
@@ -240,6 +269,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 const li = document.createElement('li')
                 li.textContent = trip.name
                 li.setAttribute('data-uuid', trip.uuid)
+                li.classList.add('tooltip')
+
+                const tooltip = document.createElement('span')
+                tooltip.classList.add('tooltiptext')
+                tooltip.innerHTML = `
+                    <h3 style='grid-column:span 2'>${trip.name}</h3>
+                    <span class='tooltipEntry'>Start:</span><span>${trip.startDate || 'Not specified.'}</span>
+                    <span class='tooltipEntry'>End:</span><span>${trip.endDate || 'Not specified.'}</span>
+                `
+                li.appendChild(tooltip)
 
                 // Create a "Remove Trip" button
                 const removeTripButton = document.createElement('button')
@@ -253,7 +292,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
 
                 li.appendChild(removeTripButton)
-                li.addEventListener('click', () => loadTrip(trip))
+                li.addEventListener('click', () => {
+                    loadTrip(trip)
+                    currentTripIdForEditing = trip.uuid // Store the selected trip ID for editing
+                })
                 tripsList.appendChild(li)
             })
         } else {
@@ -300,6 +342,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 div.addEventListener('click', () => {
                     addBagForm.showModal()
                     addBagBtn.focus()
+                    currentBagNameForEditing = bag.name // Store the selected bag name for editing
                     bagNameInput.value = bag.name
                     bagWeightInput.value = bag.weight
                     bagWeightLimitInput.value = bag.weightLimit || ''
@@ -350,6 +393,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 div.addEventListener('click', () => {
                     addItemForm.showModal()
                     addItemBtn.focus()
+                    currentItemNameForEditing = item.name
                     itemNameInput.value = item.name
                     itemAmountInput.value = item.amount
                     itemWeightInput.value = item.weight
@@ -381,9 +425,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     } else if (totalBagWeight > bag.weightLimit) {
                         totalBagWeightHighlight = "highlightAlert"
                     }
-                    caption.innerHTML = `${bag.name.replace(/(#[0-9]+)$/, '')} <span class="bag-index">${bag.name.match(/(#[0-9]+)$/)?.[0] || ''}</span> (${bag.weight} g) | Total Weight: <span class="${totalBagWeightHighlight}">${totalBagWeight}</span>/${bag.weightLimit} g`
+                    caption.innerHTML = `<div>${bag.name.replace(/(#[0-9]+)$/, '')} <span class="bag-index">${bag.name.match(/(#[0-9]+)$/)?.[0] || ''}</span> (${bag.weight} g)</div><span class="emptyBag">Bag is empty</span><span class="loadedBag">Total Weight: <span class="${totalBagWeightHighlight}">${totalBagWeight}</span>/${bag.weightLimit} g</span>`
                 } else {
-                    caption.innerHTML = `${bag.name.replace(/(#[0-9]+)$/, '')} <span class="bag-index">${bag.name.match(/(#[0-9]+)$/)?.[0] || ''}</span> (${bag.weight} g) | Total Weight: ${totalBagWeight} g`
+                    caption.innerHTML = `<div>${bag.name.replace(/(#[0-9]+)$/, '')} <span class="bag-index">${bag.name.match(/(#[0-9]+)$/)?.[0] || ''}</span> (${bag.weight} g)</div><span class="emptyBag">Bag is empty</span><span class="loadedBag">Total Weight: ${totalBagWeight} g</span>`
 
                 }
                 const removeBagButton = document.createElement('button')
@@ -471,6 +515,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 // }
 
                 bagsTableContainer.appendChild(bagTable)
+
+                const article = document.createElement('article')
+                const div1 = document.createElement('div')
+                const div2 = document.createElement('div')
+                const button = document.createElement('button')
+                button.className = 'modalButton'
+                button.dataset.bag = bag.id
+                button.textContent = 'Add Item'
+                button.onclick = function () {
+                    itemBagInput.value = bag.id
+                    editEntries.checked = false // Disable Edit Mode
+                    addItemForm.showModal()
+                }
+                div2.appendChild(button)
+                article.appendChild(div1)
+                article.appendChild(div2)
+                bagTable.appendChild(article)
             })
         }
         attachDragEvents()
@@ -756,11 +817,18 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 selectedTripName.textContent = `${currentTrip.name} (${Math.abs(daysRemaining)} ${dayOrDays} ago)`
             }
-            selectedTripDates.innerHTML = `<span class="tripStartEnd">from</span><br>${formatDate(tripStartDate)}<br><span class="tripStartEnd">to</span><br>${formatDate(tripEndDate)}`
+            selectedTripDates.innerHTML = `<div><span class="tripStartEnd">Start</span><br>${formatDate(tripStartDate)}</div><div><span class="tripStartEnd">End</span><br>${formatDate(tripEndDate)}</div>`
             // selectedTripDates.innerText = `${formatDate(tripStartDate)} - ${formatDate(tripEndDate)}`
             // selectedTripDates.innerText = `${trip.startDate} - ${trip.endDate}`
         } else {
             selectedTripName.innerText = `${trip.name}`
+        }
+        if (document.getElementById('editEntries').checked) {
+            tripNameInput.value = trip.name
+            tripStartDateInput.value = trip.startDate
+            tripEndDateInput.value = trip.endDate
+            createTripForm.showModal()
+            // return
         }
     }
 
@@ -768,6 +836,20 @@ document.addEventListener('DOMContentLoaded', () => {
     createTripForm.addEventListener('click', (event) => {
         if (event.target === createTripForm) {
             createTripForm.close()
+        }
+    })
+
+    // Close the dialog when clicking outside of it
+    addBagForm.addEventListener('click', (event) => {
+        if (event.target === addBagForm) {
+            addBagForm.close()
+        }
+    })
+
+    // Close the dialog when clicking outside of it
+    addItemForm.addEventListener('click', (event) => {
+        if (event.target === addItemForm) {
+            addItemForm.close()
         }
     })
 
@@ -832,6 +914,36 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     })
 
+    editTripBtn.addEventListener('click', () => {
+        if (!currentTripIdForEditing) return // Ensure a trip is selected for editing
+
+        const updatedTripName = tripNameInput.value.trim()
+        const updatedStartDate = tripStartDateInput.value || null
+        const updatedEndDate = tripEndDateInput.value || null
+
+        // Find the trip by its uuid
+        const tripIndex = trips.findIndex(trip => trip.uuid === currentTripIdForEditing)
+
+        if (tripIndex !== -1) {
+            // Update the trip details
+            trips[tripIndex].name = updatedTripName
+            trips[tripIndex].startDate = updatedStartDate
+            trips[tripIndex].endDate = updatedEndDate
+
+            saveToLocalStorage()
+            renderTrips()
+            loadTrip(trips[tripIndex])
+
+            currentTripIdForEditing = null
+            tripNameInput.value = ''
+            tripStartDateInput.value = ''
+            tripEndDateInput.value = ''
+            createTripForm.close()
+        } else {
+            console.error("Trip to edit was not found.")
+        }
+    })
+
     addBagBtn.addEventListener('click', () => {
         if (!currentTrip) return
 
@@ -883,13 +995,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 description,
                 items: []
             }
-            const bagForLibrary = {
-                name: bagName,
-                weight,
-                weightLimit,
-                description,
-                items: []
-            }
+
+            // Create a copy of the bag without the id to store in bagsLibraryData
+            const bagForLibrary = { ...bag }
+            delete bagForLibrary.id // Remove the id for storage
 
             // Add to the bagsLibrary if it doesn't already exist
             if (!bagsLibraryData.some(existingBag => existingBag.name === bagName)) {
@@ -911,6 +1020,35 @@ document.addEventListener('DOMContentLoaded', () => {
             bagWeightInput.value = ''
             bagWeightLimitInput.value = ''
             bagDescriptionInput.value = ''
+        }
+    })
+
+    editBagBtn.addEventListener('click', () => {
+        if (!currentBagNameForEditing) return
+
+        const newBagName = bagNameInput.value.trim()
+        const newWeight = parseFloat(bagWeightInput.value)
+        const newWeightLimit = parseFloat(bagWeightLimitInput.value) || null
+        const newDescription = bagDescriptionInput.value.trim() || ''
+
+        if (!newBagName || !newWeight) return
+
+        // Find the old bag in the library by its name
+        const bagIndex = bagsLibraryData.findIndex(bag => bag.name === currentBagNameForEditing)
+
+        if (bagIndex !== -1) {
+            bagsLibraryData[bagIndex] = {
+                name: newBagName,
+                weight: newWeight,
+                weightLimit: newWeightLimit,
+                description: newDescription
+            }
+            saveToLocalStorage()
+            renderBagsLibrary()
+            currentBagNameForEditing = null
+            addBagForm.close()
+        } else {
+            console.error("Bag to edit was not found in the library.")
         }
     })
 
@@ -937,9 +1075,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 subcategory
             }
 
+            // Create a copy of the item without the id to store in itemsLibraryData
+            const itemForLibrary = { ...item }
+            delete itemForLibrary.id // Remove the id for storage
+
             // Add to itemsLibrary only if it doesn't already exist
             if (!itemsLibraryData.some(existingItem => existingItem.name === itemName)) {
-                itemsLibraryData.push(item)
+                itemsLibraryData.push(itemForLibrary)
                 itemsLibraryData = sortByName(itemsLibraryData) // Sort after addition
                 saveToLocalStorage()
                 renderItemsLibrary()
@@ -962,6 +1104,37 @@ document.addEventListener('DOMContentLoaded', () => {
             itemSubcategoryInput.value = ''
             // itemBagInput.value = '';
 
+        }
+    })
+
+    editItemBtn.addEventListener('click', () => {
+        if (!currentItemNameForEditing) return
+
+        const newItemName = itemNameInput.value
+        const newAmount = parseInt(itemAmountInput.value, 10)
+        const newWeight = parseFloat(itemWeightInput.value)
+        const newPriority = itemPriorityInput.value
+        const newCategory = itemCategoryInput.value
+        const newSubcategory = itemSubcategoryInput.value
+
+        // Find the old item in the library by its name
+        const itemIndex = itemsLibraryData.findIndex(item => item.name === currentItemNameForEditing)
+
+        if (itemIndex !== -1) {
+            itemsLibraryData[itemIndex] = {
+                name: newItemName,
+                amount: newAmount,
+                weight: newWeight,
+                priority: newPriority,
+                category: newCategory,
+                subcategory: newSubcategory
+            }
+            saveToLocalStorage()
+            renderItemsLibrary()
+            currentItemNameForEditing = null
+            addItemForm.close()
+        } else {
+            console.error("Item to edit was not found in the library.")
         }
     })
 
@@ -988,7 +1161,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-    const itemBagSelect = document.getElementById('itemBag') // Updated bag dropdown with correct id
+    const itemBagSelect = document.getElementById('itemBag')
     function updateBagDropdown(selectedBagUUID) {
         // Clear the dropdown
         itemBagSelect.innerHTML = ''
