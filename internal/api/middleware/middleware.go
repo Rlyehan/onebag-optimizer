@@ -2,22 +2,66 @@ package middleware
 
 import (
 	"net/http"
+	"sync"
 	"time"
 
 	"github.com/Rlyehan/onebag-optimizer/internal/session"
 	"github.com/Rlyehan/onebag-optimizer/internal/utils"
 	"go.uber.org/zap"
+	"golang.org/x/time/rate"
 )
 
 type Middleware struct {
-	logger  *zap.Logger
-	session *session.Manager
+	logger        *zap.Logger
+	session       *session.Manager
+	ipLimiter     *IPRateLimiter
+	globalLimiter *rate.Limiter
+}
+
+type IPRateLimiter struct {
+	limiters map[string]*rate.Limiter
+	mu       *sync.RWMutex
+	limit    rate.Limit
+	burst    int
+}
+
+func NewIPRateLimiter(requestsPerSecond rate.Limit, burstSize int) *IPRateLimiter {
+	return &IPRateLimiter{
+		limiters: make(map[string]*rate.Limiter),
+		mu:       &sync.RWMutex{},
+		limit:    requestsPerSecond,
+		burst:    burstSize,
+	}
+}
+
+func (limiter *IPRateLimiter) AddIP(ip string) *rate.Limiter {
+	limiter.mu.Lock()
+	defer limiter.mu.Unlock()
+
+	ipLimiter := rate.NewLimiter(limiter.limit, limiter.burst)
+	limiter.limiters[ip] = ipLimiter
+	return ipLimiter
+}
+
+func (limiter *IPRateLimiter) GetLimiter(ip string) *rate.Limiter {
+	limiter.mu.Lock()
+	ipLimiter, exists := limiter.limiters[ip]
+
+	if !exists {
+		limiter.mu.Unlock()
+		return limiter.AddIP(ip)
+	}
+
+	limiter.mu.Unlock()
+	return ipLimiter
 }
 
 func NewMiddleware(logger *zap.Logger, session *session.Manager) *Middleware {
 	return &Middleware{
-		logger:  logger,
-		session: session,
+		logger:        logger,
+		session:       session,
+		ipLimiter:     NewIPRateLimiter(10, 25),
+		globalLimiter: rate.NewLimiter(200, 300),
 	}
 }
 
@@ -74,4 +118,34 @@ func (m *Middleware) SessionMiddleware(next http.HandlerFunc) http.HandlerFunc {
 
 		next.ServeHTTP(w, r)
 	}
+}
+
+func (m *Middleware) RateLimitMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		clientIP := r.RemoteAddr
+		ipLimiter := m.ipLimiter.GetLimiter(clientIP)
+
+		if !ipLimiter.Allow() {
+			http.Error(w, "IP rate limit exceeded", http.StatusTooManyRequests)
+			return
+		}
+
+		if !m.globalLimiter.Allow() {
+			http.Error(w, "Global rate limit exceeded", http.StatusTooManyRequests)
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	})
+}
+
+func (m *Middleware) SecurityHeaders(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("X-XSS-Protection", "1; mode=block")
+		w.Header().Set("X-Frame-Options", "DENY")
+		w.Header().Set("X-Content-Type-Options", "nosniff")
+		w.Header().Set("Referrer-Policy", "strict-origin-when-cross-origin")
+		w.Header().Set("Content-Security-Policy", "default-src 'self'")
+		next.ServeHTTP(w, r)
+	})
 }
