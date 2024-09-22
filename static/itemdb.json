@@ -17,7 +17,6 @@
     "name": "Apple iPad (1st Gen)",
     "amount": 1,
     "weight": 680,
-    "priority": "HI",
     "category": "Electronics",
     "subcategory": "Tablet"
   },
@@ -25,7 +24,6 @@
     "name": "Apple iPad 2",
     "amount": 1,
     "weight": 601,
-    "priority": "HI",
     "category": "Electronics",
     "subcategory": "Tablet"
   },
@@ -33,7 +31,6 @@
     "name": "Apple iPad (3rd Gen)",
     "amount": 1,
     "weight": 652,
-    "priority": "HI",
     "category": "Electronics",
     "subcategory": "Tablet"
   },
@@ -41,7 +38,6 @@
     "name": "Apple iPad (4th Gen)",
     "amount": 1,
     "weight": 652,
-    "priority": "HI",
     "category": "Electronics",
     "subcategory": "Tablet"
   },
@@ -49,7 +45,6 @@
     "name": "Apple iPad (5th Gen)",
     "amount": 1,
     "weight": 469,
-    "priority": "HI",
     "category": "Electronics",
     "subcategory": "Tablet"
   },
@@ -57,7 +52,6 @@
     "name": "Apple iPad (6th Gen)",
     "amount": 1,
     "weight": 469,
-    "priority": "HI",
     "category": "Electronics",
     "subcategory": "Tablet"
   },
@@ -65,7 +59,6 @@
     "name": "Apple iPad (7th Gen)",
     "amount": 1,
     "weight": 483,
-    "priority": "HI",
     "category": "Electronics",
     "subcategory": "Tablet"
   },
@@ -73,7 +66,6 @@
     "name": "Apple iPad (8th Gen)",
     "amount": 1,
     "weight": 490,
-    "priority": "HI",
     "category": "Electronics",
     "subcategory": "Tablet"
   },
@@ -81,7 +73,6 @@
     "name": "Apple iPad (9th Gen)",
     "amount": 1,
     "weight": 487,
-    "priority": "HI",
     "category": "Electronics",
     "subcategory": "Tablet"
   },
@@ -89,7 +80,6 @@
     "name": "Apple iPad (10th Gen)",
     "amount": 1,
     "weight": 477,
-    "priority": "HI",
     "category": "Electronics",
     "subcategory": "Tablet"
   },
@@ -97,7 +87,6 @@
     "name": "Apple iPad Air (1st Gen)",
     "amount": 1,
     "weight": 469,
-    "priority": "HI",
     "category": "Electronics",
     "subcategory": "Tablet"
   },
@@ -105,7 +94,6 @@
     "name": "Apple iPad Air 2",
     "amount": 1,
     "weight": 437,
-    "priority": "HI",
     "category": "Electronics",
     "subcategory": "Tablet"
   },
@@ -113,7 +101,6 @@
     "name": "Apple iPad Air (3rd Gen)",
     "amount": 1,
     "weight": 456,
-    "priority": "HI",
     "category": "Electronics",
     "subcategory": "Tablet"
   },
@@ -121,7 +108,6 @@
     "name": "Apple iPad Air (4th Gen)",
     "amount": 1,
     "weight": 458,
-    "priority": "HI",
     "category": "Electronics",
     "subcategory": "Tablet"
   },
@@ -129,7 +115,6 @@
     "name": "Apple iPad Air (5th Gen)",
     "amount": 1,
     "weight": 461,
-    "priority": "HI",
     "category": "Electronics",
     "subcategory": "Tablet"
   },
@@ -137,7 +122,6 @@
     "name": "Apple iPad mini (1st Gen)",
     "amount": 1,
     "weight": 308,
-    "priority": "HI",
     "category": "Electronics",
     "subcategory": "Tablet"
   },
@@ -145,7 +129,6 @@
     "name": "Apple iPad mini 2",
     "amount": 1,
     "weight": 331,
-    "priority": "HI",
     "category": "Electronics",
     "subcategory": "Tablet"
   },
@@ -153,7 +136,6 @@
     "name": "Apple iPad mini 3",
     "amount": 1,
     "weight": 331,
-    "priority": "HI",
     "category": "Electronics",
     "subcategory": "Tablet"
   },
@@ -161,7 +143,6 @@
     "name": "Apple iPad mini 4",
     "amount": 1,
     "weight": 298,
-    "priority": "HI",
     "category": "Electronics",
     "subcategory": "Tablet"
   },
@@ -169,7 +150,6 @@
     "name": "Apple iPad mini (5th Gen)",
     "amount": 1,
     "weight": 300,
-    "priority": "HI",
     "category": "Electronics",
     "subcategory": "Tablet"
   },
@@ -177,7 +157,6 @@
     "name": "Apple iPad mini (6th Gen)",
     "amount": 1,
     "weight": 293,
-    "priority": "HI",
     "category": "Electronics",
     "subcategory": "Tablet"
   },
@@ -185,7 +164,6 @@
     "name": "Apple iPad Pro (9.7-inch)",
     "amount": 1,
     "weight": 437,
-    "priority": "HI",
     "category": "Electronics",
     "subcategory": "Tablet"
   },
@@ -193,7 +171,6 @@
     "name": "Apple iPad Pro (10.5-inch)",
     "amount": 1,
     "weight": 469,
-    "priority": "HI",
     "category": "Electronics",
     "subcategory": "Tablet"
   },
@@ -201,7 +178,6 @@
     "name": "Apple iPad Pro (11-inch, 1st Gen)",
     "amount": 1,
     "weight": 468,
-    "priority": "HI",
     "category": "Electronics",
     "subcategory": "Tablet"
   },
@@ -209,7 +185,6 @@
     "name": "Apple iPad Pro (11-inch, 2nd Gen)",
     "amount": 1,
     "weight": 471,
-    "priority": "HI",
     "category": "Electronics",
     "subcategory": "Tablet"
   },
@@ -217,7 +192,6 @@
     "name": "Apple iPad Pro (11-inch, 3rd Gen)",
     "amount": 1,
     "weight": 466,
-    "priority": "HI",
     "category": "Electronics",
     "subcategory": "Tablet"
   },
@@ -225,7 +199,6 @@
     "name": "Apple iPad Pro (12.9-inch, 1st Gen)",
     "amount": 1,
     "weight": 713,
-    "priority": "HI",
     "category": "Electronics",
     "subcategory": "Tablet"
   },
@@ -233,7 +206,6 @@
     "name": "Apple iPad Pro (12.9-inch, 2nd Gen)",
     "amount": 1,
     "weight": 692,
-    "priority": "HI",
     "category": "Electronics",
     "subcategory": "Tablet"
   },
@@ -241,7 +213,6 @@
     "name": "Apple iPad Pro (12.9-inch, 3rd Gen)",
     "amount": 1,
     "weight": 631,
-    "priority": "HI",
     "category": "Electronics",
     "subcategory": "Tablet"
   },
@@ -249,7 +220,6 @@
     "name": "Apple iPad Pro (12.9-inch, 4th Gen)",
     "amount": 1,
     "weight": 641,
-    "priority": "HI",
     "category": "Electronics",
     "subcategory": "Tablet"
   },
@@ -257,7 +227,6 @@
     "name": "Apple iPad Pro (12.9-inch, 5th Gen)",
     "amount": 1,
     "weight": 682,
-    "priority": "HI",
     "category": "Electronics",
     "subcategory": "Tablet"
   },
@@ -265,7 +234,6 @@
     "name": "Apple iPad Pro (12.9-inch, 6th Gen)",
     "amount": 1,
     "weight": 684,
-    "priority": "HI",
     "category": "Electronics",
     "subcategory": "Tablet"
   },
@@ -589,5 +557,201 @@
     "weight": 63,
     "category": "Electronics",
     "subcategory": "Storage"
+  },
+  {
+    "name": "Samsung Galaxy S",
+    "amount": 1,
+    "weight": 119,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Samsung Galaxy S2",
+    "amount": 1,
+    "weight": 116,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Samsung Galaxy S3",
+    "amount": 1,
+    "weight": 133,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Samsung Galaxy S4",
+    "amount": 1,
+    "weight": 130,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Samsung Galaxy S5",
+    "amount": 1,
+    "weight": 145,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Samsung Galaxy S6",
+    "amount": 1,
+    "weight": 138,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Samsung Galaxy S6 Edge",
+    "amount": 1,
+    "weight": 132,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Samsung Galaxy S7",
+    "amount": 1,
+    "weight": 152,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Samsung Galaxy S7 Edge",
+    "amount": 1,
+    "weight": 157,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Samsung Galaxy S8",
+    "amount": 1,
+    "weight": 155,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Samsung Galaxy S8+",
+    "amount": 1,
+    "weight": 173,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Samsung Galaxy S9",
+    "amount": 1,
+    "weight": 163,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Samsung Galaxy S9+",
+    "amount": 1,
+    "weight": 189,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Samsung Galaxy S10",
+    "amount": 1,
+    "weight": 157,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Samsung Galaxy S10+",
+    "amount": 1,
+    "weight": 175,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Samsung Galaxy S10e",
+    "amount": 1,
+    "weight": 150,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Samsung Galaxy S20",
+    "amount": 1,
+    "weight": 163,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Samsung Galaxy S20+",
+    "amount": 1,
+    "weight": 186,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Samsung Galaxy S20 Ultra",
+    "amount": 1,
+    "weight": 222,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Samsung Galaxy S21",
+    "amount": 1,
+    "weight": 169,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Samsung Galaxy S21+",
+    "amount": 1,
+    "weight": 200,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Samsung Galaxy S21 Ultra",
+    "amount": 1,
+    "weight": 228,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Samsung Galaxy S22",
+    "amount": 1,
+    "weight": 168,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Samsung Galaxy S22+",
+    "amount": 1,
+    "weight": 196,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Samsung Galaxy S22 Ultra",
+    "amount": 1,
+    "weight": 229,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Samsung Galaxy S23",
+    "amount": 1,
+    "weight": 168,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Samsung Galaxy S23+",
+    "amount": 1,
+    "weight": 196,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
+  },
+  {
+    "name": "Samsung Galaxy S23 Ultra",
+    "amount": 1,
+    "weight": 234,
+    "category": "Electronics",
+    "subcategory": "Smartphone"
   }
 ]
