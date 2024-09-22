@@ -6,6 +6,7 @@ import (
 	"github.com/Rlyehan/onebag-optimizer/internal/api/handlers"
 	"github.com/Rlyehan/onebag-optimizer/internal/api/middleware"
 	"github.com/Rlyehan/onebag-optimizer/internal/config"
+	"github.com/Rlyehan/onebag-optimizer/internal/metrics"
 	"github.com/Rlyehan/onebag-optimizer/internal/session"
 	"github.com/Rlyehan/onebag-optimizer/internal/storage"
 	"go.uber.org/zap"
@@ -35,11 +36,25 @@ func (r *Router) SetupRoutes() http.Handler {
 	rootHandler := handlers.NewRootHandler(r.logger)
 	listHandler := handlers.NewListHandler(r.logger, r.s3Client, r.config.S3BucketName)
 
-	mux.HandleFunc("/", r.middleware.SessionMiddleware(rootHandler.ServeRoot))
-	mux.HandleFunc("/upload", r.middleware.SessionMiddleware(listHandler.UploadList))
+	applyMiddleware := func(h http.HandlerFunc) http.HandlerFunc {
+		return func(w http.ResponseWriter, req *http.Request) {
+			handler := r.middleware.SecurityHeaders(
+				r.middleware.RateLimitMiddleware(
+					r.middleware.SessionMiddleware(h),
+				),
+			)
+			handler.ServeHTTP(w, req)
+		}
+	}
+
+	// Application Routes
+	mux.HandleFunc("/", applyMiddleware(rootHandler.ServeRoot))
+	mux.HandleFunc("/upload", applyMiddleware(listHandler.UploadList))
 
 	fs := http.FileServer(http.Dir("static"))
 	mux.Handle("/static/", http.StripPrefix("/static/", fs))
+
+	mux.Handle("/metrics", metrics.MetricsHandler())
 
 	return mux
 }
