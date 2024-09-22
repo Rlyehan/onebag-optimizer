@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function filterLibrary(inputId, libraryId) {
         const input = document.getElementById(inputId)
         const library = document.getElementById(libraryId)
-        const entries = library.getElementsByClassName('libraryEntry')
+        const entries = library.getElementsByClassName('library-entry')
 
         input.addEventListener('input', function () {
             const filter = input.value.toLowerCase()
@@ -272,11 +272,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 li.classList.add('tooltip')
 
                 const tooltip = document.createElement('span')
-                tooltip.classList.add('tooltiptext')
+                tooltip.classList.add('tooltip-text')
                 tooltip.innerHTML = `
                     <h3 style='grid-column:span 2'>${trip.name}</h3>
-                    <span class='tooltipEntry'>Start:</span><span>${trip.startDate || 'Not specified.'}</span>
-                    <span class='tooltipEntry'>End:</span><span>${trip.endDate || 'Not specified.'}</span>
+                    <span class='tooltip-entry'>Start:</span><span>${trip.startDate || 'Not specified.'}</span>
+                    <span class='tooltip-entry'>End:</span><span>${trip.endDate || 'Not specified.'}</span>
                 `
                 li.appendChild(tooltip)
 
@@ -285,7 +285,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const trashCan = document.createElement("i")
                 trashCan.classList.add("fa-solid", "fa-trash-can")
                 removeTripButton.appendChild(trashCan)
-                removeTripButton.classList.add('remove-trip')
+                removeTripButton.classList.add('remove-trip-button')
                 removeTripButton.addEventListener('click', (e) => {
                     e.stopPropagation() // Prevent click from bubbling to the li
                     removeTrip(trip.uuid, trip.name)
@@ -313,14 +313,14 @@ document.addEventListener('DOMContentLoaded', () => {
             bagsLibrary.innerHTML = ''
             sortedBags.forEach((bag, index) => {
                 const div = document.createElement('div')
-                div.classList.add('libraryEntry', 'tooltip')
+                div.classList.add('library-entry', 'tooltip')
                 const tooltip = document.createElement('span')
-                tooltip.classList.add('tooltiptext')
+                tooltip.classList.add('tooltip-text')
                 tooltip.innerHTML = `
                     <h3 style='grid-column:span 2'>${bag.name}</h3>
-                    <span class='tooltipEntry'>Description:</span><span>${bag.description || 'No description added.'}</span>
-                    <span class='tooltipEntry'>Weight:</span><span>${bag.weight} g</span>
-                    <span class='tooltipEntry'>Weight Limit:</span><span>${bag.weightLimit || 'No limit specified'} ${bag.weightLimit ? ' g' : ''}</span>
+                    <span class='tooltip-entry'>Description:</span><span>${bag.description || 'No description added.'}</span>
+                    <span class='tooltip-entry'>Weight:</span><span>${bag.weight} g</span>
+                    <span class='tooltip-entry'>Weight Limit:</span><span>${bag.weightLimit || 'No limit specified'} ${bag.weightLimit ? ' g' : ''}</span>
                 `
                 div.appendChild(tooltip)
                 const divName = document.createElement('div')
@@ -332,7 +332,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const trashCan = document.createElement('i')
                 trashCan.classList.add('fa-solid', 'fa-trash-can')
                 removeBtn.appendChild(trashCan)
-                removeBtn.classList.add('remove-bag')
+                removeBtn.classList.add('remove-bag-button')
                 removeBtn.addEventListener('click', (e) => {
                     e.stopPropagation() // Prevent click from bubbling to the div
                     removeBagFromLibrary(index)
@@ -351,7 +351,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 bagsLibrary.appendChild(div)
             })
         }
-
     }
 
     function renderItemsLibrary() {
@@ -362,14 +361,14 @@ document.addEventListener('DOMContentLoaded', () => {
             itemsLibrary.innerHTML = ''
             sortedItems.forEach((item, index) => {
                 const div = document.createElement('div')
-                div.classList.add('libraryEntry', 'tooltip')
+                div.classList.add('library-entry', 'tooltip')
                 const tooltip = document.createElement('span')
-                tooltip.classList.add('tooltiptext')
+                tooltip.classList.add('tooltip-text')
                 tooltip.innerHTML = `
                     <h3 style='grid-column:span 2'>${item.name}</h3>
-                    <span class='tooltipEntry'>Weight:</span><span>${item.weight} g</span>
-                    <span class='tooltipEntry'>Category:</span><span>${item.category || 'No category specified.'}</span>
-                    <span class='tooltipEntry'>Subcategory:</span><span>${item.subcategory || 'No subcategory specified'}</span>
+                    <span class='tooltip-entry'>Weight:</span><span>${item.weight} g</span>
+                    <span class='tooltip-entry'>Category:</span><span>${item.category || 'No category specified.'}</span>
+                    <span class='tooltip-entry'>Subcategory:</span><span>${item.subcategory || 'No subcategory specified'}</span>
                 `
                 div.appendChild(tooltip)
                 div.setAttribute('data-category', item.category)
@@ -383,7 +382,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 trashCan.classList.add('fa-solid', 'fa-trash-can')
                 // trashCan.innerText = 'X'
                 removeBtn.appendChild(trashCan)
-                removeBtn.classList.add('remove-item')
+                removeBtn.classList.add('remove-item-button')
                 removeBtn.addEventListener('click', (e) => {
                     e.stopPropagation() // Prevent click from bubbling to the div
                     removeItemFromLibrary(index)
@@ -414,46 +413,70 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const bagTable = document.createElement('section')
                 const caption = document.createElement('div')
-                caption.classList.add("bagCaption")
+                const toggle = document.createElement('input')
+                const toggleLabel = document.createElement('label')
+                toggle.type = "checkbox"
+                toggle.id = `toggle-${bag.id}`
+                toggle.style.display = 'none'
+                toggle.classList.add('bag-toggle-checkbox')
+                toggleLabel.classList.add('bag-toggle')
+                toggleLabel.setAttribute("for", `toggle-${bag.id}`)
+                // toggle.style.display = 'none';
+                caption.classList.add("bag-caption")
                 var totalBagWeightHighlight = ""
                 if (bag.weightLimit !== null) {
 
                     // Warning highlight color if the total weight is between 90% and 100% of the user specified bag weight limit
                     if (bag.weightLimit * 0.9 <= totalBagWeight && totalBagWeight <= bag.weightLimit) {
-                        totalBagWeightHighlight = "highlightWarning"
+                        totalBagWeightHighlight = "highlight-warning"
                         // Alert highlight color if total weight is above user specified bag weight limit
                     } else if (totalBagWeight > bag.weightLimit) {
-                        totalBagWeightHighlight = "highlightAlert"
+                        totalBagWeightHighlight = "highlight-alert"
                     }
-                    caption.innerHTML = `<div>${bag.name.replace(/(#[0-9]+)$/, '')} <span class="bag-index">${bag.name.match(/(#[0-9]+)$/)?.[0] || ''}</span> (${bag.weight} g)</div><span class="emptyBag">Bag is empty</span><span class="loadedBag">Total Weight: <span class="${totalBagWeightHighlight}">${totalBagWeight}</span>/${bag.weightLimit} g</span>`
+                    caption.innerHTML = `<div>${bag.name.replace(/(#[0-9]+)$/, '')} <span class="bag-index">${bag.name.match(/(#[0-9]+)$/)?.[0] || ''}</span> (${bag.weight} g)</div><span class="empty-bag">Bag is empty</span><span class="loaded-bag">Total Weight: <span class="${totalBagWeightHighlight}">${totalBagWeight}</span>/${bag.weightLimit} g</span>`
                 } else {
-                    caption.innerHTML = `<div>${bag.name.replace(/(#[0-9]+)$/, '')} <span class="bag-index">${bag.name.match(/(#[0-9]+)$/)?.[0] || ''}</span> (${bag.weight} g)</div><span class="emptyBag">Bag is empty</span><span class="loadedBag">Total Weight: ${totalBagWeight} g</span>`
+                    caption.innerHTML = `<div>${bag.name.replace(/(#[0-9]+)$/, '')} <span class="bag-index">${bag.name.match(/(#[0-9]+)$/)?.[0] || ''}</span> (${bag.weight} g)</div><span class="empty-bag">Bag is empty</span><span class="loaded-bag">Total Weight: ${totalBagWeight} g</span>`
 
                 }
-                const removeBagButton = document.createElement('button')
+
+                const removeBagCheckbox = document.createElement('input')
+                removeBagCheckbox.type = 'checkbox'
+                removeBagCheckbox.id = `confirm-${bag.id}`
+                removeBagCheckbox.style.display = 'none'
+                removeBagCheckbox.classList.add('remove-bag-checkbox')
+
+                const removeBagConfirm = document.createElement('label')
+                removeBagConfirm.setAttribute("for", `confirm-${bag.id}`)
+                removeBagConfirm.innerHTML = '<i class="fa-solid fa-square-check"></i>'
+                removeBagConfirm.classList.add('remove-bag-confirm')
+
+                const removeBagCancel = document.createElement('label')
+                removeBagCancel.setAttribute("for", `confirm-${bag.id}`)
+                removeBagCancel.innerHTML = '<i class="fa-solid fa-rectangle-xmark"></i>'
+                removeBagCancel.classList.add('remove-bag-cancel')
+
+                const removeBagText = document.createElement('p')
+                removeBagText.classList.add('remove-bag-text')
+                removeBagText.textContent = 'Delete this bag forever?'
+
+                const removeBagButton = document.createElement('label')
+                removeBagButton.setAttribute("for", `confirm-${bag.id}`)
                 var trashCan = document.createElement("i")
                 trashCan.classList.add("fa-solid")
                 trashCan.classList.add("fa-trash-can")
 
                 removeBagButton.appendChild(trashCan)
-                removeBagButton.classList.add('remove-bag')
-                removeBagButton.addEventListener('click', () => removeBagFromTrip(bag.id, bag.name))
+                removeBagButton.classList.add('remove-bag-button')
+                removeBagConfirm.addEventListener('click', () => removeBagFromTrip(bag.id, bag.name))
 
                 bagTable.appendChild(caption)
 
-                // Meter to show how full the bag is
-                // if (bag.weightLimit) {
-                //     const meterWeight = document.createElement('meter')
-                //     meterWeight.setAttribute("value", totalBagWeight);
-                //     meterWeight.setAttribute("min", 0)
-                //     meterWeight.setAttribute("optimum", 0.4 * bag.weightLimit)
-                //     meterWeight.setAttribute("low", 0.8 * bag.weightLimit)
-                //     meterWeight.setAttribute("high", 0.9 * bag.weightLimit)
-                //     meterWeight.setAttribute("max", bag.weightLimit)
-                //     meterWeight.textContent = `${totalBagWeight} g`
-                //     caption.appendChild(meterWeight)
-                // }
-
+                caption.appendChild(toggle)
+                caption.appendChild(toggleLabel)
+                caption.appendChild(removeBagCheckbox)
+                caption.appendChild(removeBagConfirm)
+                caption.appendChild(removeBagCancel)
+                caption.appendChild(removeBagText)
                 caption.appendChild(removeBagButton)
 
                 // Enable the table (bag) as a drop zone
@@ -466,17 +489,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Create table header
                 // if (bag.items.length !== 0) {    
                 const headerRow = document.createElement('article')
-                headerRow.classList.add('headerRow')
+                headerRow.classList.add('header-row')
                 headerRow.innerHTML = `
-                    <div class="dragHandleHeader"></div>
-                    <div class="itemName">Item</div>
-                    <div class="itemAmount">Amount</div>
-                    <div class="itemWeight">Weight (g)</div>
-                    <div class="itemTotalWeight">Total (g)</div>
-                    <div class="itemPriority">Prio</div>
-                    <div class="itemCategory">Category</div>
-                    <div class="itemSubcategory">Subcategory</div>
-                    <div class="removeItem"></div>
+                    <div class="drag-handle-header"></div>
+                    <div class="item-name">Item</div>
+                    <div class="item-amount">Amount</div>
+                    <div class="item-weight">Weight (g)</div>
+                    <div class="item-total-weight">Total (g)</div>
+                    <div class="item-priority">Prio</div>
+                    <div class="item-category">Category</div>
+                    <div class="item-subcategory">Subcategory</div>
+                    <div class="remove-item"></div>
                     `
                 bagTable.appendChild(headerRow)
 
@@ -484,27 +507,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Add items to the table
                 bag.items.forEach(item => {
                     const itemRow = document.createElement('article')
-                    itemRow.setAttribute('data-bag', bag.id) // Track which bag the item is in
-                    itemRow.setAttribute('data-item', item.id) // Track the item name
+                    itemRow.setAttribute('data-bag', bag.id)
+                    itemRow.setAttribute('data-item', item.id)
                     itemRow.addEventListener('dragstart', handleDragStart)
 
-                    // Calculate total item weight (amount * weight)
                     const totalItemWeight = item.amount * item.weight
 
                     itemRow.innerHTML = `
-                            <div class="dragHandle" draggable="true"><i class="fa-solid fa-up-down-left-right"></i></div>
-                            <div class="itemName">${item.name}</div>
-                            <div class="itemAmount">${item.amount}x</div>
-                            <div class="itemWeight">${item.weight}</div>
-                            <div class="itemTotalWeight">${totalItemWeight}</div>
-                            <div class="itemPriority">${item.priority}</div>
-                            <div class="itemCategory">${item.category}</div>
-                            <div class="itemSubcategory">${item.subcategory || 'None'}</div>
-                            <div><button class="remove-item"><i class="fa-solid fa-trash-can"></i></button></div>
+                            <div class="drag-handle" draggable="true"><i class="fa-solid fa-up-down-left-right"></i></div>
+                            <div class="item-name">${item.name}</div>
+                            <div class="item-amount">${item.amount}x</div>
+                            <div class="item-weight">${item.weight}</div>
+                            <div class="item-total-weight">${totalItemWeight}</div>
+                            <div class="item-priority">${item.priority}</div>
+                            <div class="item-category">${item.category}</div>
+                            <div class="item-subcategory">${item.subcategory || 'None'}</div>
+                            <div><button class="remove-item-button"><i class="fa-solid fa-trash-can"></i></button></div>
                         `
 
-                    // Add event listener for removing the item
-                    itemRow.querySelector('.remove-item').addEventListener('click', () => {
+                    itemRow.querySelector('.remove-item-button').addEventListener('click', () => {
                         bag.items = bag.items.filter(i => i.id !== item.id)
                         saveToLocalStorage()
                         renderBagsTable()
@@ -512,20 +533,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     bagTable.appendChild(itemRow)
                 })
-                // }
 
                 bagsTableContainer.appendChild(bagTable)
 
                 const article = document.createElement('article')
+                article.classList.add('row-add-item')
                 const div1 = document.createElement('div')
                 const div2 = document.createElement('div')
                 const button = document.createElement('button')
-                button.className = 'modalButton'
+                button.className = 'modal-button'
                 button.dataset.bag = bag.id
                 button.textContent = 'Add Item'
                 button.onclick = function () {
                     itemBagInput.value = bag.id
-                    editEntries.checked = false // Disable Edit Mode
+                    editEntries.checked = false
                     addItemForm.showModal()
                 }
                 div2.appendChild(button)
@@ -570,16 +591,17 @@ document.addEventListener('DOMContentLoaded', () => {
         renderItemsLibrary()
     }
 
-    function removeBagFromTrip(bagId, bagName) {
-        const confirmRemoval = confirm(`Are you sure you want to remove the bag "${bagName}"?`)
-        if (confirmRemoval) {
-            currentTrip.bags = currentTrip.bags.filter(bag => bag.id !== bagId)
-
-            saveToLocalStorage()
-            updateBagDropdown()
-            renderBagsTable()
-        }
+    function removeBagFromTrip(bagId) {
+        currentTrip.bags = currentTrip.bags.filter(bag => bag.id !== bagId)
+        saveToLocalStorage()
+        removeBagFromDOM(bagId)
+        updateBagDropdown()
     }
+
+
+
+
+
 
 
     /* ########################### */
@@ -607,7 +629,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Set the content of the custom drag image
-        dragImage.textContent = event.target.parentNode.querySelector('.itemName').textContent
+        dragImage.textContent = event.target.parentNode.querySelector('.item-name').textContent
 
         // Set the drag image
         event.dataTransfer.setDragImage(dragImage, 0, 0)
@@ -675,6 +697,9 @@ document.addEventListener('DOMContentLoaded', () => {
             item.addEventListener('dragend', handleDragEnd) // Attach dragend event
         })
     }
+
+
+
 
     /* ############################# */
     /* IMPORTING/EXPORTING FUNCTIONS */
@@ -784,12 +809,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Remove 'selected-trip' class from all trips
         const tripItems = tripsList.querySelectorAll('li')
-        tripItems.forEach(item => item.classList.remove('selectedTrip'))
+        tripItems.forEach(item => item.classList.remove('selected-trip'))
 
         // Find the list item by UUID and add the 'selectedTrip' class
         const selectedTripItem = Array.from(tripItems).find(item => item.getAttribute('data-uuid') === trip.uuid)
         if (selectedTripItem) {
-            selectedTripItem.classList.add('selectedTrip')
+            selectedTripItem.classList.add('selected-trip')
         }
 
         tripNameInput.value = ''
@@ -817,7 +842,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 selectedTripName.textContent = `${currentTrip.name} (${Math.abs(daysRemaining)} ${dayOrDays} ago)`
             }
-            selectedTripDates.innerHTML = `<div><span class="tripStartEnd">Start</span><br>${formatDate(tripStartDate)}</div><div><span class="tripStartEnd">End</span><br>${formatDate(tripEndDate)}</div>`
+            selectedTripDates.innerHTML = `<div><span class="trip-start-end">Start</span><br>${formatDate(tripStartDate)}</div><div><span class="trip-start-end">End</span><br>${formatDate(tripEndDate)}</div>`
             // selectedTripDates.innerText = `${formatDate(tripStartDate)} - ${formatDate(tripEndDate)}`
             // selectedTripDates.innerText = `${trip.startDate} - ${trip.endDate}`
         } else {
@@ -853,27 +878,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     })
 
-    // // Add event listener to the "Cancel" button to close the dialog
-    // closeDialogBtn.addEventListener('click', () => {
-    //     createTripForm.close()
-    // })
-    // // Close the dialog when clicking outside of it
-    // addBagSection.addEventListener('click', (event) => {
-    //     if (event.target === addBagSection) {  // Check if the click is outside the dialog content
-    //         addBagSection.close()
-    //     }
-    // })
-
-    // // Add event listener to the "Cancel" button to close the dialog
-    // closeDialogBtn.addEventListener('click', () => {
-    //     createTripForm.close()
-    // })
-    // // Close the dialog when clicking outside of it
-    // addItemSection.addEventListener('click', (event) => {
-    //     if (event.target === addItemSection) {  // Check if the click is outside the dialog content
-    //         addItemSection.close()
-    //     }
-    // })
 
 
     // FUNCTION TO DISALLOW SETTING END DATE BEFORE START DATE
@@ -1011,7 +1015,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Add the new bag to the current trip
             currentTrip.bags.push(bag)
             saveToLocalStorage()
-            renderBagsTable()
+            addBagToDOM(bag)
             updateBagDropdown(bag.id)
             addBagForm.close()
 
@@ -1022,6 +1026,152 @@ document.addEventListener('DOMContentLoaded', () => {
             bagDescriptionInput.value = ''
         }
     })
+
+    function addBagToDOM(bag) {
+        const totalBagWeight = bag.weight + bag.items.reduce((acc, item) => acc + (item.weight * item.amount), 0)
+
+        const bagTable = document.createElement('section')
+        const caption = document.createElement('div')
+        const toggle = document.createElement('input')
+        const toggleLabel = document.createElement('label')
+        toggle.type = "checkbox"
+        toggle.id = `toggle-${bag.id}`
+        toggle.style.display = 'none'
+        toggle.classList.add('bag-toggle-checkbox')
+        toggleLabel.classList.add('bag-toggle')
+        toggleLabel.setAttribute("for", `toggle-${bag.id}`)
+
+        caption.classList.add("bag-caption")
+        var totalBagWeightHighlight = ""
+        if (bag.weightLimit !== null) {
+            if (bag.weightLimit * 0.9 <= totalBagWeight && totalBagWeight <= bag.weightLimit) {
+                totalBagWeightHighlight = "highlight-warning"
+            } else if (totalBagWeight > bag.weightLimit) {
+                totalBagWeightHighlight = "highlight-alert"
+            }
+            caption.innerHTML = `<div>${bag.name.replace(/(#[0-9]+)$/, '')} <span class="bag-index">${bag.name.match(/(#[0-9]+)$/)?.[0] || ''}</span> (${bag.weight} g)</div><span class="empty-bag">Bag is empty</span><span class="loaded-bag">Total Weight: <span class="${totalBagWeightHighlight}">${totalBagWeight}</span>/${bag.weightLimit} g</span>`
+        } else {
+            caption.innerHTML = `<div>${bag.name.replace(/(#[0-9]+)$/, '')} <span class="bag-index">${bag.name.match(/(#[0-9]+)$/)?.[0] || ''}</span> (${bag.weight} g)</div><span class="empty-bag">Bag is empty</span><span class="loaded-bag">Total Weight: ${totalBagWeight} g</span>`
+        }
+
+
+        const removeBagCheckbox = document.createElement('input')
+        removeBagCheckbox.type = 'checkbox'
+        removeBagCheckbox.id = `confirm-${bag.id}`
+        removeBagCheckbox.style.display = 'none'
+        removeBagCheckbox.classList.add('remove-bag-checkbox')
+
+        const removeBagConfirm = document.createElement('label')
+        removeBagConfirm.setAttribute("for", `confirm-${bag.id}`)
+        removeBagConfirm.innerHTML = '<i class="fa-solid fa-square-check"></i>'
+        removeBagConfirm.classList.add('remove-bag-confirm')
+
+        const removeBagCancel = document.createElement('label')
+        removeBagCancel.setAttribute("for", `confirm-${bag.id}`)
+        removeBagCancel.innerHTML = '<i class="fa-solid fa-rectangle-xmark"></i>'
+        removeBagCancel.classList.add('remove-bag-cancel')
+
+        const removeBagText = document.createElement('p')
+        removeBagText.classList.add('remove-bag-text')
+        removeBagText.textContent = 'Delete this bag forever?'
+
+        const removeBagButton = document.createElement('label')
+        removeBagButton.setAttribute("for", `confirm-${bag.id}`)
+        var trashCan = document.createElement("i")
+        trashCan.classList.add("fa-solid")
+        trashCan.classList.add("fa-trash-can")
+
+        removeBagButton.appendChild(trashCan)
+        removeBagButton.classList.add('remove-bag-button')
+        removeBagConfirm.addEventListener('click', () => removeBagFromTrip(bag.id, bag.name))
+
+        bagTable.appendChild(caption)
+
+        caption.appendChild(toggle)
+        caption.appendChild(toggleLabel)
+        caption.appendChild(removeBagCheckbox)
+        caption.appendChild(removeBagConfirm)
+        caption.appendChild(removeBagCancel)
+        caption.appendChild(removeBagText)
+        caption.appendChild(removeBagButton)
+
+        // Enable the table (bag) as a drop zone
+        bagTable.setAttribute('data-bag', bag.id)
+        bagTable.classList.add('drop-zone')
+        bagTable.addEventListener('dragover', handleDragOver)
+        bagTable.addEventListener('drop', handleDrop)
+        bagTable.addEventListener('dragleave', handleDragLeave)
+
+        // Create table header
+        // if (bag.items.length !== 0) {    
+        const headerRow = document.createElement('article')
+        headerRow.classList.add('header-row')
+        headerRow.innerHTML = `
+            <div class="drag-handle-header"></div>
+            <div class="item-name">Item</div>
+            <div class="item-amount">Amount</div>
+            <div class="item-weight">Weight (g)</div>
+            <div class="item-total-weight">Total (g)</div>
+            <div class="item-priority">Prio</div>
+            <div class="item-category">Category</div>
+            <div class="item-subcategory">Subcategory</div>
+            <div class="remove-item"></div>
+            `
+        bagTable.appendChild(headerRow)
+
+
+        // Add items to the table
+        bag.items.forEach(item => {
+            const itemRow = document.createElement('article')
+            itemRow.setAttribute('data-bag', bag.id)
+            itemRow.setAttribute('data-item', item.id)
+            itemRow.addEventListener('dragstart', handleDragStart)
+
+            const totalItemWeight = item.amount * item.weight
+
+            itemRow.innerHTML = `
+                    <div class="drag-handle" draggable="true"><i class="fa-solid fa-up-down-left-right"></i></div>
+                    <div class="item-name">${item.name}</div>
+                    <div class="item-amount">${item.amount}x</div>
+                    <div class="item-weight">${item.weight}</div>
+                    <div class="item-total-weight">${totalItemWeight}</div>
+                    <div class="item-priority">${item.priority}</div>
+                    <div class="item-category">${item.category}</div>
+                    <div class="item-subcategory">${item.subcategory || 'None'}</div>
+                    <div><button class="remove-item-button"><i class="fa-solid fa-trash-can"></i></button></div>
+                `
+
+            itemRow.querySelector('.remove-item-button').addEventListener('click', () => {
+                bag.items = bag.items.filter(i => i.id !== item.id)
+                saveToLocalStorage()
+                renderBagsTable()
+            })
+
+            bagTable.appendChild(itemRow)
+        })
+
+        bagsTableContainer.appendChild(bagTable)
+
+        const article = document.createElement('article')
+        article.classList.add('row-add-item')
+        const div1 = document.createElement('div')
+        const div2 = document.createElement('div')
+        const button = document.createElement('button')
+        button.className = 'modal-button'
+        button.dataset.bag = bag.id
+        button.textContent = 'Add Item'
+        button.onclick = function () {
+            itemBagInput.value = bag.id
+            editEntries.checked = false
+            addItemForm.showModal()
+        }
+        div2.appendChild(button)
+        article.appendChild(div1)
+        article.appendChild(div2)
+        bagTable.appendChild(article)
+        attachDragEvents()
+    }
+
 
     editBagBtn.addEventListener('click', () => {
         if (!currentBagNameForEditing) return
@@ -1087,12 +1237,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 renderItemsLibrary()
             }
 
-            // Add the item to the selected bag
+            // Add the new item to the trip's bag but not to bagsLibrary
             const bag = currentTrip.bags.find(bag => bag.id === bagId)
             if (bag) {
+                // Only update the currentTrip.bags, not the bagsLibrary
                 bag.items.push(item)
+
+                // Check that no item is added to bagsLibraryData
+                // Remove this if already being done elsewhere
+                const libraryBag = bagsLibraryData.find(b => b.name === bag.name)
+                if (libraryBag) {
+                    libraryBag.items = []  // Ensure libraryBag stays empty
+                }
+
                 saveToLocalStorage()
-                renderBagsTable()
+                addItemToDOM(bagId, item) // Update the DOM with the new item
             }
             addItemForm.close()
             // Clear item inputs
@@ -1100,12 +1259,51 @@ document.addEventListener('DOMContentLoaded', () => {
             itemAmountInput.value = '1'
             itemWeightInput.value = ''
             // itemPriorityInput.value = 'LO';
-            // itemCategoryInput.value = 'Clothing';
+            // itemCategoryInput.value = 'Clothing'
             itemSubcategoryInput.value = ''
-            // itemBagInput.value = '';
+            // itemBagInput.value = ''
 
         }
     })
+
+    function addItemToDOM(bagId, item) {
+        const bagTable = bagsTableContainer.querySelector(`section[data-bag="${bagId}"]`)
+
+        const itemRow = document.createElement('article')
+        itemRow.setAttribute('data-bag', bagId)
+        itemRow.setAttribute('data-item', item.id)
+        itemRow.addEventListener('dragstart', handleDragStart)
+
+        const totalItemWeight = item.amount * item.weight
+
+        itemRow.innerHTML = `
+            <div class="drag-handle" draggable="true"><i class="fa-solid fa-up-down-left-right"></i></div>
+            <div class="item-name">${item.name}</div>
+            <div class="item-amount">${item.amount}x</div>
+            <div class="item-weight">${item.weight}</div>
+            <div class="item-total-weight">${totalItemWeight}</div>
+            <div class="item-priority">${item.priority}</div>
+            <div class="item-category">${item.category}</div>
+            <div class="item-subcategory">${item.subcategory || 'None'}</div>
+            <div><button class="remove-item-button"><i class="fa-solid fa-trash-can"></i></button></div>
+        `
+        itemRow.querySelector('.remove-item-button').addEventListener('click', () => {
+            const bag = currentTrip.bags.find(b => b.id === bagId)
+            bag.items = bag.items.filter(i => i.id !== item.id)
+            saveToLocalStorage()
+            itemRow.remove() // Remove from DOM directly
+        })
+
+        bagTable.appendChild(itemRow)
+        moveAddItemRowToEnd(bagTable)
+    }
+
+    function removeBagFromDOM(bagId) {
+        const bagElement = bagsTableContainer.querySelector(`section[data-bag="${bagId}"]`)
+        if (bagElement) {
+            bagElement.remove()
+        }
+    }
 
     editItemBtn.addEventListener('click', () => {
         if (!currentItemNameForEditing) return
@@ -1137,6 +1335,19 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error("Item to edit was not found in the library.")
         }
     })
+
+    function moveAddItemRowToEnd(section) {
+        const addItemRow = section.querySelector('.row-add-item')
+        if (addItemRow) {
+            section.appendChild(addItemRow)  // Move it to the end
+        }
+    }
+
+
+
+
+
+
 
     function populateBagDropdown() {
         const itemBagInput = document.getElementById('itemBag')
