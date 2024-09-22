@@ -1,35 +1,41 @@
 :root {
   --bg-clr-sidebar: #111;
   --bg-clr-main: #222;
-  --bg-clr-inputs: #222;
+  --bg-clr-dialog: #000;
+  --bg-clr-inputs: #111;
   --bg-clr-btn: #666;
   --bg-clr-btn-hover: #000;
   --bg-clr-tooltips: #222;
   --bg-clr-focus: #333;
-  --box-shadow-clr-topleft: rgba(255,255,255,0.05);
-  --box-shadow-clr-bottomright: rgba(0,0,0,0.15);
+  --box-shadow-clr-topleft: rgba(255, 255, 255, 0.05);
+  --box-shadow-clr-bottomright: rgba(0, 0, 0, 0.15);
   --clr-accent: teal;
   /* --clr-edit: white; */
   --clr-focus: white;
   --clr-warning: orange;
   --clr-alert: red;
   --clr-text: white;
+  --clr-confirm: lime;
+  --clr-cancel: var(--clr-alert);
 }
 @media (prefers-color-scheme: light) {
   :root {
     --bg-clr-sidebar: #eee;
     --bg-clr-main: #eee;
+    --bg-clr-dialog: #fff;
     --bg-clr-inputs: #fff;
     --bg-clr-btn: white;
     --bg-clr-btn-hover: white;
     --bg-clr-tooltips: #fff;
     --bg-clr-focus: #333;
-    --box-shadow-clr-topleft: rgba(255,255,255,0.75);
-    --box-shadow-clr-bottomright: rgba(0,0,0,0.1);
+    --box-shadow-clr-topleft: rgba(255, 255, 255, 0.75);
+    --box-shadow-clr-bottomright: rgba(0, 0, 0, 0.1);
     --clr-accent: teal;
     --clr-warning: orange;
     --clr-alert: red;
     --clr-text: black;
+    --clr-confirm: lime;
+    --clr-cancel: var(--clr-alert);
   }
 }
 
@@ -62,11 +68,11 @@ h1 {
   margin-block-end: 0;
 }
 
-.highlightWarning {
+.highlight-warning {
   color: var(--clr-warning);
 }
 
-.highlightAlert {
+.highlight-alert {
   color: var(--clr-alert);
 }
 
@@ -91,7 +97,7 @@ button {
   cursor: pointer;
   /* font-size: 1rem; */
   background-color: var(--bg-clr-btn);
-  
+
   &:hover {
     background-color: var(--bg-clr-btn-hover);
     outline: 1px solid;
@@ -128,6 +134,7 @@ input::-webkit-inner-spin-button {
 
 /* Firefox */
 input[type="number"] {
+  appearance: textfield;
   -moz-appearance: textfield;
 }
 
@@ -136,7 +143,7 @@ input[type="number"] {
   max-height: 25rem;
 }
 
-.libraryHeader {
+.library-header {
   margin-block: 1.5rem 0.5rem;
   border-block-end: 2px solid;
   display: grid;
@@ -158,12 +165,12 @@ input[type="number"] {
   cursor: pointer;
 }
 
-.dragHandle {
+.drag-handle {
   visibility: hidden;
   margin-inline: auto;
 }
 
-.bagCaption {
+.bag-caption {
   font-weight: bold;
   /* margin-block: 2.5rem 1rem; */
   font-size: 1.25rem;
@@ -177,13 +184,13 @@ input[type="number"] {
   }
 }
 
-.exportImportTrips,
-.exportImportLibraries {
+.export-import-trips,
+.export-import-libraries {
   & button,
   label {
     background-color: transparent;
     margin: 0;
-    padding: .25rem;
+    padding: 0.25rem;
     font-size: 1rem;
 
     &:hover {
@@ -226,8 +233,8 @@ aside ul {
   padding: 0;
 }
 
-aside li, 
-.libraryEntry {
+aside li,
+.library-entry {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -247,7 +254,7 @@ aside li {
   }
 }
 
-.modalButton {
+.modal-button {
   font-style: italic;
   font-size: inherit;
   margin-block-start: 0.25rem;
@@ -274,7 +281,7 @@ aside li {
     font-size: 0.75rem;
   }
 
-  & .gridWrapper {
+  & .wrapper-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 0.5rem;
@@ -288,27 +295,27 @@ aside li {
   margin: 0;
 }
 
-.remove-trip,
-.remove-bag,
-.remove-item {
+.remove-trip-button,
+.remove-bag-button,
+.remove-item-button {
   visibility: hidden;
   color: rgb(255, 62, 62);
   background-color: transparent;
 }
 
-.remove-bag {
+.remove-bag-button, .remove-bag-confirm, .remove-bag-cancel {
   aspect-ratio: 1;
 }
 
-main article:hover .remove-item {
+main article:hover .remove-item-button {
   visibility: visible;
 }
 
-/* .libraryEntry:hover > button, */
+/* .library-entry:hover > button, */
 /* li:hover > button, */
 /* article:hover button, */
-article:hover .dragHandle,
-.bagCaption:hover > button {
+article:hover .drag-handle,
+.bag-caption:hover > .remove-bag-button {
   visibility: visible;
 }
 
@@ -319,8 +326,8 @@ article:hover .dragHandle,
   font-style: italic;
 }
 
-.tripsListTitle,
-.librariesTitle {
+.trips-list-title,
+.libraries-title {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
@@ -330,16 +337,16 @@ article:hover .dragHandle,
   }
 }
 
-.librariesTitle {
+.libraries-title {
   margin: 0;
 }
 
-.librariesTitle h3 {
+.libraries-title h3 {
   margin: 0;
 }
 
-.tripStartDateInput,
-.tripEndDateInput {
+.trip-start-date-input,
+.trip-end-date-input {
   display: flex;
   align-items: center;
 
@@ -354,18 +361,18 @@ article:hover .dragHandle,
   margin-block-end: 1rem;
 }
 
-.selectedTrip {
+.selected-trip {
   font-weight: bold;
   font-style: italic;
   text-decoration: underline;
 }
 
-body:has(#tripsList li.selectedTrip) #tripInfoNoSelection,
+body:has(#tripsList li.selected-trip) #tripInfoNoSelection,
 body:has(#createTripForm[open]) #tripInfoNoSelection {
   display: none;
 }
 
-body:not(:has(#tripsList li.selectedTrip)) #tripInfo {
+body:not(:has(#tripsList li.selected-trip)) #tripInfo {
   display: none;
 }
 
@@ -377,7 +384,7 @@ body:not(:has(#tripsList li.selectedTrip)) #tripInfo {
   }
 }
 
-.tripStartEnd {
+.trip-start-end {
   display: inline-block;
   font-style: italic;
   font-size: 0.75rem;
@@ -385,7 +392,7 @@ body:not(:has(#tripsList li.selectedTrip)) #tripInfo {
   width: 10ch;
 }
 
-.tripData {
+.trip-data {
   text-align: center;
 }
 
@@ -397,7 +404,7 @@ body:not(:has(#tripsList li.selectedTrip)) #tripInfo {
   grid-template-columns: 1fr 1fr;
 }
 
-.libraryEntry {
+.library-entry {
   display: flex;
   justify-content: space-between;
 
@@ -420,14 +427,14 @@ article {
     border-block-end: 1px solid rgb(54, 54, 54);
   }
 
-  &.headerRow {
+  &.header-row {
     border-block-end: 2px solid;
     & div {
       font-size: 0.75rem;
     }
   }
 
-  & .modalButton {
+  & .modal-button {
     margin-block-start: 0;
     padding: 0.25rem 2rem;
   }
@@ -438,7 +445,7 @@ article {
   }
 }
 
-.noBags {
+.no-bags {
   margin-block-start: 5rem;
   text-align: center;
 }
@@ -457,23 +464,23 @@ article {
   /* box-shadow: 12px 12px 12px var(--box-shadow-clr-bottomright),
   -10px -10px 10px var(--box-shadow-clr-topleft); */
 }
+
 #tripBags section:hover {
-  box-shadow: 12px 12px 12px var(--box-shadow-clr-bottomright),
-  -10px -10px 10px var(--box-shadow-clr-topleft);
+  box-shadow: 12px 12px 12px var(--box-shadow-clr-bottomright), -10px -10px 10px var(--box-shadow-clr-topleft);
   /* outline: 1px solid; */
 }
 
-body:has(#tripsList li) .noTrips,
-body:not(:has(aside #tripsList .selectedTrip)) .noBags,
-body:not(:has(aside #tripsList .selectedTrip)) .addBagSection,
-body:has(#tripBags section) .noBags {
+body:has(#tripsList li) .no-trips,
+body:not(:has(aside #tripsList .selected-trip)) .no-bags,
+body:not(:has(aside #tripsList .selected-trip)) .add-bag-section,
+body:has(#tripBags section) .no-bags {
   display: none;
 }
 
-body:not(:has(.selectedTrip)):not(:has(#editEntries:checked)) .libraryEntry,
+body:not(:has(.selected-trip)):not(:has(#editEntries:checked)) .library-entry,
 body:has(#tripBags:empty):not(:has(#editEntries:checked))
   #itemsLibrary
-  .libraryEntry {
+  .library-entry {
   pointer-events: none;
   color: gray;
   font-style: italic;
@@ -484,7 +491,7 @@ body:has(#tripBags:empty):not(:has(#editEntries:checked))
   width: 50ch;
 }
 
-.dialogButtons {
+.dialog-buttons {
   margin-block-start: 0.5rem;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -495,7 +502,7 @@ body:has(#tripBags:empty):not(:has(#editEntries:checked))
   }
 }
 
-.confirmBtn {
+.btn-confirm {
   background-color: #45a049;
 }
 
@@ -518,7 +525,7 @@ body:has(#tripBags:empty):not(:has(#editEntries:checked))
   text-decoration: dashed;
 } */
 
-aside:has(#editEntries:checked) :is(#tripsList li, .libraryEntry div) {
+aside:has(#editEntries:checked) :is(#tripsList li, .library-entry div) {
   color: var(--clr-edit);
   animation: wiggle 3s ease infinite;
 }
@@ -562,20 +569,19 @@ aside:has(#editEntries:checked) :is(#tripsList li, .libraryEntry div) {
   }
 } */
 
-
-aside:has(#editEntries:checked) .remove-trip,
-aside:has(#editEntries:checked) .remove-bag,
-aside:has(#editEntries:checked) .remove-item {
+aside:has(#editEntries:checked) .remove-trip-button,
+aside:has(#editEntries:checked) .remove-bag-button,
+aside:has(#editEntries:checked) .remove-item-button {
   visibility: visible;
 }
 
 /* body:not(:has(aside #editEntries:checked)) #editTripBtn,
 body:has(aside #editEntries:checked) #addTripBtn, */
-body:not(:has(aside #editEntries:checked)) aside .remove-item,
+body:not(:has(aside #editEntries:checked)) aside .remove-item-button,
 /* body:not(:has(aside #editEntries:checked)) #editBagBtn,
 body:not(:has(aside #editEntries:checked)) #editItemBtn, */
-body:not(:has(aside #editEntries:checked)) :is(#editTripBtn, #editBagBtn, #editItemBtn, .addForm h3.edit),
-body:has(aside #editEntries:checked) :is(#addTripBtn, #addBagBtn, #addItemBtn, .addForm h3:not(:is(.edit, .noTrips))) {
+body:not(:has(aside #editEntries:checked)) :is(#editTripBtn, #editBagBtn, #editItemBtn, .add-form h3.edit),
+body:has(aside #editEntries:checked) :is(#addTripBtn, #addBagBtn, #addItemBtn, .add-form h3:not(:is(.edit, .no-trips))) {
   display: none;
 }
 
@@ -583,7 +589,7 @@ body:has(aside #editEntries:checked) :is(#addTripBtn, #addBagBtn, #addItemBtn, .
   position: relative;
 }
 
-.tooltip .tooltiptext {
+.tooltip .tooltip-text {
   visibility: hidden;
   display: grid;
   min-width: 45ch;
@@ -591,7 +597,7 @@ body:has(aside #editEntries:checked) :is(#addTripBtn, #addBagBtn, #addItemBtn, .
   gap: 0.5rem;
   background-color: var(--bg-clr-tooltips);
   box-shadow: 12px 12px 12px var(--box-shadow-clr-bottomright),
-  -10px -10px 10px var(--box-shadow-clr-topleft);
+    -10px -10px 10px var(--box-shadow-clr-topleft);
   padding: 1rem;
   border: 1px solid;
   position: absolute;
@@ -609,41 +615,41 @@ body:has(aside #editEntries:checked) :is(#addTripBtn, #addBagBtn, #addItemBtn, .
   }
 }
 
-.tooltip:hover .tooltiptext {
+.tooltip:hover .tooltip-text {
   visibility: visible;
 }
 
-.tooltipEntry {
+.tooltip-entry {
   text-align: end;
 }
 
-section article:last-child:is(.headerRow) {
+section article:last-child:is(.header-row) {
   display: none;
 }
 
-section:has(article:last-child:is(.headerRow)) .loadedBag {
+section:has(article:last-child:is(.header-row)) .loaded-bag {
   display: none;
 }
 
-section:has(article:last-child:not(:is(.headerRow))) .emptyBag {
+section:has(article:last-child:not(:is(.header-row))) .empty-bag {
   display: none;
 }
-.emptyBag {
+.empty-bag {
   font-style: italic;
   color: gainsboro;
 }
 
 body:has(aside #editEntries:checked)
-  .addForm:has(:is(input:invalid))
-  .confirmBtn {
+  .add-form:has(:is(input:invalid))
+  .btn-confirm {
   pointer-events: none;
   background-color: gray;
   opacity: 0.6;
 }
 
 body:not(:has(aside #editEntries:checked))
-  .addForm:has(:is(input:invalid, select:invalid))
-  .confirmBtn {
+  .add-form:has(:is(input:invalid, select:invalid))
+  .btn-confirm {
   pointer-events: none;
   background-color: gray;
   opacity: 0.6;
@@ -664,7 +670,7 @@ body:has(aside #editEntries:checked)
   vertical-align: super;
 }
 
-.addBagSection {
+.add-bag-section {
   display: grid;
   place-items: center;
 
@@ -674,15 +680,24 @@ body:has(aside #editEntries:checked)
   }
 }
 
-.bagCaption {
+.bag-caption {
   display: grid;
-  grid-template-columns: 50ch 1fr 5ch;
+  grid-template-columns: 5ch 50ch 1fr 5ch 5ch;
+  grid-template-areas: "bag-toggle bag-name bag-total-weight bag-confirm bag-remove";
   align-items: center;
   gap: 2rem;
 }
 
+dialog {
+  background-color: var(--bg-clr-dialog);
+}
+
 dialog::backdrop {
-  backdrop-filter: blur(2px)
+  backdrop-filter: blur(2px);
+}
+
+.edit {
+  margin-block: auto 1rem;
 }
 
 .edit:has(input:not(:checked)) p {
@@ -693,4 +708,110 @@ dialog::backdrop {
   margin: 0;
   font-size: 0.75rem;
   text-wrap: balance;
+}
+
+#tripBags section input {
+  display: none;
+}
+
+#tripBags section label {
+  cursor: pointer;
+  height: 100%;
+  display: flex;
+  position: relative;
+  place-content: center;
+  align-items: center;
+}
+
+#tripBags section label:hover {
+  outline: 1px solid;
+}
+
+section .bag-toggle::before {
+  content: "\f422";
+  position: absolute;
+  display: flex;
+  height: 100%;
+  aspect-ratio: 1;
+  place-content: center;
+  align-items: center;
+  font-family: "FontAwesome";
+}
+
+section:has(.bag-toggle-checkbox:checked) .bag-toggle::before {
+  content: "\f065";
+}
+
+section:has(.bag-toggle-checkbox:checked) article {
+  display: none;
+}
+
+.bag-toggle {
+  grid-area: bag-toggle;
+}
+
+.remove-bag-button {
+  grid-area: bag-remove;
+}
+
+#tripBags :is(.remove-bag-confirm, .remove-bag-cancel, .remove-bag-text) {
+  display: none;
+  z-index: 4;
+  /* aspect-ratio: 1; */
+}
+
+.remove-bag-confirm {
+  grid-area: bag-confirm;
+  color: var(--clr-confirm);
+}
+
+.remove-bag-cancel {
+  grid-area: bag-remove;
+  color: var(--clr-cancel);
+}
+
+.remove-bag-text {
+  position: absolute;
+  padding: 0.5rem 0.5rem 9rem 0.5rem;
+  z-index: 3 !important;
+  margin: 0;
+  text-align: center;
+  width: 15ch;
+  right: -1ch;
+  height: 2.5lh;
+  bottom: -0.75rem;
+  background-color: var(--bg-clr-dialog);
+  border: 1px solid;
+}
+
+#tripBags .bag-caption:has(.remove-bag-checkbox:checked) :is(.remove-bag-confirm, .remove-bag-cancel, .remove-bag-text) {
+  display: flex;
+}
+
+#tripBags .bag-caption:has(.remove-bag-checkbox:checked) .remove-bag-button {
+  display: none;
+}
+
+section:has(article:not(:is(.row-add-item)):hover) article:hover {
+  opacity: 1;
+}
+
+section:has(article:not(:is(.header-row, .row-add-item)):hover) article:not(:hover):not(:is(.header-row, .row-add-item)) {
+  opacity: 0.5;
+}
+
+article:not(.header-row, .row-add-item) {
+  opacity: 0;
+  /* translate: 100% 0; */
+  animation: fadeIn 1000ms forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    /* translate: 100% 0; */
+  } to {
+    opacity: 1;
+    translate: 0 0;
+  }
 }

@@ -5,13 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pack-It-Easy</title>
+    <script src="scripts.js" defer></script>
     <link rel="stylesheet" href="styles.css">
     <script src="a256e5c374.js" crossorigin="anonymous"></script>
+    <!-- <script src="./static/scripts.js"></script> -->
     <!-- <link rel="stylesheet" href="./static/styles.css">
     <script src="./static/a256e5c374.js" crossorigin="anonymous"></script> -->
     <!-- <script src="https://kit.fontawesome.com/a256e5c374.js" crossorigin="anonymous"></script> -->
-    <script src="scripts.js" defer></script>
-    <!-- <script src="./static/scripts.js"></script> -->
 </head>
 
 <body>
@@ -19,10 +19,10 @@
         <aside class="sidebar">
             <h1>Pack-It-Easy</h1>
 
-            <section class="sectionTrips">
-                <div class="tripsListTitle">
-                    <h2>Trips <button class="modalButton" onclick="createTripForm.showModal(); editEntries.checked = false;">+</button></h2>
-                    <div class="exportImportTrips">
+            <section class="section-trips">
+                <div class="trips-list-title">
+                    <h2>Trips <button class="modal-button" onclick="createTripForm.showModal(); editEntries.checked = false;">+</button></h2>
+                    <div class="export-import-trips">
                         <input type="file" id="importTripsFile" accept=".json" style="display:none;">
                         <label for="importTripsFile" title="Import Trips" class="import-label"><i class="fa-solid fa-file-import"></i></label>
                         <button id="exportTripsBtn" title="Export Trips"><i class="fa-solid fa-file-export"></i></button>
@@ -33,73 +33,73 @@
             </section>
 
             <section id="sectionLibraries">
-                <div class="librariesTitle">
+                <div class="libraries-title">
                     <h3>User Library</h3>
-                    <div class="exportImportLibraries">
+                    <div class="export-import-libraries">
                         <input type="file" id="importFile" accept=".json" style="display:none;">
                         <label for="importFile" class="import-label" title="Import Libraries"><i class="fa-solid fa-file-import"></i></label>
                         <button id="exportBtn" title="Export Libraries"><i class="fa-solid fa-file-export"></i></button>
                     </div>
                 </div>
 
-                <div class="libraryHeader">
+                <div class="library-header">
                     <h4>Bags</h4>
                     <input type="text" id="searchBags" placeholder="Search">
                 </div>
                 <div id="bagsLibrary" class="library"></div>
-                <div class="libraryHeader">
+                <div class="library-header">
                     <h4>Items</h4>
                     <input type="text" id="searchItems" placeholder="Search">
                 </div>
                 <div id="itemsLibrary" class="library"></div>
             </section>
             <div class="edit">
-                <label><input type="checkbox" name="Edit Entries" id="editEntries" />Edit Mode</label>
                 <p>Click the trips, bags or items above to edit!</p>
+                <label><input type="checkbox" name="Edit Entries" id="editEntries" />Edit Mode</label>
             </div>
         </aside>
         <main>
-            <h2 id="tripInfoNoSelection">Please select a trip from your list or <button class="modalButton" onclick="createTripForm.showModal(); editEntries.checked = false;">create a new one.</button></h2>
-            <div id=" tripInfo">
-                <div class="tripData">
+            <h2 id="tripInfoNoSelection">Please select a trip from your list or <button class="modal-button" onclick="createTripForm.showModal(); editEntries.checked = false;">create a new one.</button></h2>
+            <div id="tripInfo">
+                <div class="trip-data">
                     <h2 id="selectedTripName"></h2>
                     <p id="tripDates"></p>
                 </div>
 
-                <p class="noBags">You have not added any bags to this trip yet. 
+                <p class="no-bags">You have not added any bags to this trip yet. 
                     <!-- <button class="modalButton" onclick="addBagForm.showModal()">Add your first bag</button> -->
                 </p>
                 <div id="tripBags"></div>
-                <section class="addBagSection"><button class="modalButton" onclick="addBagForm.showModal(); editEntries.checked = false;">Add Bag</button></section>
+                <section class="add-bag-section"><button class="modal-button" onclick="addBagForm.showModal(); editEntries.checked = false;">Add Bag</button></section>
 
             </div>
         </main>
     </div>
 
-    <dialog id="createTripForm" class="addForm">
+    <dialog id="createTripForm" class="add-form">
         <div class="wrapper">
-            <h2 class="noTrips">Hey there!</h2>
-            <h3 class="noTrips">Looks like you don't have any trips yet, start by creating one here:</h3>
-            <div class="tripNameInput">
+            <h2 class="no-trips">Hey there!</h2>
+            <h3 class="no-trips">Looks like you don't have any trips yet, start by creating one here:</h3>
+            <div class="trip-name-input">
                 <label for="tripName">Trip Name</label>
                 <input type="text" id="tripName" placeholder="e.g. Japan 2024" required>
             </div>
-            <div class="tripStartDateInput">
+            <div class="trip-start-date-input">
                 <label for="tripStartDate">Start</label>
                 <input type="date" id="tripStartDate">
             </div>
-            <div class="tripEndDateInput">
+            <div class="trip-end-date-input">
                 <label for="tripEndDate">End</label>
                 <input type="date" id="tripEndDate">
             </div>
-            <div class="dialogButtons">
-                <button id="addTripBtn" class="confirmBtn">Add Trip</button>
-                <button id="editTripBtn" class="confirmBtn">Save Changes</button>
+            <div class="dialog-buttons">
+                <button id="addTripBtn" class="btn-confirm">Add Trip</button>
+                <button id="editTripBtn" class="btn-confirm">Save Changes</button>
                 <button onclick="createTripForm.close();">Cancel</button>
             </div>
         </div>
     </dialog>
-    <dialog id="addBagForm" class="addForm">
+    <dialog id="addBagForm" class="add-form">
         <div class="wrapper">
             <h3>Add Bag</h3>
             <h3 class="edit">Edit Bag</h3>
@@ -120,14 +120,14 @@
                 <label for="bagWeightLimit">Weight Limit (optional)</label>
                 <input type="number" id="bagWeightLimit" placeholder="Weight Limit (optional)">
             </div>
-            <div class="dialogButtons">
-                <button id="addBagBtn" class="confirmBtn">Add Bag</button>
-                <button id="editBagBtn" class="confirmBtn">Save Changes</button>
+            <div class="dialog-buttons">
+                <button id="addBagBtn" class="btn-confirm">Add Bag</button>
+                <button id="editBagBtn" class="btn-confirm">Save Changes</button>
                 <button onclick="addBagForm.close();">Cancel</button>
             </div>
         </div>
     </dialog>
-    <dialog id="addItemForm" class="addForm">
+    <dialog id="addItemForm" class="add-form">
         <div class="wrapper">
             <h3>Add Item</h3>
             <h3 class="edit">Edit Item</h3>
@@ -136,7 +136,7 @@
                 <label for="itemName">Item Name</label>
                 <input type="text" id="itemName" placeholder="Item Name" list="itemNameSuggestions" required>
             </div>
-            <div class="gridWrapper">
+            <div class="wrapper-grid">
                 <div>
                     <label for="itemAmount">Amount</label>
                     <input type="number" id="itemAmount" value="1" placeholder="Amount" required>
@@ -175,9 +175,9 @@
                 <label for="itemBag">Target Bag</label>
                 <select id="itemBag" required></select>
             </div>
-            <div class="dialogButtons">
-                <button id="addItemBtn" class="confirmBtn">Add Item</button>
-                <button id="editItemBtn" class="confirmBtn">Save Changes</button>
+            <div class="dialog-buttons">
+                <button id="addItemBtn" class="btn-confirm">Add Item</button>
+                <button id="editItemBtn" class="btn-confirm">Save Changes</button>
                 <button onclick="addItemForm.close();">Cancel</button>
             </div>
         </div>
