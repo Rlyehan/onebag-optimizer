@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const addBagForm = document.getElementById('addBagForm')
     const addItemForm = document.getElementById('addItemForm')
     const editEntries = document.getElementById('editEntries')
+    const dialogs = document.querySelectorAll('dialog')
     let trips = JSON.parse(localStorage.getItem('tripList')) || []
     let bagsLibraryData = JSON.parse(localStorage.getItem('bagsLibrary')) || []
     let itemsLibraryData = JSON.parse(localStorage.getItem('itemsLibrary')) || []
@@ -36,7 +37,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentTripIdForEditing = null
     let currentBagNameForEditing = null
     let currentItemNameForEditing = null
-
+    let currentItemForEditing = null
+    let currentBagForEditing = null
 
 
     /* UTILITY FUNCTIONS */
@@ -63,6 +65,84 @@ document.addEventListener('DOMContentLoaded', () => {
             // If the number is the same, compare the remaining suffix (e.g., "Pro", "Plus", "Max")
             return (aSuffix || "").trim().toLowerCase().localeCompare((bSuffix || "").trim().toLowerCase())
         })
+    }
+
+    let currentSort = {
+        field: null,
+        ascending: true
+    }
+
+    function sortBagItems(bagId, sortField) {
+        const bag = currentTrip.bags.find(b => b.id === bagId)
+        if (bag) {
+            // Determine sort direction
+            if (currentSort.field === sortField) {
+                currentSort.ascending = !currentSort.ascending
+            } else {
+                currentSort.field = sortField
+                currentSort.ascending = true
+            }
+
+            // Sort items based on field and direction
+            bag.items.sort((a, b) => {
+                let comparison = 0
+                switch (sortField) {
+                    case 'name':
+                        comparison = a.name.localeCompare(b.name)
+                        break
+                    case 'amount':
+                        comparison = b.amount - a.amount
+                        break
+                    case 'weight':
+                        comparison = b.weight - a.weight
+                        break
+                    case 'totalWeight':
+                        comparison = (b.amount * b.weight) - (a.amount * a.weight)
+                        break
+                    case 'priority':
+                        comparison = a.priority.localeCompare(b.priority)
+                        break
+                    case 'category':
+                        comparison = a.category.localeCompare(b.category)
+                        break
+                    case 'subcategory':
+                        comparison = a.subcategory.localeCompare(b.subcategory)
+                        break
+                }
+                return currentSort.ascending ? comparison : -comparison
+            })
+
+            renderBagsTable() // Update the bag's items table
+            // Update UI with active sort styling for the specific bag
+            updateSortIcons(bagId, sortField, currentSort.ascending)
+        }
+    }
+
+    // Buggy for now, as the sort icon gets reset when you sort in another bag.
+    function updateSortIcons(bagId, activeField, ascending) {
+        // Select headers only within the current bag
+        const bagElement = document.querySelector(`[data-bag="${bagId}"]`)
+
+        // Remove active classes from all headers in the current bag
+        bagElement.querySelectorAll('.sortable').forEach(header => {
+            header.classList.remove('asc', 'desc')
+            const icon = header.querySelector('i')
+            if (icon) {
+                icon.classList.remove('fa-sort-up', 'fa-sort-down')
+                icon.classList.add('fa-sort') // Reset icon to neutral state
+            }
+        })
+
+        // Add active classes to the clicked header
+        const activeHeader = bagElement.querySelector(`.sortable[data-sort="${activeField}"]`)
+        if (activeHeader) {
+            activeHeader.classList.add(ascending ? 'asc' : 'desc')
+            const icon = activeHeader.querySelector('i')
+            if (icon) {
+                icon.classList.remove('fa-sort') // Remove neutral state icon
+                icon.classList.add(ascending ? 'fa-sort-up' : 'fa-sort-down') 
+            }
+        }
     }
 
     function formatDate(dateString) {
@@ -293,6 +373,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 li.appendChild(removeTripButton)
                 li.addEventListener('click', () => {
+                    setDialogType()
                     loadTrip(trip)
                     currentTripIdForEditing = trip.uuid // Store the selected trip ID for editing
                 })
@@ -340,6 +421,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 div.appendChild(removeBtn)
                 div.addEventListener('click', () => {
+                    setDialogType("add")
                     addBagForm.showModal()
                     addBagBtn.focus()
                     currentBagNameForEditing = bag.name // Store the selected bag name for editing
@@ -390,6 +472,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 div.appendChild(removeBtn)
                 div.addEventListener('click', () => {
+                    setDialogType("add")
                     addItemForm.showModal()
                     addItemBtn.focus()
                     currentItemNameForEditing = item.name
@@ -439,6 +522,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 }
 
+                const editBagButton = document.createElement('button')
+                editBagButton.classList.add('edit-bag-button')
+                editBagButton.innerHTML = '<i class="fa-solid fa-pen"></i>'
+                editBagButton.addEventListener('click', () => {
+                    setDialogType("update")
+                    openEditBagForm(bag)
+                })
+
                 const removeBagCheckbox = document.createElement('input')
                 removeBagCheckbox.type = 'checkbox'
                 removeBagCheckbox.id = `confirm-${bag.id}`
@@ -473,6 +564,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 caption.appendChild(toggle)
                 caption.appendChild(toggleLabel)
+                caption.appendChild(editBagButton)
                 caption.appendChild(removeBagCheckbox)
                 caption.appendChild(removeBagConfirm)
                 caption.appendChild(removeBagCancel)
@@ -491,17 +583,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 const headerRow = document.createElement('article')
                 headerRow.classList.add('header-row')
                 headerRow.innerHTML = `
-                    <div class="drag-handle-header"></div>
-                    <div class="item-name">Item</div>
-                    <div class="item-amount">Amount</div>
-                    <div class="item-weight">Weight (g)</div>
-                    <div class="item-total-weight">Total (g)</div>
-                    <div class="item-priority">Prio</div>
-                    <div class="item-category">Category</div>
-                    <div class="item-subcategory">Subcategory</div>
-                    <div class="remove-item"></div>
+                        <div class="drag-handle-header"></div>
+                        <div class="item-name sortable" data-sort="name">Item <i class="fa-solid fa-sort"></i></div>
+                        <div class="item-amount sortable" data-sort="amount">Amount <i class="fa-solid fa-sort"></i></div>
+                        <div class="item-weight sortable" data-sort="weight">Weight <i class="fa-solid fa-sort"></i></div>
+                        <div class="item-total-weight sortable" data-sort="totalWeight">Total <i class="fa-solid fa-sort"></i></div>
+                        <div class="item-priority sortable" data-sort="priority">Prio <i class="fa-solid fa-sort"></i></div>
+                        <div class="item-category sortable" data-sort="category">Category <i class="fa-solid fa-sort"></i></div>
+                        <div class="item-subcategory sortable" data-sort="subcategory">Subcategory <i class="fa-solid fa-sort"></i></div>
+                        <div class="remove-item"></div>
                     `
                 bagTable.appendChild(headerRow)
+
+                // Add event listeners to headers for sorting
+                headerRow.querySelectorAll('.sortable').forEach(header => {
+                    header.addEventListener('click', () => {
+                        const sortField = header.dataset.sort
+                        sortBagItems(bag.id, sortField)
+                    })
+                })
 
 
                 // Add items to the table
@@ -521,15 +621,24 @@ document.addEventListener('DOMContentLoaded', () => {
                             <div class="item-total-weight">${totalItemWeight}</div>
                             <div class="item-priority">${item.priority}</div>
                             <div class="item-category">${item.category}</div>
-                            <div class="item-subcategory">${item.subcategory || 'None'}</div>
-                            <div><button class="remove-item-button"><i class="fa-solid fa-trash-can"></i></button></div>
+                            <div class="item-subcategory" title="${item.subcategory || 'None'}">${item.subcategory || 'None'}</div>
+                            <div>
+                            <button class="edit-item-button"><i class="fa-solid fa-pen"></i></button>
+                            <button class="remove-item-button"><i class="fa-solid fa-trash-can"></i></button>
+                            </div>
                         `
+
+                    itemRow.querySelector('.edit-item-button').addEventListener('click', () => {
+                        setDialogType("update")
+                        openEditItemForm(bag.id, item)
+                    })
 
                     itemRow.querySelector('.remove-item-button').addEventListener('click', () => {
                         bag.items = bag.items.filter(i => i.id !== item.id)
                         saveToLocalStorage()
                         renderBagsTable()
                     })
+
 
                     bagTable.appendChild(itemRow)
                 })
@@ -547,6 +656,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 button.onclick = function () {
                     itemBagInput.value = bag.id
                     editEntries.checked = false
+                    setDialogType("add")
                     addItemForm.showModal()
                 }
                 div2.appendChild(button)
@@ -597,9 +707,6 @@ document.addEventListener('DOMContentLoaded', () => {
         removeBagFromDOM(bagId)
         updateBagDropdown()
     }
-
-
-
 
 
 
@@ -853,7 +960,6 @@ document.addEventListener('DOMContentLoaded', () => {
             tripStartDateInput.value = trip.startDate
             tripEndDateInput.value = trip.endDate
             createTripForm.showModal()
-            // return
         }
     }
 
@@ -919,7 +1025,7 @@ document.addEventListener('DOMContentLoaded', () => {
     })
 
     editTripBtn.addEventListener('click', () => {
-        if (!currentTripIdForEditing) return // Ensure a trip is selected for editing
+        if (!currentTripIdForEditing) return
 
         const updatedTripName = tripNameInput.value.trim()
         const updatedStartDate = tripStartDateInput.value || null
@@ -990,7 +1096,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 bagNameWithIndex = `${bagName} #${index}`
             }
 
-            // Create the new bag object
             const bag = {
                 id: generateUUID(),
                 name: bagNameWithIndex,
@@ -1002,28 +1107,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Create a copy of the bag without the id to store in bagsLibraryData
             const bagForLibrary = { ...bag }
-            delete bagForLibrary.id // Remove the id for storage
+            delete bagForLibrary.id
 
             // Add to the bagsLibrary if it doesn't already exist
             if (!bagsLibraryData.some(existingBag => existingBag.name === bagName)) {
                 bagsLibraryData.push(bagForLibrary)
-                bagsLibraryData = sortByName(bagsLibraryData) // Sort after addition
+                bagsLibraryData = sortByName(bagsLibraryData)
                 saveToLocalStorage()
                 renderBagsLibrary()
             }
 
-            // Add the new bag to the current trip
             currentTrip.bags.push(bag)
             saveToLocalStorage()
             addBagToDOM(bag)
             updateBagDropdown(bag.id)
             addBagForm.close()
-
-            // Clear inputs
-            bagNameInput.value = ''
-            bagWeightInput.value = ''
-            bagWeightLimitInput.value = ''
-            bagDescriptionInput.value = ''
+            resetAddBagForm()
         }
     })
 
@@ -1054,6 +1153,10 @@ document.addEventListener('DOMContentLoaded', () => {
             caption.innerHTML = `<div>${bag.name.replace(/(#[0-9]+)$/, '')} <span class="bag-index">${bag.name.match(/(#[0-9]+)$/)?.[0] || ''}</span> (${bag.weight} g)</div><span class="empty-bag">Bag is empty</span><span class="loaded-bag">Total Weight: ${totalBagWeight} g</span>`
         }
 
+        const editBagButton = document.createElement('button')
+        editBagButton.classList.add('edit-bag-button')
+        editBagButton.innerHTML = '<i class="fa-solid fa-pen"></i>'
+        editBagButton.addEventListener('click', () => openEditBagForm(bag))
 
         const removeBagCheckbox = document.createElement('input')
         removeBagCheckbox.type = 'checkbox'
@@ -1089,6 +1192,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         caption.appendChild(toggle)
         caption.appendChild(toggleLabel)
+        caption.appendChild(editBagButton)
         caption.appendChild(removeBagCheckbox)
         caption.appendChild(removeBagConfirm)
         caption.appendChild(removeBagCancel)
@@ -1103,7 +1207,6 @@ document.addEventListener('DOMContentLoaded', () => {
         bagTable.addEventListener('dragleave', handleDragLeave)
 
         // Create table header
-        // if (bag.items.length !== 0) {    
         const headerRow = document.createElement('article')
         headerRow.classList.add('header-row')
         headerRow.innerHTML = `
@@ -1118,38 +1221,6 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="remove-item"></div>
             `
         bagTable.appendChild(headerRow)
-
-
-        // Add items to the table
-        bag.items.forEach(item => {
-            const itemRow = document.createElement('article')
-            itemRow.setAttribute('data-bag', bag.id)
-            itemRow.setAttribute('data-item', item.id)
-            itemRow.addEventListener('dragstart', handleDragStart)
-
-            const totalItemWeight = item.amount * item.weight
-
-            itemRow.innerHTML = `
-                    <div class="drag-handle" draggable="true"><i class="fa-solid fa-up-down-left-right"></i></div>
-                    <div class="item-name">${item.name}</div>
-                    <div class="item-amount">${item.amount}x</div>
-                    <div class="item-weight">${item.weight}</div>
-                    <div class="item-total-weight">${totalItemWeight}</div>
-                    <div class="item-priority">${item.priority}</div>
-                    <div class="item-category">${item.category}</div>
-                    <div class="item-subcategory">${item.subcategory || 'None'}</div>
-                    <div><button class="remove-item-button"><i class="fa-solid fa-trash-can"></i></button></div>
-                `
-
-            itemRow.querySelector('.remove-item-button').addEventListener('click', () => {
-                bag.items = bag.items.filter(i => i.id !== item.id)
-                saveToLocalStorage()
-                renderBagsTable()
-            })
-
-            bagTable.appendChild(itemRow)
-        })
-
         bagsTableContainer.appendChild(bagTable)
 
         const article = document.createElement('article')
@@ -1163,6 +1234,7 @@ document.addEventListener('DOMContentLoaded', () => {
         button.onclick = function () {
             itemBagInput.value = bag.id
             editEntries.checked = false
+            setDialogType("add")
             addItemForm.showModal()
         }
         div2.appendChild(button)
@@ -1214,7 +1286,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const bagId = itemBagInput.value
 
         if (itemName) {
-            // Create item object
             const item = {
                 id: generateUUID(),
                 name: itemName,
@@ -1227,42 +1298,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Create a copy of the item without the id to store in itemsLibraryData
             const itemForLibrary = { ...item }
-            delete itemForLibrary.id // Remove the id for storage
+            delete itemForLibrary.id
 
             // Add to itemsLibrary only if it doesn't already exist
             if (!itemsLibraryData.some(existingItem => existingItem.name === itemName)) {
                 itemsLibraryData.push(itemForLibrary)
-                itemsLibraryData = sortByName(itemsLibraryData) // Sort after addition
+                itemsLibraryData = sortByName(itemsLibraryData)
                 saveToLocalStorage()
                 renderItemsLibrary()
             }
 
-            // Add the new item to the trip's bag but not to bagsLibrary
             const bag = currentTrip.bags.find(bag => bag.id === bagId)
             if (bag) {
-                // Only update the currentTrip.bags, not the bagsLibrary
                 bag.items.push(item)
-
-                // Check that no item is added to bagsLibraryData
-                // Remove this if already being done elsewhere
                 const libraryBag = bagsLibraryData.find(b => b.name === bag.name)
                 if (libraryBag) {
-                    libraryBag.items = []  // Ensure libraryBag stays empty
+                    libraryBag.items = []
                 }
 
                 saveToLocalStorage()
                 addItemToDOM(bagId, item) // Update the DOM with the new item
             }
             addItemForm.close()
-            // Clear item inputs
-            itemNameInput.value = ''
-            itemAmountInput.value = '1'
-            itemWeightInput.value = ''
-            // itemPriorityInput.value = 'LO';
-            // itemCategoryInput.value = 'Clothing'
-            itemSubcategoryInput.value = ''
-            // itemBagInput.value = ''
-
+            resetAddItemForm()
         }
     })
 
@@ -1284,18 +1342,44 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="item-total-weight">${totalItemWeight}</div>
             <div class="item-priority">${item.priority}</div>
             <div class="item-category">${item.category}</div>
-            <div class="item-subcategory">${item.subcategory || 'None'}</div>
-            <div><button class="remove-item-button"><i class="fa-solid fa-trash-can"></i></button></div>
+            <div class="item-subcategory" alt="${item.subcategory || 'None'}">${item.subcategory || 'None'}</div>
+            <div>
+                <button class="edit-item-button"><i class="fa-solid fa-pen"></i></button>
+                <button class="remove-item-button"><i class="fa-solid fa-trash-can"></i></button>
+            </div>
         `
+
+        itemRow.querySelector('.edit-item-button').addEventListener('click', () => {
+            setDialogType("update")
+            openEditItemForm(bag.id, item)
+        })
+
         itemRow.querySelector('.remove-item-button').addEventListener('click', () => {
             const bag = currentTrip.bags.find(b => b.id === bagId)
             bag.items = bag.items.filter(i => i.id !== item.id)
+            updateBagTotalWeight(bagId)
             saveToLocalStorage()
             itemRow.remove() // Remove from DOM directly
         })
 
         bagTable.appendChild(itemRow)
+        updateBagTotalWeight(bagId)
         moveAddItemRowToEnd(bagTable)
+    }
+
+    function updateBagTotalWeight(bagId) {
+        // Find the bag in the current trip
+        const bag = currentTrip.bags.find(b => b.id === bagId)
+
+        // Recalculate the total weight
+        const totalBagWeight = bag.weight + bag.items.reduce((acc, item) => acc + (item.weight * item.amount), 0)
+
+        // Update the weight in the DOM
+        const bagCaption = bagsTableContainer.querySelector(`section[data-bag="${bagId}"] .loaded-bag`)
+
+        if (bagCaption) {
+            bagCaption.innerHTML = `Total Weight: ${totalBagWeight}${bag.weightLimit ? `/${bag.weightLimit} g` : ' g'}`
+        }
     }
 
     function removeBagFromDOM(bagId) {
@@ -1343,10 +1427,126 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Function to open the form and pre-fill with item data for editing
+    function openEditItemForm(bagId, item) {
+
+        // Set the global variables for current item and bag
+        currentBagForEditing = bagId
+        currentItemForEditing = item
+
+        // Fill the form with the item's current data
+        itemNameInput.value = item.name
+        itemAmountInput.value = item.amount
+        itemWeightInput.value = item.weight
+        itemPriorityInput.value = item.priority
+        itemCategoryInput.value = item.category
+        itemSubcategoryInput.value = item.subcategory || ''
+        itemBagInput.value = bagId
+
+        // Open the form dialog
+        setDialogType("update")
+        addItemForm.showModal()
+    }
+
+    updateItemBtn.addEventListener('click', () => {
+        if (!currentItemForEditing || !currentBagForEditing) return
+
+        // Get updated values from the form
+        const newItemName = itemNameInput.value
+        const newAmount = parseInt(itemAmountInput.value, 10)
+        const newWeight = parseFloat(itemWeightInput.value)
+        const newPriority = itemPriorityInput.value
+        const newCategory = itemCategoryInput.value
+        const newSubcategory = itemSubcategoryInput.value
+
+        // Find the bag and item in the current trip
+        const bag = currentTrip.bags.find(b => b.id === currentBagForEditing)
+        const itemIndex = bag.items.findIndex(i => i.id === currentItemForEditing.id)
+
+        if (itemIndex !== -1) {
+            // Update the item in the bag
+            bag.items[itemIndex] = {
+                ...bag.items[itemIndex], // Preserve the item's ID
+                name: newItemName,
+                amount: newAmount,
+                weight: newWeight,
+                priority: newPriority,
+                category: newCategory,
+                subcategory: newSubcategory
+            }
+
+            saveToLocalStorage() // Save changes to localStorage
+            renderBagsTable()    // Re-render the table to reflect changes
+            addItemForm.close()  // Close the dialog
+
+            // Clear the global variables and reset form
+            currentItemForEditing = null
+            currentBagForEditing = null
+            resetAddItemForm()
+        }
+    })
 
 
 
+    function resetAddItemForm() {
+        itemNameInput.value = ''
+        itemAmountInput.value = '1'
+        itemWeightInput.value = ''
+        // itemPriorityInput.value = ''
+        // itemCategoryInput.value = ''
+        itemSubcategoryInput.value = ''
+        // itemBagInput.value = ''
+    }
 
+
+    function openEditBagForm(bag) {
+        currentBagForEditing = bag
+        bagNameInput.value = bag.name
+        bagWeightInput.value = bag.weight
+        bagWeightLimitInput.value = bag.weightLimit || ''
+        bagDescriptionInput.value = bag.description || ''
+        addBagForm.showModal()
+    }
+
+    updateBagBtn.addEventListener('click', () => {
+        if (!currentBagForEditing) return
+
+        // Get updated values from the form
+        const newBagName = bagNameInput.value.trim()
+        const newWeight = parseFloat(bagWeightInput.value)
+        const newWeightLimit = parseFloat(bagWeightLimitInput.value) || null
+        const newDescription = bagDescriptionInput.value.trim() || ''
+
+        if (!newBagName || isNaN(newWeight)) return // Ensure valid input
+
+        // Find the bag in the current trip
+        const bagIndex = currentTrip.bags.findIndex(bag => bag.id === currentBagForEditing.id)
+
+        if (bagIndex !== -1) {
+            // Update the bag in the current trip
+            currentTrip.bags[bagIndex] = {
+                ...currentTrip.bags[bagIndex],  // Keep the same ID
+                name: newBagName,
+                weight: newWeight,
+                weightLimit: newWeightLimit,
+                description: newDescription
+            }
+
+            saveToLocalStorage()
+            renderBagsTable()
+            addBagForm.close()
+            currentBagForEditing = null
+            resetAddBagForm()
+        }
+    })
+
+    // Helper function to reset the bag form
+    function resetAddBagForm() {
+        bagNameInput.value = ''
+        bagWeightInput.value = ''
+        bagWeightLimitInput.value = ''
+        bagDescriptionInput.value = ''
+    }
 
 
     function populateBagDropdown() {
@@ -1374,13 +1574,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const itemBagSelect = document.getElementById('itemBag')
     function updateBagDropdown(selectedBagUUID) {
-        // Clear the dropdown
         itemBagSelect.innerHTML = ''
-
-        // Populate dropdown with all bags in the current trip
         populateBagDropdown()
 
-        // Automatically select the newly added bag or default value if not specified
         if (selectedBagUUID) {
             itemBagSelect.value = selectedBagUUID
         } else {
@@ -1388,8 +1584,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Initialize
     renderTrips()
     renderBagsLibrary()
     renderItemsLibrary()
 })
+
+function setDialogType(type) {
+    const editEntries = document.getElementById('editEntries')
+    document.querySelectorAll('dialog').forEach(dialog => {
+        dialog.classList.remove('add')
+        dialog.classList.remove('edit')
+        dialog.classList.remove('update')
+        if (editEntries.checked) {
+            dialog.classList.add('edit')
+        } else {
+            dialog.classList.add(type)
+        }
+    })
+}

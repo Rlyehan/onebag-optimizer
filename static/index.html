@@ -21,7 +21,7 @@
 
             <section class="section-trips">
                 <div class="trips-list-title">
-                    <h2>Trips <button class="modal-button" onclick="createTripForm.showModal(); editEntries.checked = false;">+</button></h2>
+                    <h2>Trips <button class="modal-button" onclick="editEntries.checked = false; setDialogType('add'); createTripForm.showModal()">+</button></h2>
                     <div class="export-import-trips">
                         <input type="file" id="importTripsFile" accept=".json" style="display:none;">
                         <label for="importTripsFile" title="Import Trips" class="import-label"><i class="fa-solid fa-file-import"></i></label>
@@ -53,13 +53,13 @@
                 </div>
                 <div id="itemsLibrary" class="library"></div>
             </section>
-            <div class="edit">
+            <div class="edit-checkbox">
                 <p>Click the trips, bags or items above to edit!</p>
                 <label><input type="checkbox" name="Edit Entries" id="editEntries" />Edit Mode</label>
             </div>
         </aside>
         <main>
-            <h2 id="tripInfoNoSelection">Please select a trip from your list or <button class="modal-button" onclick="createTripForm.showModal(); editEntries.checked = false;">create a new one.</button></h2>
+            <h2 id="tripInfoNoSelection">Please select a trip from your list or <button class="modal-button" onclick="editEntries.checked = false; setDialogType('add'); createTripForm.showModal();">create a new one.</button></h2>
             <div id="tripInfo">
                 <div class="trip-data">
                     <h2 id="selectedTripName"></h2>
@@ -70,7 +70,7 @@
                     <!-- <button class="modalButton" onclick="addBagForm.showModal()">Add your first bag</button> -->
                 </p>
                 <div id="tripBags"></div>
-                <section class="add-bag-section"><button class="modal-button" onclick="addBagForm.showModal(); editEntries.checked = false;">Add Bag</button></section>
+                <section class="add-bag-section"><button class="modal-button" onclick="editEntries.checked = false; setDialogType('add'); addBagForm.showModal();">Add Bag</button></section>
 
             </div>
         </main>
@@ -78,6 +78,9 @@
 
     <dialog id="createTripForm" class="add-form">
         <div class="wrapper">
+            <h3 class="add">Add Trip</h3>
+            <h3 class="edit">Edit Trip</h3>
+            <h3 class="update">Update Trip</h3>
             <h2 class="no-trips">Hey there!</h2>
             <h3 class="no-trips">Looks like you don't have any trips yet, start by creating one here:</h3>
             <div class="trip-name-input">
@@ -95,14 +98,15 @@
             <div class="dialog-buttons">
                 <button id="addTripBtn" class="btn-confirm">Add Trip</button>
                 <button id="editTripBtn" class="btn-confirm">Save Changes</button>
-                <button onclick="createTripForm.close();">Cancel</button>
+                <button class="cancel-button" onclick="createTripForm.close();">Cancel</button>
             </div>
         </div>
     </dialog>
     <dialog id="addBagForm" class="add-form">
         <div class="wrapper">
-            <h3>Add Bag</h3>
+            <h3 class="add">Add Bag</h3>
             <h3 class="edit">Edit Bag</h3>
+            <h3 class="update">Update Bag</h3>
             <div>
                 <datalist id="bagNameSuggestions"></datalist>
                 <label for="bagName">Bag Name</label>
@@ -123,14 +127,16 @@
             <div class="dialog-buttons">
                 <button id="addBagBtn" class="btn-confirm">Add Bag</button>
                 <button id="editBagBtn" class="btn-confirm">Save Changes</button>
-                <button onclick="addBagForm.close();">Cancel</button>
+                <button id="updateBagBtn" class="btn-confirm">Update Bag</button>
+                <button class="cancel-button" onclick="addBagForm.close();">Cancel</button>
             </div>
         </div>
     </dialog>
     <dialog id="addItemForm" class="add-form">
         <div class="wrapper">
-            <h3>Add Item</h3>
+            <h3 class="add">Add Item</h3>
             <h3 class="edit">Edit Item</h3>
+            <h3 class="update">Update Item</h3>
             <div>
                 <datalist id="itemNameSuggestions"></datalist>
                 <label for="itemName">Item Name</label>
@@ -149,13 +155,22 @@
             <div>
                 <label for="itemCategory">Category</label>
                 <select id="itemCategory" required>
+                    <option value="Accessories">Accessories</option>
+                    <option value="Bags">Bags</option>
+                    <option value="Books">Books</option>
+                    <option value="Camera Equipment">Camera Equipment</option>
                     <option value="Clothing">Clothing</option>
-                    <option value="Electronics">Electronics</option>
-                    <option value="Toiletries">Toiletries</option>
                     <option value="Documents">Documents</option>
+                    <option value="Electronics">Electronics</option>
+                    <option value="Entertainment">Entertainment</option>
+                    <option value="Fitness">Fitness</option>
                     <option value="Food">Food</option>
+                    <option value="Footwear">Footwear</option>
+                    <option value="Gear">Gear</option>
                     <option value="Medication">Medication</option>
-                    <option value="Miscellaneous">Miscellaneous</option>
+                    <option value="Toiletries">Toiletries</option>
+                    <option value="Tools">Tools</option>
+                    <option value="Other">Other</option>
                 </select>
             </div>
             <div>
@@ -178,7 +193,8 @@
             <div class="dialog-buttons">
                 <button id="addItemBtn" class="btn-confirm">Add Item</button>
                 <button id="editItemBtn" class="btn-confirm">Save Changes</button>
-                <button onclick="addItemForm.close();">Cancel</button>
+                <button id="updateItemBtn" class="btn-confirm">Update Entry</button>
+                <button class="cancel-button" onclick="addItemForm.close();">Cancel</button>
             </div>
         </div>
     </dialog>
